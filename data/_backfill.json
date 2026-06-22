@@ -1,0 +1,394 @@
+{
+  "balizador-de-jardim-led": {
+    "description_pt": "O balizador de jardim LED foi concebido para oferecer iluminação exterior suave e funcional. Com um design vertical discreto, resistência superior a água e poeiras, é ideal para caminhos, acessos ou zonas ajardinadas. Garante segurança, orientação e uma presença visual elegante em qualquer ambiente paisagístico.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Balizadores_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Balizadores_cam-01_Produto-Ambiente-scaled.jpg"
+    ],
+    "applications": ["caminhos", "acessos", "zonas ajardinadas"]
+  },
+  "barra-led-high-bay": {
+    "description_pt": "Pensada para ambientes que exigem robustez superior e desempenho elevado, a Barra LED High Bay une proteção contra água, pó e impactos mantendo uma iluminação uniforme de alto rendimento. Ideal para armazéns, fábricas, oficinas, estacionamentos cobertos, espaços industriais com humidade ou ambientes severos.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-High-Bay_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-High-Bay_Produto-Ambiente-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-High-Bay_Produto-Ambiente-01-scaled.jpg"
+    ],
+    "applications": ["Armazéns", "Fábricas", "Oficinas", "Estacionamentos cobertos", "Espaços industriais com humidade", "Ambientes severos"]
+  },
+  "barra-linear-led-40w-50w": {
+    "description_pt": "A Barra Linear LED 40W/50W combina eficiência e flexibilidade num design linear moderno, ideal para projetos que exigem iluminação contínua e homogénea em espaços comerciais ou comuns. Disponível em duas potências, adapta-se a diferentes ambientes, proporcionando luz uniforme e alta performance energética.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-40w-50w_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-40w-50w_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-40w-50w_Produto-Ambiente-02-scaled.jpg"
+    ],
+    "applications": ["espaços comerciais", "espaços comuns"]
+  },
+  "barra-linear-led-45w-sensor": {
+    "description_pt": "A Barra Linear LED 45W representa a fusão perfeita entre eficiência energética, tecnologia de automação e design funcional. Com 45W de potência, incorpora um sensor de movimento, tornando-a ideal para projetos que buscam economia, segurança e iluminação inteligente em ambientes comerciais ou áreas comuns em zonas residenciais.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-45w_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-45w_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Linear-45w_Produto-Ambiente-02-scaled.jpg"
+    ],
+    "applications": ["ambientes comerciais", "áreas comuns em zonas residenciais"]
+  },
+  "barra-linear-led-fina-sensor": {
+    "description_pt": "A Barra Linear LED Fina c/ Sensor combina eficiência e flexibilidade num design linear fino moderno, ideal para projetos que exigem iluminação contínua e homogénea em espaços comerciais ou comuns esteticamente relevantes. Com tecnologia de detecção de movimento integrada, adapta-se a diferentes ambientes, proporcionando luz uniforme e alta performance energética aleada a poupança energética autónoma.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-12_39_53-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-12_35_28-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-12_25_47-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-12_22_39-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/eb6287ef0fcb4b93b7469610348011c1.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/88585ef414198728468e5404c3c4fa12-2.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/031500ecdd63f781f08cc8a04ba9e184-3.jpg"
+    ]
+  },
+  "barra-linear-led-tri-proof": {
+    "description_pt": "A Barra Linear LED Estanque oferece uma solução de iluminação robusta, eficiente e resistente para ambientes exigentes. Com design linear e eficiente, combina proteção contra água, poeira e impactos com alto desempenho energético, ideal para aplicações industriais, comerciais e exteriores protegidas.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear_Produto-Ambiente-02-scaled.jpg"
+    ],
+    "applications": ["aplicações industriais", "aplicações comerciais", "exteriores protegidos"]
+  },
+  "barra-linear-led-ultrafina-tri-proof": {
+    "description_pt": "A Barra Linear LED Ultrafina oferece iluminação contínua e eficiente num design extrafino em comparação com outros modelos de iluminação industrial em barra. Com estrutura selada, perfil reduzido e alta resistência a água, pó e impactos, é ideal para ambientes que exigem uma performance robusta sem abdicar da estética elegante.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear-Ultrafino_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear-Ultrafino_Produto-Ambiente-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Industrial-Linear-Ultrafino_Produto-Ambiente-01-scaled.jpg"
+    ]
+  },
+  "foco-encastrar-led-circular-exterior": {
+    "description_pt": "Este Foco de Encastrar LED combina robustez técnica com estética discreta, ideal para iluminar elementos exteriores com precisão e elegância. Com alta resistência a água e poeiras esta solução é concebida para instalação em solo ou caminhos, oferecendo iluminação direcional e eficaz, valorizando fachadas, esculturas ou zonas de passagem com estilo minimalista.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Foco_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Foco_cam-02_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "foco-encastrar-led-quadrado-exterior": {
+    "description_pt": "Este Foco de Encastrar LED Quadrado combina robustez técnica com estética discreta, ideal para iluminar elementos exteriores com precisão e elegância. Com alta resistência a água e poeiras esta solução é instalada no solo, oferecendo iluminação direcional e eficaz, valorizando fachadas, esculturas ou zonas de passagem com estilo minimalista.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-11_01_24-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-11_17_45-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/ChatGPT-Image-27_01_2026-10_59_25-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/微信图片_20250115111550_621_305-2.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/微信图片_20250115111549_620_305-2.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/微信图片_20250115111546_618_305-1.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/微信图片_20250115111544_617_305-1.jpg",
+      "https://domusmat.pt/wp-content/uploads/2026/01/247c686a-c2d0-4bcc-b06e-ae5735c72b5b-1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/01/5ee53fe4-0de2-4d80-98cd-a767d74e9e28-2.png"
+    ]
+  },
+  "luminaria-led-ampla-downlight": {
+    "description_pt": "Com design moderno e tecnologia sofisticada, a Luminária LED ampla proporciona uma iluminação homogénea e suave, cobrindo grandes áreas sem criar pontos de brilho ou sombras acentuadas. Uma solução elegante, eficiente e com resistência a espaços húmidos sendo adaptável tanto em ambientes residenciais como comerciais.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Ampla-10w20w28w_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Ampla-10w20w28w_Produto-Ambiente-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Ampla-10w20w28w_Produto-Ambiente-01-scaled.jpg"
+    ],
+    "applications": ["residenciais", "comerciais"]
+  },
+  "luminaria-led-embutida-ip65": {
+    "description_pt": "Com design moderno e minimalista, esta luminária de teto embutida LED destaca-se pela sua alta resistência à água, tornando esta solução altamente eficiente para locais húmidos ou até mesmo exteriores. Oferece luz uniforme e eficiente, o que a torna ideal para ambientes residenciais e comerciais que exigem durabilidade, estilo e baixo consumo de energia.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/09/Iluminacao-LED_Teto-Embutida-10w14w20w_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/09/Iluminacao-LED_Teto-Embutida-10w14w20w_Produto-Ambiente-02-scaled.jpg"
+    ],
+    "applications": ["ambientes residenciais", "ambientes comerciais", "locais húmidos", "exteriores"]
+  },
+  "luminaria-led-embutida-ip20": {
+    "description_pt": "Com design moderno e minimalista esta luminária de teto embutida LED distribui a luz de forma uniforme, reduzindo brilhos e sombras indesejadas. Ideal para zonas interiores não húmidas, esta solução destaca ambientes diversos com elegância mantendo os consumos baixos e garantindo desempenho de alta qualidade com durabilidade prolongada.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Embutida-10w15w20w_Produto-Ambiente-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Embutida-10w15w20w_Produto-Ambiente-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Iluminacao-LED_Teto-Embutida-10w15w20w_Produto-Ambiente-01-scaled.jpg"
+    ]
+  },
+  "pavimento-carvalho": {
+    "description_pt": "O pavimento em carvalho oferece uma combinação equilibrada de resistência, versatilidade e estética intemporal, sendo uma escolha confiável para diferentes estilos de projeto. A madeira de carvalho, com a sua textura rica e padrão natural bem definido, permite criar ambientes acolhedores e modernos. Disponível em acabamentos liso ou escovado com verniz UV, adapta-se às preferências visuais e necessidades de manutenção de cada cliente. Com sistema de encaixe prático e estrutura estável, este pavimento garante fácil aplicação, elevada durabilidade e integração perfeita em espaços residenciais.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_ProdutoDestaque_Carvalho-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Carvalho_cam-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Carvalho_cam-01-scaled.jpg"
+    ]
+  },
+  "pavimento-nogueira": {
+    "description_pt": "O pavimento em nogueira conjuga estabilidade dimensional, durabilidade e um acabamento distinto, ideal para ambientes que valorizam elegância e autenticidade. A sua tonalidade profunda e o desenho natural da madeira oferecem sofisticação a qualquer espaço, enquanto as opções de acabamento em verniz ou óleo natural garantem proteção e valorização estética. Com um sistema de encaixe simples e eficaz, este pavimento assegura uma instalação prática e um desempenho duradouro, adaptando-se a contextos residenciais ou comerciais que exigem qualidade superior.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_ProdutoDestaque_Nogueira-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Nogueira_cam-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Nogueira_cam-01-scaled.jpg"
+    ]
+  },
+  "pavimento-teca": {
+    "description_pt": "Este pavimento em teca multicamadas oferece elegância natural aliada à máxima resistência, sendo ideal para ambientes residenciais e comerciais exigentes. A tonalidade quente e os veios marcantes da teca conferem sofisticação visual e caráter único ao espaço. Com acabamentos em verniz ou óleo natural, realça a beleza original da madeira e garante proteção duradoura. O sistema de encaixe simples permite uma instalação rápida e eficiente, resultando numa solução estável, duradoura e esteticamente diferenciadora.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_ProdutoDestaque_Teca-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Teca_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-01_Teca_cam-02-scaled.jpg"
+    ]
+  },
+  "pavimento-aba-vinilico": {
+    "description_pt": "O pavimento ABA é um revestimento de última geração, desenvolvido com uma estrutura multicamada de alto desempenho que alia conforto, resistência e estabilidade dimensional. Graças ao sistema de encaixe fácil, sem necessidade de cola, à camada superior resistente a riscos e à base acústica integrada, este pavimento garante o equilíbrio ideal entre conforto, durabilidade e estética, sendo indicado tanto para espaços residenciais como comerciais.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_ProdutoDestaque_ABA-Vinyl_Florenca-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-02_ABA-Vinilico_Florenca_cam-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-02_ABA-Vinilico_Florenca_cam-01-scaled.jpg"
+    ]
+  },
+  "pavimento-spc-vinilico": {
+    "description_pt": "O pavimento SPC é um vinílico de núcleo rígido altamente técnico, que combina durabilidade extrema, resistência à água, estabilidade dimensional e estética natural. Equipado com sistema de encaixe rápido e base acústica integrada, este pavimento é ideal para ambientes residenciais e comerciais com tráfego intenso.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_ProdutoDestaque_SPC-Vinyl_Veneza-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-02_SPC-Vinilico_Veneza_cam-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Pavimento_Produto-Ambiente-02_SPC-Vinilico_Veneza_cam-01-scaled.jpg"
+    ]
+  },
+  "rodape-oculto": {
+    "description_pt": "Os rodapés ocultos foram desenvolvidos para garantir uma leitura arquitetónica contínua e limpa entre paredes e pavimentos. Este tipo de solução elimina saliências visíveis, permitindo uma integração discreta e elegante em projetos contemporâneos. Compatível com diferentes tipos de revestimentos e espessuras de parede, assegura durabilidade e resistência sem comprometer a estética. É uma opção técnica ideal para quem procura sofisticação minimalista, mantendo a funcionalidade e proteção nas zonas de transição. A solução perfeita para ambientes onde o detalhe silencioso faz toda a diferença.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Oculto_Produto-Ambiente_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Oculto_Produto-Ambiente_cam-03-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Oculto_Produto-Ambiente_cam-02-scaled.jpg"
+    ]
+  },
+  "rodape-simples": {
+    "description_pt": "Os rodapés simples garantem uma transição harmoniosa entre o pavimento e a parede, protegendo as superfícies e elevando a percepção de acabamento em qualquer ambiente. Com linhas diretas e disponíveis em diferentes alturas, materiais e acabamentos, esta solução adapta-se facilmente a projetos residenciais ou comerciais. Além da estética limpa, oferecem resistência ao impacto e à humidade, contribuindo para a durabilidade dos espaços. Uma solução versátil e discreta para quem valoriza detalhe e funcionalidade no design de interiores.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Simples_Produto-Ambiente_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Simples_Produto-Ambiente_cam-02-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Rodape-Simples_Produto-Ambiente_cam-03-scaled.jpg"
+    ],
+    "applications": ["Residencial", "Comercial"]
+  },
+  "armario-casa-de-banho": {
+    "description_pt": "Os Armários de Casa de Banho modulares foram concebidos para oferecer máxima funcionalidade, estética contemporânea e resistência, mesmo em ambientes húmidos e de uso intensivo. Com estrutura em aglomerado de madeira e portas em MDF com acabamento lacado ou revestimento em melamina/CPL, estes armários destacam-se pela versatilidade modular, adaptando-se a qualquer projeto de cozinha, desde minimalista a clássico. Permitem ainda um nível de customização elevado, desde a dimensão dos módulos, a disposição da estrutura, acabamentos e cores.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria-Armario-WC_Categoria-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armarios-de-casa-de-banho.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Casa-de-Banho-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Casa-de-Banho-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Casa-de-Banho-03_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Casa-de-Banho-04_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/PT_Carpintaria_Casa-de-Banho-scaled.jpg"
+    ]
+  },
+  "armario-de-cozinha": {
+    "description_pt": "O Armário de Cozinha Modular foi concebido para oferecer máxima funcionalidade, estética contemporânea e resistência, mesmo em ambientes húmidos e de uso intensivo. Com estrutura em aglomerado de madeira e portas em MDF com acabamento lacado ou revestimento em melamina/CPL, estes armários destacam-se pela versatilidade modular, adaptando-se a qualquer projeto de cozinha, desde minimalista a clássico. Permitem um nível elevado de customização desde a dimensão dos módulos, disposição da estrutura, acabamentos e cores.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria-Armario-Cozinha_Categoria-1-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armarios-Cozinha_1.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armarios-de-Cozinha.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria_Armario-Cozinha-02_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria_Armario-Cozinha-01_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Cozinha-02_Produto-Ambiente-01_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Cozinha-03_Produto-Ambiente-01_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Cozinha-04_Produto-Ambiente-01_cam-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Armario-Cozinha-05_Produto-Ambiente-01_cam-01-scaled.jpg"
+    ]
+  },
+  "canais-de-drenagem-bmc": {
+    "description_pt": "Os canais de drenagem em resina composta (BMC) oferecem uma solução técnica resistente, leve e duradoura, ideal para sistemas de escoamento de águas pluviais e industriais em contextos urbanos, comerciais e industriais. O seu perfil em \"U\" promove um fluxo contínuo, minimizando o risco de entupimentos, enquanto a leveza do compósito facilita o manuseamento e a instalação em obras de diferentes dimensões. Uma solução fiável e eficiente, que alia desempenho técnico e funcionalidade.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Canal_Produto-Categoria-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Grelha_3.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Canal_Produto-Destaque-Ambiente-scaled.jpg"
+    ]
+  },
+  "grelha-de-drenagem-aco-inox": {
+    "description_pt": "A grelha de drenagem em aço inoxidável garante robustez superior, durabilidade prolongada e um acabamento elegante, sendo ideais para ambientes que exigem elevados padrões de higiene e resistência a agentes corrosivos. Desenvolvidas para oferecer desempenho técnico de excelência em zonas comerciais, industriais ou residenciais, mantêm a integridade e a estética mesmo sob condições exigentes, assegurando funcionalidade e longevidade no escoamento de águas.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Grelha-de-Aco_Produto-Categoria-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Grelha_1.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Grelha-de-Aco_Produto-Destaque-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/PT_Grelha-de-Drenagem-Aco-Inox_Detalhe-Tecnico-scaled.jpg"
+    ]
+  },
+  "grelha-de-drenagem-bmc": {
+    "description_pt": "A grelha de drenagem em BMC (resina composta) representa uma solução moderna, leve e resistente, desenvolvida para garantir o escoamento eficiente de águas em contextos urbanos, industriais e comerciais. Fabricadas com compósito de alto desempenho, aliam durabilidade a uma instalação prática e rápida. A resistência ao uso intensivo e às condições exigentes tornam estas grelhas uma escolha técnica fiável, mantendo a funcionalidade sem comprometer a estética envolvente.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Grelha-BMC_Produto-Categoria-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Grelha_2.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Drenagem_Grelha-BMC_Produto-Destaque-Ambiente-scaled.jpg"
+    ]
+  },
+  "porta-batente": {
+    "description_pt": "A porta batente simples é uma solução discreta e versátil, ideal para projetos residenciais ou comerciais que valorizam um design limpo e funcional. Sem detalhes ornamentais, destaca-se pela elegância do seu acabamento plano e pela ampla possibilidade de personalização. Disponível em diferentes cores e texturas, adapta-se a vários conceitos de interior, assegurando uma integração visual harmoniosa com o restante espaço. A possibilidade de customização nas medidas e nos tipos de encaixe torna esta porta uma escolha prática e sofisticada.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Batente_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/2025082002.png",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Batente.jpg"
+    ]
+  },
+  "porta-batente-c": {
+    "description_pt": "A Porta Batente com acabamento circular foi desenhada para integrar-se de forma harmoniosa em ambientes residenciais e comerciais de alto padrão. O detalhe circular em torno da maçaneta distingue-se como elemento de design, conferindo um toque moderno e subtilmente escultural. Disponível com dois tipos de encaixe e possibilidade de personalização em medidas e cores, esta porta adapta-se aos mais diversos contextos arquitetónicos, mantendo sempre um acabamento premium e uma presença discreta mas marcante.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Batente-C_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Batente-C.jpg"
+    ]
+  },
+  "porta-batente-t": {
+    "description_pt": "A Porta Batente com acabamento triangular distingue-se pelo detalhe geométrico junto à maçaneta que defere um elemento de assinatura visual que combina estética contemporânea com funcionalidade. Ideal para espaços que valorizam o detalhe no desenho e a qualidade nos materiais. Disponível com dois tipos de encaixe e possibilidade de personalização em medidas e cores, esta solução adapta-se facilmente a projetos residenciais ou comerciais com exigência estética elevada.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Batente-T_Produto-Ambiente-01-1-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Batente-T.jpg"
+    ]
+  },
+  "porta-de-correr": {
+    "description_pt": "A porta de correr combina estética minimalista com tecnologia funcional, oferecendo uma solução moderna para divisões com limitação de espaço. Concebida com materiais de alta qualidade e estrutura reforçada, esta porta com sistema de correr invisível é ideal para interiores residenciais ou comerciais onde o aproveitamento inteligente da área é essencial e a atenção ao detalhe é valorizada.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Correr_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Correr.jpg"
+    ]
+  },
+  "porta-de-entrada-classe-3": {
+    "description_pt": "A Porta de Entrada Classe 3 alia desempenho técnico com um design contemporâneo, garantindo segurança, isolamento térmico e conforto acústico. Concebida para responder a elevados padrões de exigência, é certificada para proporcionar proteção reforçada sem comprometer a estética. Ideal para habitações que valorizam privacidade, eficiência e estilo, esta solução combina resistência, inovação e elegância, adaptando-se com distinção a qualquer contexto residencial.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Entrada-Classe-3_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Classe-3.jpg"
+    ]
+  },
+  "porta-de-entrada-classe-4": {
+    "description_pt": "As Portas de Entrada Classe 4 elevam os padrões de proteção, conjugando resistência estrutural com um design sofisticado. Com certificações rigorosas, asseguram um desempenho superior em segurança, isolamento térmico e conforto acústico. Estas portas são indicadas para projetos residenciais e institucionais de alta exigência, estas portas representam uma solução robusta e estética, garantindo máxima proteção sem comprometer a integração arquitetónica.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Entrada-Classe-4_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Class-4.jpg"
+    ]
+  },
+  "porta-corta-fogo-1-folha": {
+    "description_pt": "A Porta Corta-Fogo de uma folha sem visor Domus Mat é uma solução robusta para ambientes que requerem total isolamento visual e máxima resistência térmica. Ideal para áreas técnicas e de evacuação. Classificação de resistência ao fogo de 30 minutos até 2 horas.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Corta-Fogo-1-Folha_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-fogo-uma-folha-sem-visor.jpg"
+    ]
+  },
+  "porta-corta-fogo-1-folha-visor": {
+    "description_pt": "A Porta Corta-Fogo de uma folha com visor Domus Mat combina proteção e funcionalidade com um design moderno. Com visor resistente ao fogo, oferece visibilidade segura entre ambientes, sendo ideal para locais que exigem vigilância e segurança contra incêndios.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Corta-Fogo-1-Folha-com-Visor_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-fogo-uma-folha-com-visor.jpg"
+    ]
+  },
+  "porta-corta-fogo-2-folhas": {
+    "description_pt": "A porta corta-fogo de duas folhas sem visor oferece proteção máxima contra incêndios em ambientes industriais e corporativos com acessos largos, onde a privacidade e isolamento térmico são prioritários.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Corta-Fogo-2-Folhas_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Corta-Fogo-duas-Folhas-sem-visor.jpg"
+    ],
+    "applications": ["Ambientes industriais", "Ambientes corporativos"]
+  },
+  "porta-corta-fogo-2-folhas-visor": {
+    "description_pt": "A Porta Corta-Fogo de duas folhas com visor Domus Mat foi projetada para acessos amplos e de alto tráfego, oferecendo excelente visibilidade e controle de incêndio. O visor em vidro corta-fogo em ambas as folhas garante segurança com design inteligente. Classificação de resistência ao fogo de 30 minutos até 2 horas.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Corta-Fogo-2-Folhas-com-Visor_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Portas-com-duas-folhas-com-visor.jpg"
+    ]
+  },
+  "porta-de-ventilacao": {
+    "description_pt": "A Porta de Grelha com Persianas de Ventilação Domus Mat é a solução perfeita para ambientes que exigem ventilação permanente e controlo de fluxo de ar, aliada a uma construção robusta e discreta. Ideal para espaços técnicos, zonas de máquinas, arrecadações, garagens, salas de contadores e outras áreas onde a circulação de ar é essencial.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Ventilacao_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Ventilacao.jpg"
+    ],
+    "applications": ["espaços técnicos", "zonas de máquinas", "arrecadações", "garagens", "salas de contadores"]
+  },
+  "porta-multiusos": {
+    "description_pt": "A Porta Multiusos para Arrecadação Domus Mat é a escolha ideal para quem busca funcionalidade, durabilidade e estética discreta em ambientes de apoio. Projetada para uso em espaços de arrumação, garagens, caves ou áreas técnicas, oferece segurança e resistência com um visual simples e eficiente.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-de-Multiusos_Produto-Ambiente-01-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Porta-Multiusos.jpg"
+    ]
+  },
+  "guarda-corpos-aco-inox": {
+    "description_pt": "Os guarda-corpos metálicos aliam segurança, resistência e versatilidade com um design funcional que se integra facilmente em diferentes contextos arquitetónicos. Disponíveis em aço pintado ou inoxidável, adaptam-se a escadas, varandas e passadiços, garantindo proteção sem comprometer a estética. O aço pintado destaca-se pela durabilidade e excelente relação custo-benefício, enquanto o inox é a escolha ideal para ambientes agressivos, como zonas costeiras, devido à sua resistência superior à corrosão. Uma solução robusta e elegante para projetos exigentes.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/09/Serralharia_Categoria-2-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/10/Serralharia_Guarda-Corpos_Produto-Ambiente-scaled.jpg"
+    ],
+    "applications": ["Escadas", "Varandas", "Passadiços"]
+  },
+  "espelho-led-cantos-retos": {
+    "description_pt": "O espelho LED com cantos retos destaca-se pelo seu design geométrico e contemporâneo, ideal para ambientes de casa de banho modernos e funcionais. Produzido em PET técnico de alta resistência, oferece robustez e longevidade mesmo sob condições de elevada humidade. Equipado com tecnologia antiembaciante, mantém a superfície livre de condensação, garantindo uma visão clara em qualquer momento do dia. A iluminação LED embutida distribui a luz de forma uniforme e sem reflexos, proporcionando um ambiente visualmente confortável e sofisticado.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Retos-LED_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-LED-C_-CANTOS-RETOS.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Retos-LED_cam-03_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Retos-LED_cam-02_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "espelho-led-cantos-arredondados": {
+    "description_pt": "Com design subtil e cantos arredondados, este espelho LED é a solução ideal para casas de banho que valorizam conforto, funcionalidade e estética moderna. Fabricado em PET técnico de alta resistência, garante durabilidade mesmo em ambientes húmidos. Equipado com tecnologia antiembaciante, mantém a superfície sempre limpa e nítida. A iluminação LED embutida oferece luz suave, uniforme e sem encandeamento, perfeita para uso diário. Combina tecnologia avançada e visual intemporal para elevar a experiência em qualquer espaço de banho.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Arredondados_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-LED-C_-CANTOS-ARREDONDADOS.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Arredondados_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Cantos-Arredondados_cam-03_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "espelho-led-cantos-retos-sem-moldura": {
+    "description_pt": "O espelho LED com cantos retos sem aro destaca-se pelo seu design geométrico e contemporâneo, ideal para ambientes de casa de banho modernos e funcionais. Produzido em PET técnico de alta resistência, oferece robustez e longevidade mesmo sob condições de elevada humidade. Equipado com tecnologia antiembaciante, mantém a superfície livre de condensação, garantindo uma visão clara em qualquer momento do dia. A iluminação LED embutida distribui a luz de forma uniforme e sem reflexos, proporcionando um ambiente visualmente confortável e sofisticado.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2026/02/01f0497d-6a27-4ef1-a4cb-0220635ad0a1.png",
+      "https://domusmat.pt/wp-content/uploads/2026/02/f244e98d-df14-450d-8aa6-91f6e760f7c2.png",
+      "https://domusmat.pt/wp-content/uploads/2026/02/ESPELHO-LED-S_ARO-CANTOS-RETOS-scaled.jpg"
+    ]
+  },
+  "espelho-redondo-led-sem-aro": {
+    "description_pt": "O Espelho Redondo com LED alia design elegante e funcionalidade inteligente, ideal para casas de banho com estilo contemporâneo. A estrutura circular com acabamento em preto confere sofisticação e modernidade ao espaço. Produzido em PET técnico de alta resistência, oferece robustez e longevidade mesmo sob condições de elevada humidade, mantendo a durabilidade ao longo do tempo. A tecnologia antiembaciante integrada garante um espelho sempre limpo e nítido. A iluminação LED oferece luz suave, contínua e sem encandeamento, assegurando conforto visual e utilidade no quotidiano.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-sem-Aro_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-REDONDO-LED-S_ARO_.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-sem-Aro_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-sem-Aro_cam-03_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "espelho-redondo-led-com-aro-preto": {
+    "description_pt": "O Espelho Redondo com LED e aro preto alia design elegante e funcionalidade inteligente, ideal para casas de banho com estilo contemporâneo. A estrutura circular com acabamento em preto confere sofisticação e modernidade ao espaço. Produzido em PET técnico de alta resistência, oferece robustez e longevidade mesmo sob condições de elevada humidade, mantendo a durabilidade ao longo do tempo. A tecnologia antiembaciante integrada garante um espelho sempre limpo e nítido. A iluminação LED oferece luz suave, contínua e sem encandeamento, assegurando conforto visual e utilidade no quotidiano.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-com-Aro-Preto_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-com-Aro-Preto_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-LED-com-Aro-Preto_cam-03_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-REDONDO-LED-C_ARO-PRETO.jpg"
+    ]
+  },
+  "espelho-redondo-led-sem-aro-simples": {
+    "description_pt": "O espelho redondo LED s/ aro destaca-se pelo seu design minimalista e contemporâneo, sem aro visível, ideal para casas de banho modernas e ambientes que privilegiam a estética limpa. Fabricado em PET técnico de alta resistência, oferece robustez e longevidade mesmo sob condições de elevada humidade. Inclui tecnologia antiembaciante, garantindo um espelho sempre nítido e funcional. A iluminação LED integrada emite uma luz suave, contínua e sem reflexos, perfeita para o uso diário. Esta solução conjuga elegância e tecnologia, elevando o ambiente com uma presença discreta, mas essencial ao conforto e à funcionalidade do espaço.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-Cortado-LED-sem-Aro_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-REDONDO-LED-S_ARO.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-Cortado-LED-sem-Aro_cam-03_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Redondo-Cortado-LED-sem-Aro_cam-02_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "espelho-arqueado-led-sem-aro": {
+    "description_pt": "O espelho arqueado LED sem aro alia design contemporâneo à funcionalidade que o dia a dia exige. Com linhas suaves e formato elegante, é ideal para espaços de banho modernos que valorizam estética e conforto. Produzido em PET técnico de alta resistência. A luz LED difusa proporciona uma iluminação suave, uniforme e sem encandeamento, ideal para tarefas diárias. Uma peça de design inteligente que transforma a rotina com um toque de sofisticação e tecnologia discreta.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho-Arqueado-LED-sem-Aro_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho-Arqueado-LED-sem-Aro_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho-Arqueado-LED-sem-Aro_cam-03_Produto-Ambiente-scaled.jpg"
+    ]
+  },
+  "espelho-arqueado-alto-led-com-aro-preto": {
+    "description_pt": "O Espelho Inteligente Arqueado Alto com LED combina design moderno com funcionalidade avançada. A moldura preta confere um toque contemporâneo e sofisticado, perfeito para qualquer ambiente. Produzido em PET técnico de alta resistência, integra tecnologia LED, que proporciona uma luz suave, homogénea e sem encandeamento, melhorando a experiência visual. Uma solução inteligente que alia design, inovação e conforto no quotidiano.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Arqueado-Longo_LED-com-Aro_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Arqueado-Longo_LED-com-Aro_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Arqueado-Longo_LED-com-Aro_cam-03_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-ARQUEADO-ALTO-C_LED.jpg"
+    ]
+  },
+  "espelho-oval-led-com-aro-dourado": {
+    "description_pt": "O espelho oval com LED combina estética sofisticada com funcionalidade moderna, sendo ideal para espaços que valorizam o detalhe. Com estrutura em PET técnico de elevada resistência e formato de corpo inteiro, adapta-se a ambientes exigentes e húmidos. O aro dourado destaca-se pela elegância, criando contraste e um ponto focal distinto. A iluminação LED proporciona uma luz suave, homogénea e sem encandeamento, melhorando a experiência visual. Uma solução inteligente que alia design, inovação e conforto no quotidiano.",
+    "images": [
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Oval_LED-com-Aro-Dourado_cam-01_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/ESPELHO-OVAL-C_LED.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Oval_LED-com-Aro-Dourado_cam-02_Produto-Ambiente-scaled.jpg",
+      "https://domusmat.pt/wp-content/uploads/2025/07/Espelho_Oval_LED-com-Aro-Dourado_cam-03_Produto-Ambiente-scaled.jpg"
+    ]
+  }
+}
