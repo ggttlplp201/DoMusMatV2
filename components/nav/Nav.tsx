@@ -1,14 +1,17 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/state/cart";
 import { useCompare } from "@/state/compare";
 import { repo } from "@/lib/repository";
 import { t } from "@/lib/strings";
+import { SearchBar } from "./SearchBar";
 
 export function Nav() {
   const { count } = useCart();
   const { refs } = useCompare();
   const categories = repo.getCategories();
+  const [search, setSearch] = useState("");
 
   return (
     <header className="sticky top-0 z-40 border-b border-aluminium bg-white">
@@ -28,6 +31,9 @@ export function Nav() {
           ))}
         </nav>
         <div className="flex-1" />
+        <div className="w-48 md:w-64">
+          <SearchBar value={search} onChange={setSearch} />
+        </div>
         <Link href="/compare" className="text-sm">
           {t.compare} ({refs.length})
         </Link>
@@ -35,7 +41,7 @@ export function Nav() {
           {t.savedLists}
         </Link>
         <button className="rounded border border-aluminium px-3 py-1.5 text-sm">B2B Login</button>
-        <Link href="/lists" aria-label="Orçamento" className="relative">
+        <Link href="/cart" aria-label="Orçamento" className="relative">
           🛒{count > 0 && (
             <span className="absolute -right-2 -top-2 rounded-full bg-brand px-1.5 text-xs text-white">
               {count}
