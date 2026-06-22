@@ -1,0 +1,49 @@
+{
+  "_note": "Only fields explicitly stated in the source PDF are filled. Everything not in the PDF is set to the string \"PLACEHOLDER\". Nothing is inferred or computed.",
+  "manufacturer": {
+    "name": "DoMusMat",
+    "address": "Av. Dom João I, 16, 2º Direito, 2780-065 Oeiras, Portugal",
+    "phone": "+351 211 372 830",
+    "email": "geral@domusmat.com"
+  },
+  "product": {
+    "name": "Barra LED High Bay",
+    "category": "PLACEHOLDER",
+    "description_pt": "Pensada para ambientes que exigem robustez superior e desempenho elevado, a barra LED high bay une proteção contra água, pó e impactos mantendo uma iluminação uniforme de alto rendimento. Ideal para armazéns, fábricas, oficinas, estacionamentos cobertos, espaços industriais com humidade ou ambientes severos.",
+    "description_en": "PLACEHOLDER",
+    "applications": ["Armazéns", "Fábricas", "Oficinas", "Estacionamentos cobertos", "Espaços industriais com humidade", "Ambientes severos"]
+  },
+  "shared_specifications": {
+    "voltage_nominal": "120-277V",
+    "color_temperature": ["3000K", "4000K", "5000K"],
+    "luminous_efficacy": "130-135 lm/W",
+    "beam_angle_deg": 120,
+    "cri": 83,
+    "ip_rating": 65,
+    "finish": "Branco",
+    "material": "Alumínio",
+    "energy_class": "A+",
+    "cross_section_mm": { "width": 150, "height": 67 },
+    "warranty_years": 3,
+    "certificates": ["CE", "RoHS", "ETL", "FCC"]
+  },
+  "variants": [
+    { "ref": "DMJR-TP120W001", "power_w": 120, "length_mm": 600,  "width_mm": 150, "height_mm": 67, "lumens": "PLACEHOLDER" },
+    { "ref": "DMJR-TP150W002", "power_w": 150, "length_mm": 900,  "width_mm": 150, "height_mm": 67, "lumens": "PLACEHOLDER" },
+    { "ref": "DMJR-TP200W003", "power_w": 200, "length_mm": 1200, "width_mm": 150, "height_mm": 67, "lumens": "PLACEHOLDER" },
+    { "ref": "DMJR-TP300W004", "power_w": 300, "length_mm": 1500, "width_mm": 150, "height_mm": 67, "lumens": "PLACEHOLDER" }
+  ],
+  "commercial": {
+    "_note": "Not present in the PDF. Required for the order/price/delivery calculator. To be supplied by DoMusMat.",
+    "currency": "PLACEHOLDER",
+    "unit_prices": {
+      "DMJR-TP120W001": "PLACEHOLDER",
+      "DMJR-TP150W002": "PLACEHOLDER",
+      "DMJR-TP200W003": "PLACEHOLDER",
+      "DMJR-TP300W004": "PLACEHOLDER"
+    },
+    "volume_discount_tiers": "PLACEHOLDER",
+    "lead_time_tiers": "PLACEHOLDER",
+    "minimum_order_quantity": "PLACEHOLDER"
+  }
+}
