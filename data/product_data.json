@@ -3806,10 +3806,16 @@
       "category": "carpintaria",
       "name": "Roupeiro",
       "ref_prefix": "PLACEHOLDER",
-      "description_pt": "PLACEHOLDER",
+      "description_pt": "O Roupeiro modular foi concebido para oferecer máxima funcionalidade, estética contemporânea e resistência principalmente em ambientes de uso intensivo. Com estrutura em aglomerado de madeira e portas em MDF com acabamento lacado ou revestimento em melamina/CPL, estes armários destacam-se pela versatilidade modular, adaptando-se a qualquer projeto de cozinha, desde minimalista a clássico.",
       "description_en": "PLACEHOLDER",
-      "applications": [],
-      "images": [],
+      "applications": ["Cozinhas", "Ambientes de uso intensivo"],
+      "images": [
+        "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria-Roupeiro_Categoria-scaled.jpg",
+        "https://domusmat.pt/wp-content/uploads/2025/07/Roupeiro.jpg",
+        "https://domusmat.pt/wp-content/uploads/2025/07/Roupeiro-02_Produto-Ambiente-scaled.jpg",
+        "https://domusmat.pt/wp-content/uploads/2025/07/Carpintaria_Roupeiro-01_Produto-Ambiente-scaled.jpg",
+        "https://domusmat.pt/wp-content/uploads/2025/07/PT_Carpintaria_Roupeiro-scaled.jpg"
+      ],
       "shared_specs": {
         "material_structure": "aglomerado",
         "material_doors": "MDF",
