@@ -1,6 +1,7 @@
 import { repo } from "./repository";
 import { formatPrice } from "./format";
 import { hasRealValue } from "./placeholder";
+import { fallbacks } from "./strings";
 
 export interface BomItem { ref: string; quantity: number; }
 export interface BomLine {
@@ -17,7 +18,7 @@ export function buildBomLines(items: BomItem[]): BomLine[] {
     const price = commercial.unit_prices?.[ref];
     const unitPrice = formatPrice(price, commercial.currency);
     const lineTotal = hasRealValue(price) && hasRealValue(commercial.currency)
-      ? formatPrice(Number(price) * quantity, commercial.currency) : "Price on request";
+      ? formatPrice(Number(price) * quantity, commercial.currency) : fallbacks.price;
     // generic spec string from the variant attrs (heterogeneous across products)
     const attrs = variant?.attrs ?? {};
     const specs = Object.entries(attrs)

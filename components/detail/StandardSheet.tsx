@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { resolvePlaceholder } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -11,9 +12,9 @@ export function StandardSheet({ product }: Props) {
   if (!s) return null;
 
   const rows = [
-    { label: "Faixa de preço", value: resolvePlaceholder(s.price_range, "—") },
-    { label: "Prazo de entrega", value: resolvePlaceholder(s.delivery_period, "—") },
-    { label: "Ciclo de manutenção", value: resolvePlaceholder(s.maintenance_cycle, "—") },
+    { label: "Faixa de preço", value: resolvePlaceholder(s.price_range, fallbacks.spec) },
+    { label: "Prazo de entrega", value: resolvePlaceholder(s.delivery_period, fallbacks.spec) },
+    { label: "Ciclo de manutenção", value: resolvePlaceholder(s.maintenance_cycle, fallbacks.spec) },
   ];
 
   return (

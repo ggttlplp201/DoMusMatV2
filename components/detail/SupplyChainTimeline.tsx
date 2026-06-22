@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -25,7 +26,7 @@ export function SupplyChainTimeline({ product }: Props) {
                   {hasRealValue(node.status) ? node.status : "—"}
                 </p>
                 <p className="text-aluminium-dark text-xs">
-                  {resolvePlaceholder(node.eta, "ETA —") as string}
+                  {resolvePlaceholder(node.eta, fallbacks.eta) as string}
                 </p>
               </div>
               {i < nodes.length - 1 && (
@@ -40,7 +41,7 @@ export function SupplyChainTimeline({ product }: Props) {
       <p className="mt-3 text-sm text-aluminium-dark">
         Stock:{" "}
         <span className="text-ink">
-          {resolvePlaceholder(chain.stock, "Sob consulta") as string}
+          {resolvePlaceholder(chain.stock, fallbacks.stock) as string}
         </span>
       </p>
     </section>

@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -53,7 +54,7 @@ export function CompliancePanel({ product }: Props) {
                       : "bg-neutral-fill text-aluminium-dark"
                   }`}
                 >
-                  {hasValue ? field.value : "Pendente"}
+                  {hasValue ? field.value : fallbacks.compliancePending}
                 </span>
               </div>
             </li>

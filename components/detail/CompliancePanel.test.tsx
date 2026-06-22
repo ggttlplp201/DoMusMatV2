@@ -3,7 +3,7 @@ import { CompliancePanel } from "./CompliancePanel";
 import { repo } from "@/lib/repository";
 
 describe("CompliancePanel", () => {
-  it("renders CE label and at least one Pendente chip", () => {
+  it("renders CE label and at least one Documentação a pedido chip", () => {
     const product = repo.getProduct("barra-led-high-bay");
     if (!product) throw new Error("Product barra-led-high-bay not found");
 
@@ -13,8 +13,8 @@ describe("CompliancePanel", () => {
     const ceElements = screen.getAllByText("CE");
     expect(ceElements.length).toBeGreaterThan(0);
 
-    // DoP and EPD are PLACEHOLDER so at least one Pendente chip should appear
-    const pendentes = screen.getAllByText("Pendente");
+    // DoP and EPD are PLACEHOLDER so at least one Documentação a pedido chip should appear
+    const pendentes = screen.getAllByText("Documentação a pedido");
     expect(pendentes.length).toBeGreaterThan(0);
   });
 });

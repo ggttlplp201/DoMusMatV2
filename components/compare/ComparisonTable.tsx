@@ -2,6 +2,7 @@ import Image from "next/image";
 import { repo } from "@/lib/repository";
 import { formatPrice, formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 function getPowerRange(product: Product): string {
@@ -34,7 +35,7 @@ function getFirstVariantPrice(product: Product): string {
 
 function getConformidade(product: Product): string {
   const ce = product.compliance?.ce;
-  return ce && hasRealValue(ce.value) ? ce.value : "—";
+  return ce && hasRealValue(ce.value) ? ce.value : fallbacks.spec;
 }
 
 const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] = [
@@ -53,7 +54,7 @@ const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] =
     label: "IP",
     getValue: (p) => {
       const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
-      return hasRealValue(ip) ? `IP${ip}` : "—";
+      return hasRealValue(ip) ? `IP${ip}` : fallbacks.spec;
     },
   },
   {
@@ -61,7 +62,7 @@ const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] =
     label: "Temp. cor",
     getValue: (p) => {
       const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
-      if (!hasRealValue(ct)) return "—";
+      if (!hasRealValue(ct)) return fallbacks.spec;
       return Array.isArray(ct) ? ct.join(" / ") : String(ct);
     },
   },
@@ -70,7 +71,7 @@ const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] =
     label: "Material",
     getValue: (p) => {
       const mat = (p.shared_specs as Record<string, unknown>).material;
-      return hasRealValue(mat) ? String(mat) : "—";
+      return hasRealValue(mat) ? String(mat) : fallbacks.spec;
     },
   },
   {
@@ -78,7 +79,7 @@ const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] =
     label: "Certificações",
     getValue: (p) => {
       const certs = (p.shared_specs as Record<string, unknown>).certificates;
-      if (!hasRealValue(certs)) return "—";
+      if (!hasRealValue(certs)) return fallbacks.spec;
       return Array.isArray(certs) ? certs.join(", ") : String(certs);
     },
   },

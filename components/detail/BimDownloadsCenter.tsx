@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -26,7 +27,7 @@ function AssetRow({ asset }: { asset: Product["bim_assets"][number] }) {
     <div className="flex items-center gap-2 rounded border border-aluminium p-3 text-sm opacity-60 cursor-not-allowed">
       <span className="font-medium text-ink">{asset.label}</span>
       <span className="text-aluminium-dark text-xs">{asset.format}</span>
-      <span className="ml-auto text-xs text-aluminium-dark italic">Em breve</span>
+      <span className="ml-auto text-xs text-aluminium-dark italic">{fallbacks.bimAsset}</span>
     </div>
   );
 }

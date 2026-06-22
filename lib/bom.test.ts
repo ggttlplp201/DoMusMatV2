@@ -7,8 +7,8 @@ describe("BOM builder", () => {
     expect(lines).toHaveLength(1);
     expect(lines[0].name).toContain("Barra LED High Bay");
     expect(lines[0].quantity).toBe(3);
-    expect(lines[0].unitPrice).toBe("Price on request");
-    expect(lines[0].lineTotal).toBe("Price on request");
+    expect(lines[0].unitPrice).toBe("Preço sob consulta");
+    expect(lines[0].lineTotal).toBe("Preço sob consulta");
   });
 
   it("toCsv(buildBomLines([{ ref: 'DMJR-TP200W003', quantity: 3 }])) has header and quoted reference in second row", () => {
@@ -19,10 +19,10 @@ describe("BOM builder", () => {
     expect(rows[1]).toContain('"DMJR-TP200W003"');
   });
 
-  it("buildBomLines([{ ref: 'NOPE', quantity: 1 }]) returns 1 line with name === 'NOPE' and unitPrice === 'Price on request'", () => {
+  it("buildBomLines([{ ref: 'NOPE', quantity: 1 }]) returns 1 line with name === 'NOPE' and unitPrice === 'Preço sob consulta'", () => {
     const lines = buildBomLines([{ ref: "NOPE", quantity: 1 }]);
     expect(lines).toHaveLength(1);
     expect(lines[0].name).toBe("NOPE");
-    expect(lines[0].unitPrice).toBe("Price on request");
+    expect(lines[0].unitPrice).toBe("Preço sob consulta");
   });
 });

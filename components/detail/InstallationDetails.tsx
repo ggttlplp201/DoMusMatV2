@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -10,7 +11,7 @@ export function InstallationDetails({ product }: Props) {
   const installation = product.standardization?.installation;
   if (!installation) return null;
 
-  const instructions = resolvePlaceholder(installation.instructions, "Em breve");
+  const instructions = resolvePlaceholder(installation.instructions, fallbacks.installation);
   const hasDoc = hasRealValue(installation.document);
   const mountingNodes = installation.mounting_nodes;
 

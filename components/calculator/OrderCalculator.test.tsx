@@ -14,8 +14,8 @@ describe("OrderCalculator", () => {
       </AnalyticsProvider>
     );
 
-    expect(screen.getAllByText("Price on request").length).toBeGreaterThan(0);
-    expect(screen.getByText("Contact for lead time")).toBeInTheDocument();
+    expect(screen.getAllByText("Preço sob consulta").length).toBeGreaterThan(0);
+    expect(screen.getByText("Prazo de entrega sob consulta")).toBeInTheDocument();
 
     const addToQuoteBtn = screen.getByRole("button", { name: "Adicionar ao orçamento" });
     expect(addToQuoteBtn).toBeEnabled();

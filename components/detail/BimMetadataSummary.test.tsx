@@ -32,9 +32,9 @@ describe("BimMetadataSummary", () => {
     expect(container.textContent).toContain("width_mm: 150");
     expect(container.textContent).toContain("height_mm: 67");
 
-    // materials: all PLACEHOLDER → should show "—"
-    // ifc_properties: all PLACEHOLDER → should show "—"
-    // The dashes should appear (at least one)
-    expect(container.textContent).toContain("—");
+    // materials: all PLACEHOLDER → should show "Sob consulta"
+    // ifc_properties: all PLACEHOLDER → should show "Sob consulta"
+    // The fallback should appear (at least one)
+    expect(container.textContent).toContain("Sob consulta");
   });
 });

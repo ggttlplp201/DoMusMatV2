@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
+import { fallbacks } from "@/lib/strings";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -11,21 +12,21 @@ export function BimMetadataSummary({ product }: Props) {
   if (!meta) return null;
 
   const rows: { label: string; value: string }[] = [
-    { label: "ID do produto", value: String(resolvePlaceholder(meta.product_id, "—")) },
+    { label: "ID do produto", value: String(resolvePlaceholder(meta.product_id, fallbacks.spec)) },
     {
       label: "Dimensões",
       value: meta.dimensions
         ? (() => {
             const real = Object.entries(meta.dimensions).filter(([, v]) => hasRealValue(v));
-            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join(", ") : "—";
+            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join(", ") : fallbacks.spec;
           })()
-        : "—",
+        : fallbacks.spec,
     },
     {
       label: "Materiais",
       value: hasRealValue(meta.materials)
         ? (meta.materials as string[]).filter(hasRealValue).join(", ")
-        : "—",
+        : fallbacks.spec,
     },
     {
       label: "Propriedades IFC",
@@ -34,11 +35,11 @@ export function BimMetadataSummary({ product }: Props) {
             const real = Object.entries(meta.ifc_properties)
               .filter(([, v]) => hasRealValue(v))
               .slice(0, 3);
-            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join("; ") : "—";
+            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join("; ") : fallbacks.spec;
           })()
-        : "—",
+        : fallbacks.spec,
     },
-    { label: "Versão", value: String(resolvePlaceholder(meta.version, "—")) },
+    { label: "Versão", value: String(resolvePlaceholder(meta.version, fallbacks.spec)) },
   ];
 
   return (
