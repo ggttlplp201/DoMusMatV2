@@ -8,6 +8,12 @@ import { Gallery } from "./Gallery";
 import { VariantSelector } from "./VariantSelector";
 import { CertBadges } from "./CertBadges";
 import { SpecTable } from "./SpecTable";
+import { BimDownloadsCenter } from "./BimDownloadsCenter";
+import { BimMetadataSummary } from "./BimMetadataSummary";
+import { CompliancePanel } from "./CompliancePanel";
+import { StandardSheet } from "./StandardSheet";
+import { InstallationDetails } from "./InstallationDetails";
+import { SupplyChainTimeline } from "./SupplyChainTimeline";
 
 interface DetailViewProps {
   productId: string;
@@ -57,10 +63,18 @@ export function DetailView({ productId }: DetailViewProps) {
         <SpecTable product={product} variant={selectedVariant} />
       )}
 
-      {/* TASK 12: BimDownloadsCenter */}
-      {/* TASK 13: CompliancePanel */}
-      {/* TASK 14B: StandardSheet + InstallationDetails */}
-      {/* TASK 14C: SupplyChainTimeline */}
+      {/* TASK 12 */}
+      <div className="space-y-10">
+        <BimDownloadsCenter product={product} />
+        <BimMetadataSummary product={product} />
+        {/* TASK 13 */}
+        <CompliancePanel product={product} />
+        {/* TASK 14B */}
+        <StandardSheet product={product} />
+        <InstallationDetails product={product} />
+        {/* TASK 14C */}
+        <SupplyChainTimeline product={product} />
+      </div>
       {/* TASK 14: OrderCalculator */}
     </div>
   );
