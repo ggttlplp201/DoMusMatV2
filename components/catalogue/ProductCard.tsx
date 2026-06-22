@@ -14,14 +14,15 @@ import { SaveButton } from "./SaveButton";
 import { DownloadMenu } from "./DownloadMenu";
 import { useCompare } from "@/state/compare";
 import { useAnalytics } from "@/state/analytics";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
 
 gsap.registerPlugin(useGSAP);
 
-function getCategoryName(categoryId: string): string {
+function getCategoryName(categoryId: string, locale: import("@/lib/i18n").Locale): string {
   const cat = repo.getCategories().find(c => c.id === categoryId);
-  return cat?.name ?? categoryId;
+  return cat ? localizedName(cat, locale) : categoryId;
 }
 
 function getPowerRange(product: Product): string | null {
@@ -51,10 +52,11 @@ export function ProductCard({ product }: { product: Product }) {
   const { toggle, has, canAdd } = useCompare();
   const analytics = useAnalytics();
   const t = useT();
+  const { locale } = useLocale();
   const inCompare = has(product.id);
 
   const firstRef = product.variants[0]?.ref ?? "";
-  const price = formatPrice(commercial.unit_prices[firstRef], commercial.currency);
+  const price = formatPrice(commercial.unit_prices[firstRef], commercial.currency, t("fb.price"));
 
   const powerRange = getPowerRange(product);
   const ipLabel = getIpLabel(product);
@@ -113,7 +115,7 @@ export function ProductCard({ product }: { product: Product }) {
             <div ref={imgWrapRef} className="absolute inset-0">
               <Image
                 src={product.images[imageIndex]}
-                alt={product.name}
+                alt={localizedName(product, locale)}
                 fill
                 className="object-cover transition-transform group-hover:scale-105"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -121,7 +123,7 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-neutral-fill p-4 text-center text-sm text-aluminium-dark">
-              {product.name}
+              {localizedName(product, locale)}
             </div>
           )}
           {/* 3D badge on hover */}
@@ -171,10 +173,10 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Card info body */}
         <div className="flex flex-1 flex-col gap-2 p-4 pb-2">
           {/* Category label */}
-          <p className="text-xs text-aluminium-dark">{getCategoryName(product.category)}</p>
+          <p className="text-xs text-aluminium-dark">{getCategoryName(product.category, locale)}</p>
 
           {/* Product name */}
-          <h3 className="text-sm font-semibold text-ink leading-snug">{product.name}</h3>
+          <h3 className="text-sm font-semibold text-ink leading-snug">{localizedName(product, locale)}</h3>
 
           {/* Spec chips */}
           {(powerRange || ipLabel || colorTemp) && (

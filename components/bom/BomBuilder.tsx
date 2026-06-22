@@ -1,14 +1,15 @@
 "use client";
 import { useBom } from "@/state/bom";
 import { buildBomLines } from "@/lib/bom";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
 import { BomTable } from "./BomTable";
 import { ExportButton } from "./ExportButton";
 
 export function BomBuilder() {
   const { items, remove, clear } = useBom();
   const t = useT();
-  const lines = buildBomLines(items);
+  const { locale } = useLocale();
+  const lines = buildBomLines(items, { locale, priceFallback: t("fb.price") });
 
   if (items.length === 0) {
     return (

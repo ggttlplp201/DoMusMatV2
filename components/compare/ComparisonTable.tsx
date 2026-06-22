@@ -5,7 +5,8 @@ import { repo } from "@/lib/repository";
 import { formatPrice, formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
 import { fallbacks } from "@/lib/strings";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
 
 function getPowerRange(product: Product): string {
@@ -29,11 +30,11 @@ function getFirstVariantDimensions(product: Product): string {
   return "—";
 }
 
-function getFirstVariantPrice(product: Product): string {
+function getFirstVariantPrice(product: Product, priceFallback?: string): string {
   const firstRef = product.variants[0]?.ref;
   if (!firstRef) return "—";
   const commercial = repo.getCommercial();
-  return formatPrice(commercial.unit_prices?.[firstRef], commercial.currency);
+  return formatPrice(commercial.unit_prices?.[firstRef], commercial.currency, priceFallback);
 }
 
 function getConformidade(product: Product): string {
@@ -48,6 +49,7 @@ interface ComparisonTableProps {
 
 export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) {
   const t = useT();
+  const { locale } = useLocale();
 
   const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] = [
     {
@@ -55,7 +57,8 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       label: t("facet.category"),
       getValue: (p) => {
         const cats = repo.getCategories();
-        return cats.find((c) => c.id === p.category)?.name ?? p.category;
+        const cat = cats.find((c) => c.id === p.category);
+        return cat ? localizedName(cat, locale) : p.category;
       },
     },
     { key: "power", label: t("spec.power"), getValue: getPowerRange },
@@ -94,7 +97,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
         return Array.isArray(certs) ? certs.join(", ") : String(certs);
       },
     },
-    { key: "price", label: t("order.unitPrice"), getValue: getFirstVariantPrice },
+    { key: "price", label: t("order.unitPrice"), getValue: (p) => getFirstVariantPrice(p, t("fb.price")) },
     { key: "conformidade", label: t("compliance.title"), getValue: getConformidade },
   ];
 
@@ -118,7 +121,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
                     {p.images && p.images.length > 0 ? (
                       <Image
                         src={p.images[0]}
-                        alt={p.name}
+                        alt={localizedName(p, locale)}
                         fill
                         className="object-contain"
                         sizes="200px"
@@ -130,7 +133,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
                     )}
                   </div>
                   {/* Name */}
-                  <span>{p.name}</span>
+                  <span>{localizedName(p, locale)}</span>
                   {/* Remove button */}
                   {onRemove && (
                     <button

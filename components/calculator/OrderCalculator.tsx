@@ -38,18 +38,18 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
         <div className="flex justify-between">
           <dt className="text-aluminium-dark">{t("order.unitPrice")}</dt>
           <dd className="font-medium text-ink">
-            {formatPrice(r.discountedUnitPrice ?? r.unitPrice, commercial.currency)}
+            {formatPrice(r.discountedUnitPrice ?? r.unitPrice, commercial.currency, t("fb.price"))}
           </dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-aluminium-dark">{t("order.total")}</dt>
           <dd className="font-medium text-ink">
-            {r.available ? formatPrice(r.total, commercial.currency) : t("fb.price")}
+            {r.available ? formatPrice(r.total, commercial.currency, t("fb.price")) : t("fb.price")}
           </dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-aluminium-dark">{t("order.leadTime")}</dt>
-          <dd className="font-medium text-ink">{formatLeadTime(r.leadTimeDays)}</dd>
+          <dd className="font-medium text-ink">{formatLeadTime(r.leadTimeDays, t("fb.leadTime"))}</dd>
         </div>
       </dl>
 

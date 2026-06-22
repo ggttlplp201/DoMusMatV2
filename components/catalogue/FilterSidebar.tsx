@@ -2,7 +2,8 @@
 import { repo } from "@/lib/repository";
 import { facetOptions } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 
 interface FilterSidebarProps {
   filters: CatalogueFilters;
@@ -15,6 +16,7 @@ function toggleItem<T>(arr: T[], item: T): T[] {
 
 export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
   const t = useT();
+  const { locale } = useLocale();
   const categories = repo.getCategories();
   const { power, ip, colorTemp } = facetOptions(repo.getProducts());
 
@@ -38,7 +40,7 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
                   className="mr-2 accent-brand"
                 />
                 <label htmlFor={id} className="cursor-pointer text-aluminium-dark hover:text-ink">
-                  {cat.name}
+                  {localizedName(cat, locale)}
                 </label>
               </li>
             );

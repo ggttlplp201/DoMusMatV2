@@ -2,6 +2,8 @@ import { repo } from "./repository";
 import { formatPrice } from "./format";
 import { hasRealValue } from "./placeholder";
 import { fallbacks } from "./strings";
+import { localizedName } from "./i18n";
+import type { Locale } from "./i18n";
 
 export interface BomItem { ref: string; quantity: number; }
 export interface BomLine {
@@ -9,16 +11,23 @@ export interface BomLine {
   complianceStatus: string; unitPrice: string; lineTotal: string;
 }
 
-export function buildBomLines(items: BomItem[]): BomLine[] {
+export interface BomBuildOpts {
+  locale?: Locale;
+  priceFallback?: string;
+}
+
+export function buildBomLines(items: BomItem[], opts?: BomBuildOpts): BomLine[] {
+  const locale = opts?.locale ?? "pt";
+  const priceFallback = opts?.priceFallback ?? fallbacks.price;
   const commercial = repo.getCommercial();
   return items.map(({ ref, quantity }) => {
     const found = repo.findByRef(ref);            // { product, variant } | undefined
     const product = found?.product;
     const variant = found?.variant;
     const price = commercial.unit_prices?.[ref];
-    const unitPrice = formatPrice(price, commercial.currency);
+    const unitPrice = formatPrice(price, commercial.currency, priceFallback);
     const lineTotal = hasRealValue(price) && hasRealValue(commercial.currency)
-      ? formatPrice(Number(price) * quantity, commercial.currency) : fallbacks.price;
+      ? formatPrice(Number(price) * quantity, commercial.currency, priceFallback) : priceFallback;
     // generic spec string from the variant attrs (heterogeneous across products)
     const attrs = variant?.attrs ?? {};
     const specs = Object.entries(attrs)
@@ -26,7 +35,8 @@ export function buildBomLines(items: BomItem[]): BomLine[] {
       .join(" · ");
     const ce = product?.compliance?.ce;
     const complianceStatus = ce && hasRealValue(ce.value) ? ce.value : "—";
-    return { ref, name: product?.name ?? ref, quantity, specs, complianceStatus, unitPrice, lineTotal };
+    const name = product ? localizedName(product, locale) : ref;
+    return { ref, name, quantity, specs, complianceStatus, unitPrice, lineTotal };
   });
 }
 

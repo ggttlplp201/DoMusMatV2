@@ -18,6 +18,7 @@ import { OrderCalculator } from "@/components/calculator/OrderCalculator";
 import { useAnalytics } from "@/state/analytics";
 import { ViewModeToggle } from "./ViewModeToggle";
 import { useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 
 interface DetailViewProps {
   productId: string;
@@ -72,15 +73,15 @@ export function DetailView({ productId }: DetailViewProps) {
           />
           {viewMode === "model" && modelAvailable ? (
             // TODO: per-variant GLB models
-            <ModelViewer src={product.model3d} alt={product.name} />
+            <ModelViewer src={product.model3d} alt={localizedName(product, locale)} />
           ) : (
-            <Gallery images={product.images} alt={product.name} />
+            <Gallery images={product.images} alt={localizedName(product, locale)} />
           )}
         </div>
 
         {/* Right: product info */}
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold text-ink">{product.name}</h1>
+          <h1 className="text-2xl font-bold text-ink">{localizedName(product, locale)}</h1>
           <p className="text-aluminium-dark text-sm leading-relaxed">{description}</p>
           <CertBadges product={product} />
           <VariantSelector

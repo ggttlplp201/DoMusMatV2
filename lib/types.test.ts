@@ -6,6 +6,22 @@ describe("DoMusMat Catalogue data backbone", () => {
     expect(catalogue.categories).toHaveLength(8);
   });
 
+  it("1b. every category has non-empty name_en and name_zh", () => {
+    for (const cat of catalogue.categories) {
+      expect(cat.name_en, `category ${cat.id} missing name_en`).toBeTruthy();
+      expect(cat.name_zh, `category ${cat.id} missing name_zh`).toBeTruthy();
+    }
+  });
+
+  it("1c. every product has non-empty name_en and name_zh (with real Chinese characters)", () => {
+    const chineseChar = /[一-鿿]/;
+    for (const p of catalogue.products) {
+      expect(p.name_en, `product ${p.id} missing name_en`).toBeTruthy();
+      expect(p.name_zh, `product ${p.id} missing name_zh`).toBeTruthy();
+      expect(chineseChar.test(p.name_zh), `product ${p.id} name_zh has no Chinese characters`).toBe(true);
+    }
+  });
+
   it("2. has 47 products", () => {
     expect(catalogue.products).toHaveLength(47);
   });

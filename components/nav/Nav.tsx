@@ -7,7 +7,8 @@ import { useCart } from "@/state/cart";
 import { useBom } from "@/state/bom";
 import { useCompare } from "@/state/compare";
 import { useLists } from "@/state/lists";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 import { repo } from "@/lib/repository";
 import { SearchBar } from "./SearchBar";
 import { LocaleToggle } from "./LocaleToggle";
@@ -15,6 +16,7 @@ import { LocaleToggle } from "./LocaleToggle";
 // Single shared markup for both fallback (activeId=null) and live render
 function CategoryBar({ activeId }: { activeId: string | null }) {
   const categories = repo.getCategories();
+  const { locale } = useLocale();
   return (
     <div className="border-b border-aluminium bg-white">
       <div className="mx-auto max-w-[1440px] px-6">
@@ -36,7 +38,7 @@ function CategoryBar({ activeId }: { activeId: string | null }) {
                   ].join(" ")}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {cat.name}
+                  {localizedName(cat, locale)}
                 </Link>
               </li>
             );
@@ -68,6 +70,7 @@ function MobileMenu({
   onClose: () => void;
 }) {
   const t = useT();
+  const { locale } = useLocale();
   const categories = repo.getCategories();
 
   if (!open) return null;
@@ -86,7 +89,7 @@ function MobileMenu({
                 onClick={onClose}
                 className="block px-6 py-2.5 text-sm text-aluminium-dark hover:text-ink hover:bg-neutral-fill"
               >
-                {cat.name}
+                {localizedName(cat, locale)}
               </Link>
             </li>
           ))}

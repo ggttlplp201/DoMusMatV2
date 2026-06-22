@@ -3,12 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLists } from "@/state/lists";
 import { repo } from "@/lib/repository";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizedName } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
 
 export function SavedLists() {
   const { saved, toggle } = useLists();
   const t = useT();
+  const { locale } = useLocale();
 
   if (saved.length === 0) {
     return (
@@ -27,7 +29,8 @@ export function SavedLists() {
   return (
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {products.map((p) => {
-        const catName = cats.find((c) => c.id === p.category)?.name ?? p.category;
+        const cat = cats.find((c) => c.id === p.category);
+        const catName = cat ? localizedName(cat, locale) : p.category;
         return (
           <li
             key={p.id}
@@ -38,7 +41,7 @@ export function SavedLists() {
               {p.images && p.images.length > 0 ? (
                 <Image
                   src={p.images[0]}
-                  alt={p.name}
+                  alt={localizedName(p, locale)}
                   fill
                   className="object-contain"
                   sizes="(max-width: 640px) 100vw, 200px"
@@ -50,7 +53,7 @@ export function SavedLists() {
               )}
             </div>
             {/* Name */}
-            <p className="font-medium text-ink leading-snug">{p.name}</p>
+            <p className="font-medium text-ink leading-snug">{localizedName(p, locale)}</p>
             {/* Category */}
             <p className="text-xs text-aluminium-dark">{catName}</p>
             {/* Actions */}

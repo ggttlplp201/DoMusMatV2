@@ -6,6 +6,8 @@ export const PLACEHOLDER: Placeholder = "PLACEHOLDER";
 export interface Category {
   id: string;
   name: string;
+  name_en: string;
+  name_zh: string;
 }
 
 export interface Variant {
@@ -77,6 +79,8 @@ export interface Product {
   id: string;
   category: string;
   name: string;
+  name_en: string;
+  name_zh: string;
   ref_prefix: string;
   description_pt: string;
   description_en: string;

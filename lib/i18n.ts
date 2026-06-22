@@ -390,3 +390,16 @@ export const messages: Record<Locale, Record<string, string>> = {
 export function translate(locale: Locale, key: string): string {
   return messages[locale]?.[key] ?? messages.pt[key] ?? key;
 }
+
+/**
+ * Returns the locale-appropriate name for a category or product object.
+ * Falls back to `name` (Portuguese) when the locale-specific field is absent or empty.
+ */
+export function localizedName(
+  obj: { name: string; name_en?: string; name_zh?: string },
+  locale: Locale
+): string {
+  if (locale === "zh" && obj.name_zh && obj.name_zh.trim() !== "") return obj.name_zh;
+  if (locale === "en" && obj.name_en && obj.name_en.trim() !== "") return obj.name_en;
+  return obj.name;
+}
