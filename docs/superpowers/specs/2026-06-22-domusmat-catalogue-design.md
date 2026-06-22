@@ -106,13 +106,40 @@ Plus the original catalogue → detail → 3D viewer → B2B order calculator fl
 
 ## Data layer (owned backbone)
 
-Single source of truth: `product_data.json`, **extended** with new sections,
-typed by a `ProductData` interface. The JSON's existing philosophy holds:
-anything not genuinely known is the string `"PLACEHOLDER"`. We extend, we do not
-fabricate.
+> **REVISED 2026-06-22 — multi-product catalogue (website revamp).** The user
+> asked to transpose the entire real domusmat.pt catalogue. The crawl captured
+> **47 real products across 8 categories** (real SKUs/specs/descriptions/images;
+> the site publishes **no prices** — quote-on-request, which matches our
+> placeholder model). Real data lives in `docs/domusmat-catalogue-crawl.md`. The
+> data model therefore becomes **multi-product / multi-category**, not single
+> product.
 
-Existing sections kept: `manufacturer`, `product`, `shared_specifications`,
-`variants[]`, `commercial`.
+Single source of truth: `data/product_data.json`, typed by a `Catalogue`
+interface. Anything not genuinely published is `"PLACEHOLDER"`. We transpose real
+data; we do not fabricate.
+
+**Top-level shape (multi-product):**
+- `manufacturer` — name/address/phone/email (real).
+- `categories[]` — `{ id (slug), name }` for the 8 categories.
+- `products[]` — each: `{ id (slug), category (slug), name, ref_prefix,
+  description_pt, description_en: "PLACEHOLDER", applications[], images[] (real
+  domusmat.pt URLs), shared_specs (key/value, real), variants[] (`{ ref, attrs }`
+  — power/dimensions/lumens per SKU; `ref: "PLACEHOLDER"` for bespoke items),
+  model3d (only the Barra LED High Bay → `/models/high_bay_led_bar.glb`; else
+  `"PLACEHOLDER"`), compliance, bim_assets, bim_metadata, standardization,
+  supply_chain }` — the per-product sub-objects below.
+- `commercial` — `currency: "PLACEHOLDER"`; `unit_prices` keyed by ref (all
+  `"PLACEHOLDER"`); `volume_discount_tiers`/`lead_time_tiers`/
+  `minimum_order_quantity` `"PLACEHOLDER"`.
+
+Per-product `compliance` maps published certs into fields: `ce`, `dop`,
+`euroclass` (fire — real for corta-fogo doors), `voc`, `epd`, `acoustic` (real
+for entry doors/mirrors where stated), `dpp`. Unknown ⇒ `"PLACEHOLDER"`.
+
+**Images:** real product photos are served from `domusmat.pt`; the app uses
+`next/image` with `domusmat.pt` allow-listed in `next.config`. **3D:** only the
+High Bay has a GLB; all other products show their photo gallery with 3D marked
+"coming soon" (a per-product hook).
 
 New sections (added with real values where we have them, else `"PLACEHOLDER"`):
 

@@ -190,6 +190,19 @@ git commit -m "chore: scaffold Next.js + Tailwind tokens, assets, vitest"
 
 ---
 
+> **PLAN REVISION 2026-06-22 (multi-product website revamp).** Tasks 2, 4, 10,
+> and 11 are superseded by the multi-product model. The real catalogue (47
+> products, 8 categories) is in `docs/domusmat-catalogue-crawl.md`; the schema is
+> in the spec's revised "Data layer" section. Task 2 now builds a multi-product
+> `Catalogue` (categories[] + products[] each with variants[]/compliance/bim/
+> standardization/supply_chain), Task 4's repository exposes
+> `getCategories()/getProducts()/getProduct(id)/getVariant(ref)` and per-product
+> getters, Task 10's grid lists products across categories with a category facet,
+> and Task 11's detail renders `<model-viewer>` only when `product.model3d` is a
+> real path (else an image gallery from `product.images`). Logic/component tasks
+> (3,5,6,7,8,9,12–18) are unchanged but operate per-product via the repository.
+> The revised Task 2 brief is `.superpowers/sdd/task-2-brief.md`.
+
 ## Task 2: Extend the data backbone + TypeScript types
 
 **Files:**
