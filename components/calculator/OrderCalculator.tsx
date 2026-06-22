@@ -8,6 +8,7 @@ import { t } from "@/lib/strings";
 import { useCart } from "@/state/cart";
 import { useAnalytics } from "@/state/analytics";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { QuantityStepper } from "./QuantityStepper";
 import { TierProgressBar } from "./TierProgressBar";
 
@@ -52,26 +53,23 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
       {r.available && <TierProgressBar result={r} />}
 
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
+        <AnimatedButton
           onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_quote", ref: variantRef }); }}
           className="w-full rounded bg-brand px-4 py-2 text-sm font-medium text-white"
         >
           {t.addToQuote}
-        </button>
-        <button
-          type="button"
+        </AnimatedButton>
+        <AnimatedButton
           onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_bom", ref: variantRef }); }}
           className="w-full rounded border border-aluminium px-4 py-2 text-sm font-medium text-ink"
         >
           {t.addToBom}
-        </button>
-        <button
-          type="button"
+        </AnimatedButton>
+        <AnimatedButton
           className="w-full px-4 py-2 text-sm text-aluminium-dark underline"
         >
           {t.requestCustomPricing}
-        </button>
+        </AnimatedButton>
       </div>
 
       <p className="text-xs text-aluminium-dark">{t.vatNote}</p>

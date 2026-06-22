@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
 import { Chip } from "@/components/ui/Chip";
 import { Badge } from "@/components/ui/Badge";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { SaveButton } from "./SaveButton";
 import { useCompare } from "@/state/compare";
 import { useAnalytics } from "@/state/analytics";
@@ -111,7 +112,7 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Actions */}
         <div className="flex gap-2" onClick={(e) => e.preventDefault()}>
           <SaveButton productId={product.id} />
-          <button
+          <AnimatedButton
             onClick={(e) => { e.preventDefault(); toggle(product.id); }}
             disabled={!inCompare && !canAdd}
             aria-label={inCompare ? "Remover da comparação" : "Adicionar à comparação"}
@@ -122,7 +123,31 @@ export function ProductCard({ product }: { product: Product }) {
             }`}
           >
             {inCompare ? "✓ Comparar" : "+ Comparar"}
-          </button>
+          </AnimatedButton>
+          <AnimatedButton
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            aria-label="Descarregar ficha técnica (disponível a pedido)"
+            title="Disponível a pedido"
+            className="flex items-center gap-1 rounded border border-aluminium px-2 py-1 text-xs text-aluminium-dark transition-colors hover:border-brand hover:text-brand"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M7 1v8M4 6l3 3 3-3M2 11h10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Descarregar
+          </AnimatedButton>
         </div>
       </div>
     </Link>
