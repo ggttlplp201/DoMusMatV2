@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { repo } from "@/lib/repository";
 import { filterProducts } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
+import { useT } from "@/state/locale";
 import { SearchBar } from "@/components/nav/SearchBar";
 import { FilterSidebar } from "./FilterSidebar";
 import { SortDropdown } from "./SortDropdown";
@@ -23,6 +24,7 @@ function sortProducts(products: Product[], sort: SortOption): Product[] {
 export function CatalogueView() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category");
+  const t = useT();
 
   const [filters, setFilters] = useState<CatalogueFilters>(() => ({
     ...EMPTY_FILTERS,
@@ -47,9 +49,9 @@ export function CatalogueView() {
       {/* Breadcrumb + results count */}
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs text-aluminium-dark">Catálogo</p>
+          <p className="text-xs text-aluminium-dark">{t("cat.breadcrumb")}</p>
           <p className="text-sm text-aluminium-dark">
-            <span className="font-semibold text-ink">{sorted.length}</span> resultados
+            <span className="font-semibold text-ink">{sorted.length}</span> {t("cat.results")}
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -69,7 +71,7 @@ export function CatalogueView() {
             aria-controls="mobile-filter-panel"
             className="mb-4 rounded border border-aluminium px-3 py-1.5 text-sm text-aluminium-dark"
           >
-            {showFilters ? "Fechar filtros" : "Filtros"}
+            {showFilters ? t("cat.mobileFilterOpen") : t("cat.mobileFilterClosed")}
           </button>
           <div id="mobile-filter-panel" className={showFilters ? "mb-6" : "hidden"}>
             <FilterSidebar filters={filters} onChange={setFilters} />
@@ -85,8 +87,8 @@ export function CatalogueView() {
         <section className="min-w-0 flex-1">
           {sorted.length === 0 ? (
             <div className="py-20 text-center text-aluminium-dark">
-              <p className="text-lg">Nenhum produto encontrado.</p>
-              <p className="mt-1 text-sm">Tente remover alguns filtros.</p>
+              <p className="text-lg">{t("cat.noResults")}</p>
+              <p className="mt-1 text-sm">{t("cat.noResultsHint")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

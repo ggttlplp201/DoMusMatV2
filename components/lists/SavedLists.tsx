@@ -3,15 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLists } from "@/state/lists";
 import { repo } from "@/lib/repository";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 export function SavedLists() {
   const { saved, toggle } = useLists();
+  const t = useT();
 
   if (saved.length === 0) {
     return (
       <p className="text-aluminium-dark py-8 text-center">
-        Ainda não guardou produtos.
+        {t("lists.empty")}
       </p>
     );
   }
@@ -43,7 +45,7 @@ export function SavedLists() {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-aluminium-dark text-xs">
-                  Sem imagem
+                  {t("detail.noImage")}
                 </div>
               )}
             </div>
@@ -57,13 +59,13 @@ export function SavedLists() {
                 href={`/products/${p.id}`}
                 className="rounded border border-brand px-3 py-1 text-xs text-brand hover:bg-brand hover:text-white"
               >
-                Ver produto
+                {t("detail.viewProduct")}
               </Link>
               <button
                 onClick={() => toggle(p.id)}
                 className="text-xs text-aluminium-dark hover:text-ink"
               >
-                Remover
+                {t("common.remove")}
               </button>
             </div>
           </li>

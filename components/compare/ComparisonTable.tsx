@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import { repo } from "@/lib/repository";
 import { formatPrice, formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
 import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 function getPowerRange(product: Product): string {
@@ -38,61 +41,63 @@ function getConformidade(product: Product): string {
   return ce && hasRealValue(ce.value) ? ce.value : fallbacks.spec;
 }
 
-const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] = [
-  {
-    key: "category",
-    label: "Categoria",
-    getValue: (p) => {
-      const cats = repo.getCategories();
-      return cats.find((c) => c.id === p.category)?.name ?? p.category;
-    },
-  },
-  { key: "power", label: "Potência", getValue: getPowerRange },
-  { key: "dimensions", label: "Dimensões", getValue: getFirstVariantDimensions },
-  {
-    key: "ip",
-    label: "IP",
-    getValue: (p) => {
-      const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
-      return hasRealValue(ip) ? `IP${ip}` : fallbacks.spec;
-    },
-  },
-  {
-    key: "color_temperature",
-    label: "Temp. cor",
-    getValue: (p) => {
-      const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
-      if (!hasRealValue(ct)) return fallbacks.spec;
-      return Array.isArray(ct) ? ct.join(" / ") : String(ct);
-    },
-  },
-  {
-    key: "material",
-    label: "Material",
-    getValue: (p) => {
-      const mat = (p.shared_specs as Record<string, unknown>).material;
-      return hasRealValue(mat) ? String(mat) : fallbacks.spec;
-    },
-  },
-  {
-    key: "certificates",
-    label: "Certificações",
-    getValue: (p) => {
-      const certs = (p.shared_specs as Record<string, unknown>).certificates;
-      if (!hasRealValue(certs)) return fallbacks.spec;
-      return Array.isArray(certs) ? certs.join(", ") : String(certs);
-    },
-  },
-  { key: "price", label: "Preço", getValue: getFirstVariantPrice },
-  { key: "conformidade", label: "Conformidade", getValue: getConformidade },
-];
-
 interface ComparisonTableProps {
   productIds: string[];
   onRemove?: (id: string) => void;
 }
 
 export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) {
+  const t = useT();
+
+  const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] = [
+    {
+      key: "category",
+      label: t("facet.category"),
+      getValue: (p) => {
+        const cats = repo.getCategories();
+        return cats.find((c) => c.id === p.category)?.name ?? p.category;
+      },
+    },
+    { key: "power", label: "Potência", getValue: getPowerRange },
+    { key: "dimensions", label: "Dimensões", getValue: getFirstVariantDimensions },
+    {
+      key: "ip",
+      label: "IP",
+      getValue: (p) => {
+        const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
+        return hasRealValue(ip) ? `IP${ip}` : fallbacks.spec;
+      },
+    },
+    {
+      key: "color_temperature",
+      label: "Temp. cor",
+      getValue: (p) => {
+        const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
+        if (!hasRealValue(ct)) return fallbacks.spec;
+        return Array.isArray(ct) ? ct.join(" / ") : String(ct);
+      },
+    },
+    {
+      key: "material",
+      label: "Material",
+      getValue: (p) => {
+        const mat = (p.shared_specs as Record<string, unknown>).material;
+        return hasRealValue(mat) ? String(mat) : fallbacks.spec;
+      },
+    },
+    {
+      key: "certificates",
+      label: "Certificações",
+      getValue: (p) => {
+        const certs = (p.shared_specs as Record<string, unknown>).certificates;
+        if (!hasRealValue(certs)) return fallbacks.spec;
+        return Array.isArray(certs) ? certs.join(", ") : String(certs);
+      },
+    },
+    { key: "price", label: t("order.unitPrice"), getValue: getFirstVariantPrice },
+    { key: "conformidade", label: t("compliance.title"), getValue: getConformidade },
+  ];
+
   const products = productIds
     .map((id) => repo.getProduct(id))
     .filter((p): p is Product => p !== undefined);
@@ -104,7 +109,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr>
-            <th className="py-3 px-3 text-left font-medium text-aluminium-dark w-40">Atributo</th>
+            <th className="py-3 px-3 text-left font-medium text-aluminium-dark w-40">{t("compare.attribute")}</th>
             {products.map((p) => (
               <th key={p.id} className="py-3 px-3 text-left font-medium text-ink min-w-[200px]">
                 <div className="flex flex-col gap-2">
@@ -120,7 +125,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-aluminium-dark text-xs">
-                        Sem imagem
+                        {t("compare.noImage")}
                       </div>
                     )}
                   </div>
@@ -132,7 +137,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
                       onClick={() => onRemove(p.id)}
                       className="text-xs text-aluminium-dark hover:text-ink"
                     >
-                      Remover
+                      {t("common.remove")}
                     </button>
                   )}
                 </div>

@@ -1,31 +1,34 @@
+"use client";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 interface Props {
   product: Product;
 }
 
-const LABELS: Record<string, string> = {
-  ce: "CE",
-  dop: "DoP",
-  euroclass: "Euroclass (fogo)",
-  voc: "VOC",
-  epd: "EPD",
-  acoustic: "Acústica",
-  dpp: "DPP",
-};
-
 export function CompliancePanel({ product }: Props) {
+  const t = useT();
   const compliance = product.compliance;
   if (!compliance) return null;
+
+  const LABELS: Record<string, string> = {
+    ce: "CE",
+    dop: "DoP",
+    euroclass: t("compliance.euroclass"),
+    voc: "VOC",
+    epd: "EPD",
+    acoustic: t("compliance.acoustic"),
+    dpp: "DPP",
+  };
 
   const fields = Object.keys(LABELS) as Array<keyof typeof LABELS>;
 
   return (
     <section>
-      <SectionLabel>Conformidade</SectionLabel>
+      <SectionLabel>{t("compliance.title")}</SectionLabel>
       <ul className="divide-y divide-aluminium text-sm">
         {fields.map((key) => {
           const field = compliance[key as keyof typeof compliance];
@@ -44,7 +47,7 @@ export function CompliancePanel({ product }: Props) {
                     rel="noopener noreferrer"
                     className="text-xs text-brand underline"
                   >
-                    Documento
+                    {t("compliance.document")}
                   </a>
                 )}
                 <span
@@ -54,7 +57,7 @@ export function CompliancePanel({ product }: Props) {
                       : "bg-neutral-fill text-aluminium-dark"
                   }`}
                 >
-                  {hasValue ? field.value : fallbacks.compliancePending}
+                  {hasValue ? field.value : t("compliance.pending")}
                 </span>
               </div>
             </li>

@@ -1,12 +1,8 @@
 "use client";
 
-export type SortOption = "featured" | "name-az" | "category";
+import { useT } from "@/state/locale";
 
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "featured", label: "Em destaque" },
-  { value: "name-az", label: "Nome A–Z" },
-  { value: "category", label: "Categoria" },
-];
+export type SortOption = "featured" | "name-az" | "category";
 
 interface SortDropdownProps {
   value: SortOption;
@@ -14,11 +10,16 @@ interface SortDropdownProps {
 }
 
 export function SortDropdown({ value, onChange }: SortDropdownProps) {
+  const t = useT();
+
+  const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+    { value: "featured", label: t("cat.sort.featured") },
+    { value: "name-az", label: t("cat.sort.name") },
+    { value: "category", label: t("cat.sort.category") },
+  ];
+
   return (
     <div className="flex items-center gap-2 text-sm">
-      <label htmlFor="sort-select" className="text-aluminium-dark">
-        Ordenar:
-      </label>
       <select
         id="sort-select"
         value={value}

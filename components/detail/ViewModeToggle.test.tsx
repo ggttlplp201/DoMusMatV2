@@ -1,11 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { LocaleProvider } from "@/state/locale";
 import { ViewModeToggle } from "./ViewModeToggle";
 
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return <LocaleProvider>{children}</LocaleProvider>;
+}
+
 describe("ViewModeToggle", () => {
-  it("renders both segment labels", () => {
+  it("renders both segment labels (PT default)", () => {
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      </Wrapper>
     );
     expect(screen.getByRole("tab", { name: /Vista renderizada/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Modelo 3D/i })).toBeInTheDocument();
@@ -13,7 +20,9 @@ describe("ViewModeToggle", () => {
 
   it("disables Modelo 3D button when modelAvailable is false", () => {
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      </Wrapper>
     );
     const modelBtn = screen.getByRole("tab", { name: /Modelo 3D/i });
     expect(modelBtn).toBeDisabled();
@@ -21,7 +30,9 @@ describe("ViewModeToggle", () => {
 
   it("Modelo 3D button is enabled when modelAvailable is true", () => {
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      </Wrapper>
     );
     const modelBtn = screen.getByRole("tab", { name: /Modelo 3D/i });
     expect(modelBtn).not.toBeDisabled();
@@ -31,7 +42,9 @@ describe("ViewModeToggle", () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
-      <ViewModeToggle mode="model" onChange={onChange} modelAvailable={true} />
+      <Wrapper>
+        <ViewModeToggle mode="model" onChange={onChange} modelAvailable={true} />
+      </Wrapper>
     );
     await user.click(screen.getByRole("tab", { name: /Vista renderizada/i }));
     expect(onChange).toHaveBeenCalledWith("rendered");
@@ -41,7 +54,9 @@ describe("ViewModeToggle", () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
-      <ViewModeToggle mode="rendered" onChange={onChange} modelAvailable={true} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={onChange} modelAvailable={true} />
+      </Wrapper>
     );
     await user.click(screen.getByRole("tab", { name: /Modelo 3D/i }));
     expect(onChange).toHaveBeenCalledWith("model");
@@ -51,7 +66,9 @@ describe("ViewModeToggle", () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      </Wrapper>
     );
     const modelBtn = screen.getByRole("tab", { name: /Modelo 3D/i });
     // disabled buttons do not fire click events
@@ -59,16 +76,20 @@ describe("ViewModeToggle", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it("shows 'em breve' hint when model is not available", () => {
+  it("shows 'em breve' hint when model is not available (PT default)", () => {
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={false} />
+      </Wrapper>
     );
     expect(screen.getByText("em breve")).toBeInTheDocument();
   });
 
   it("does not show 'em breve' hint when model is available", () => {
     render(
-      <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      <Wrapper>
+        <ViewModeToggle mode="rendered" onChange={() => {}} modelAvailable={true} />
+      </Wrapper>
     );
     expect(screen.queryByText("em breve")).not.toBeInTheDocument();
   });

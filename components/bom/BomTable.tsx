@@ -1,3 +1,6 @@
+"use client";
+
+import { useT } from "@/state/locale";
 import type { BomLine } from "@/lib/bom";
 
 interface BomTableProps {
@@ -6,19 +9,20 @@ interface BomTableProps {
 }
 
 export function BomTable({ lines, onRemove }: BomTableProps) {
+  const t = useT();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr className="bg-neutral-fill text-aluminium-dark">
-            <th className="py-2 px-3 text-left font-medium">Referência</th>
-            <th className="py-2 px-3 text-left font-medium">Produto</th>
-            <th className="py-2 px-3 text-right font-medium">Qtd</th>
-            <th className="py-2 px-3 text-left font-medium">Especificações</th>
-            <th className="py-2 px-3 text-left font-medium">Conformidade</th>
-            <th className="py-2 px-3 text-right font-medium">Preço unitário</th>
-            <th className="py-2 px-3 text-right font-medium">Total</th>
-            {onRemove && <th className="py-2 px-3 text-right font-medium sr-only">Ação</th>}
+            <th className="py-2 px-3 text-left font-medium">{t("bom.col.ref")}</th>
+            <th className="py-2 px-3 text-left font-medium">{t("bom.col.product")}</th>
+            <th className="py-2 px-3 text-right font-medium">{t("bom.col.qty")}</th>
+            <th className="py-2 px-3 text-left font-medium">{t("bom.col.specs")}</th>
+            <th className="py-2 px-3 text-left font-medium">{t("bom.col.compliance")}</th>
+            <th className="py-2 px-3 text-right font-medium">{t("bom.col.unitPrice")}</th>
+            <th className="py-2 px-3 text-right font-medium">{t("bom.col.total")}</th>
+            {onRemove && <th className="py-2 px-3 text-right font-medium sr-only">{t("common.remove")}</th>}
           </tr>
         </thead>
         <tbody>
@@ -38,7 +42,7 @@ export function BomTable({ lines, onRemove }: BomTableProps) {
                 <td className="py-2 px-3 text-right">
                   <button
                     type="button"
-                    aria-label={`Remover ${line.ref}`}
+                    aria-label={`${t("common.remove")} ${line.ref}`}
                     onClick={() => onRemove(line.ref)}
                     className="text-xs text-aluminium-dark hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
                   >

@@ -2,6 +2,7 @@
 import { repo } from "@/lib/repository";
 import { facetOptions } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
+import { useT } from "@/state/locale";
 
 interface FilterSidebarProps {
   filters: CatalogueFilters;
@@ -13,6 +14,7 @@ function toggleItem<T>(arr: T[], item: T): T[] {
 }
 
 export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
+  const t = useT();
   const categories = repo.getCategories();
   const { power, ip, colorTemp } = facetOptions(repo.getProducts());
 
@@ -20,7 +22,7 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
     <aside className="w-full space-y-6 text-sm lg:w-56">
       {/* Category group */}
       <section>
-        <p className="mb-2 font-semibold text-ink">Categoria</p>
+        <p className="mb-2 font-semibold text-ink">{t("facet.category")}</p>
         <ul className="space-y-1">
           {categories.map(cat => {
             const id = `cat-${cat.id}`;
@@ -47,7 +49,7 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
       {/* Power group */}
       {power.length > 0 && (
         <section>
-          <p className="mb-2 font-semibold text-ink">Potência (W)</p>
+          <p className="mb-2 font-semibold text-ink">{t("facet.power")}</p>
           <ul className="space-y-1">
             {power.map(w => {
               const id = `power-${w}`;
@@ -75,7 +77,7 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
       {/* IP group */}
       {ip.length > 0 && (
         <section>
-          <p className="mb-2 font-semibold text-ink">Índice IP</p>
+          <p className="mb-2 font-semibold text-ink">{t("facet.ip")}</p>
           <ul className="space-y-1">
             {ip.map(n => {
               const id = `ip-${n}`;
@@ -103,7 +105,7 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
       {/* Color temperature group */}
       {colorTemp.length > 0 && (
         <section>
-          <p className="mb-2 font-semibold text-ink">Temperatura de cor</p>
+          <p className="mb-2 font-semibold text-ink">{t("facet.colorTemp")}</p>
           <ul className="space-y-1">
             {colorTemp.map(ct => {
               const id = `ct-${ct}`;

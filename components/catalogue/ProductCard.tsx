@@ -11,6 +11,7 @@ import { SaveButton } from "./SaveButton";
 import { DownloadMenu } from "./DownloadMenu";
 import { useCompare } from "@/state/compare";
 import { useAnalytics } from "@/state/analytics";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 function getCategoryName(categoryId: string): string {
@@ -44,6 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
   const commercial = repo.getCommercial();
   const { toggle, has, canAdd } = useCompare();
   const analytics = useAnalytics();
+  const t = useT();
   const inCompare = has(product.id);
 
   const firstRef = product.variants[0]?.ref ?? "";
@@ -81,7 +83,7 @@ export function ProductCard({ product }: { product: Product }) {
           {/* 3D badge on hover */}
           {hasRealValue(product.model3d) && (
             <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-              <Badge>Ver 3D</Badge>
+              <Badge>{t("card.view3d")}</Badge>
             </div>
           )}
         </div>
@@ -106,7 +108,7 @@ export function ProductCard({ product }: { product: Product }) {
           {/* Ref line */}
           <p className="text-xs text-aluminium-dark">
             {product.ref_prefix}
-            {variantCount > 1 ? ` · ${variantCount} referências` : variantCount === 1 ? ` · ${firstRef}` : ""}
+            {variantCount > 1 ? ` · ${variantCount} ${t("card.references")}` : variantCount === 1 ? ` · ${firstRef}` : ""}
           </p>
 
           {/* Price */}
@@ -120,14 +122,14 @@ export function ProductCard({ product }: { product: Product }) {
         <AnimatedButton
           onClick={() => toggle(product.id)}
           disabled={!inCompare && !canAdd}
-          aria-label={inCompare ? "Remover da comparação" : "Adicionar à comparação"}
+          aria-label={inCompare ? t("common.remove") : t("card.compare")}
           className={`rounded border px-2 py-1 text-xs transition-colors disabled:opacity-40 ${
             inCompare
               ? "border-brand bg-brand text-white"
               : "border-aluminium text-aluminium-dark hover:border-brand hover:text-brand"
           }`}
         >
-          {inCompare ? "✓ Comparar" : "+ Comparar"}
+          {inCompare ? `✓ ${t("card.compare")}` : `+ ${t("card.compare")}`}
         </AnimatedButton>
         <DownloadMenu product={product} />
       </div>

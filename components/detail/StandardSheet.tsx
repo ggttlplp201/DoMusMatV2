@@ -1,6 +1,9 @@
+"use client";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { resolvePlaceholder } from "@/lib/placeholder";
 import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -8,18 +11,19 @@ interface Props {
 }
 
 export function StandardSheet({ product }: Props) {
+  const t = useT();
   const s = product.standardization;
   if (!s) return null;
 
   const rows = [
-    { label: "Faixa de preço", value: resolvePlaceholder(s.price_range, fallbacks.spec) },
-    { label: "Prazo de entrega", value: resolvePlaceholder(s.delivery_period, fallbacks.spec) },
-    { label: "Ciclo de manutenção", value: resolvePlaceholder(s.maintenance_cycle, fallbacks.spec) },
+    { label: t("std.priceRange"), value: resolvePlaceholder(s.price_range, fallbacks.spec) },
+    { label: t("std.deliveryPeriod"), value: resolvePlaceholder(s.delivery_period, fallbacks.spec) },
+    { label: t("std.maintenance"), value: resolvePlaceholder(s.maintenance_cycle, fallbacks.spec) },
   ];
 
   return (
     <section>
-      <SectionLabel>Ficha padronizada</SectionLabel>
+      <SectionLabel>{t("std.title")}</SectionLabel>
       <dl className="text-sm">
         {rows.map(({ label, value }, i) => (
           <div

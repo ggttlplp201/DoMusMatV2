@@ -1,13 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { BimMetadataSummary } from "./BimMetadataSummary";
+import { LocaleProvider } from "@/state/locale";
 import { repo } from "@/lib/repository";
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return <LocaleProvider>{children}</LocaleProvider>;
+}
 
 describe("BimMetadataSummary", () => {
   it("never renders the text PLACEHOLDER for barra-led-high-bay", () => {
     const product = repo.getProduct("barra-led-high-bay");
     if (!product) throw new Error("Product barra-led-high-bay not found");
 
-    const { container } = render(<BimMetadataSummary product={product} />);
+    const { container } = render(<Wrapper><BimMetadataSummary product={product} /></Wrapper>);
 
     // No element with the exact text "PLACEHOLDER"
     expect(screen.queryByText(/PLACEHOLDER/)).toBeNull();
@@ -20,7 +25,7 @@ describe("BimMetadataSummary", () => {
     const product = repo.getProduct("barra-led-high-bay");
     if (!product) throw new Error("Product barra-led-high-bay not found");
 
-    const { container } = render(<BimMetadataSummary product={product} />);
+    const { container } = render(<Wrapper><BimMetadataSummary product={product} /></Wrapper>);
 
     // version is a real value
     expect(container.textContent).toContain("1.0.0");

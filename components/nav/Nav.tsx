@@ -7,9 +7,10 @@ import { useCart } from "@/state/cart";
 import { useBom } from "@/state/bom";
 import { useCompare } from "@/state/compare";
 import { useLists } from "@/state/lists";
+import { useT } from "@/state/locale";
 import { repo } from "@/lib/repository";
 import { SearchBar } from "./SearchBar";
-import { t } from "@/lib/strings";
+import { LocaleToggle } from "./LocaleToggle";
 
 // Single shared markup for both fallback (activeId=null) and live render
 function CategoryBar({ activeId }: { activeId: string | null }) {
@@ -66,6 +67,7 @@ function MobileMenu({
   onSearchChange: (v: string) => void;
   onClose: () => void;
 }) {
+  const t = useT();
   const categories = repo.getCategories();
 
   if (!open) return null;
@@ -75,7 +77,7 @@ function MobileMenu({
       <div className="px-6 py-3">
         <SearchBar value={search} onChange={onSearchChange} />
       </div>
-      <nav aria-label="Categorias (menu mobile)">
+      <nav aria-label={t("nav.categories")}>
         <ul>
           {categories.map((cat) => (
             <li key={cat.id}>
@@ -92,17 +94,20 @@ function MobileMenu({
       </nav>
       <div className="flex flex-col gap-2 px-6 py-3 border-t border-aluminium">
         <Link href="/compare" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
-          <CompareIcon /> {t.compare}
+          <CompareIcon /> {t("nav.compare")}
         </Link>
         <Link href="/lists" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
-          <BookmarkIcon /> {t.savedLists}
+          <BookmarkIcon /> {t("nav.savedLists")}
         </Link>
         <Link href="/materiais" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
-          <BomListIcon /> Lista de materiais
+          <BomListIcon /> {t("nav.materialList")}
         </Link>
         <button className="rounded border border-aluminium px-3 py-1.5 text-sm text-left">
-          B2B Login
+          {t("nav.login")}
         </button>
+        <div className="pt-1">
+          <LocaleToggle />
+        </div>
       </div>
     </div>
   );
@@ -168,6 +173,7 @@ export function Nav() {
   const { count: bomCount } = useBom();
   const { refs } = useCompare();
   const { saved } = useLists();
+  const t = useT();
   const [search, setSearch] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -190,11 +196,16 @@ export function Nav() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-4 ml-auto md:ml-0">
+            {/* Language toggle — desktop */}
+            <div className="hidden md:flex">
+              <LocaleToggle />
+            </div>
+
             {/* Comparar */}
             <Link
               href="/compare"
-              aria-label="Comparar produtos"
-              title="Comparar"
+              aria-label={t("nav.compare")}
+              title={t("nav.compare")}
               className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
             >
               <CompareIcon />
@@ -208,8 +219,8 @@ export function Nav() {
             {/* Listas */}
             <Link
               href="/lists"
-              aria-label="Listas guardadas"
-              title="Listas"
+              aria-label={t("nav.savedLists")}
+              title={t("nav.savedLists")}
               className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
             >
               <BookmarkIcon />
@@ -223,8 +234,8 @@ export function Nav() {
             {/* Lista de materiais */}
             <Link
               href="/materiais"
-              aria-label="Lista de materiais"
-              title="Lista de materiais"
+              aria-label={t("nav.materialList")}
+              title={t("nav.materialList")}
               className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
             >
               <BomListIcon />
@@ -238,8 +249,8 @@ export function Nav() {
             {/* Cart */}
             <Link
               href="/cart"
-              aria-label="Orçamento"
-              title="Orçamento"
+              aria-label={t("nav.quote")}
+              title={t("nav.quote")}
               className="relative flex items-center text-ink"
             >
               <CartIcon />
@@ -250,9 +261,9 @@ export function Nav() {
               )}
             </Link>
 
-            {/* B2B Login — desktop */}
+            {/* Login — desktop */}
             <button className="hidden md:inline-flex rounded border border-aluminium px-3 py-1.5 text-sm text-ink hover:border-ink transition-colors">
-              B2B Login
+              {t("nav.login")}
             </button>
 
             {/* Hamburger — mobile */}
@@ -285,4 +296,3 @@ export function Nav() {
     </header>
   );
 }
-

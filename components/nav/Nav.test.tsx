@@ -5,18 +5,21 @@ import { CartProvider } from "@/state/cart";
 import { BomProvider } from "@/state/bom";
 import { CompareProvider } from "@/state/compare";
 import { ListsProvider } from "@/state/lists";
+import { LocaleProvider } from "@/state/locale";
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <CartProvider>
-      <BomProvider>
-        <CompareProvider>
-          <ListsProvider>
-            {children}
-          </ListsProvider>
-        </CompareProvider>
-      </BomProvider>
-    </CartProvider>
+    <LocaleProvider>
+      <CartProvider>
+        <BomProvider>
+          <CompareProvider>
+            <ListsProvider>
+              {children}
+            </ListsProvider>
+          </CompareProvider>
+        </BomProvider>
+      </CartProvider>
+    </LocaleProvider>
   );
 }
 
@@ -47,12 +50,13 @@ describe("Nav", () => {
     expect(screen.getByLabelText("Orçamento")).toBeDefined();
   });
 
-  it("renders B2B Login button", () => {
+  it("renders Login button (general login, PT default)", () => {
     render(
       <Providers>
         <Nav />
       </Providers>
     );
-    expect(screen.getAllByText("B2B Login").length).toBeGreaterThan(0);
+    // PT default: "Iniciar sessão"
+    expect(screen.getAllByText("Iniciar sessão").length).toBeGreaterThan(0);
   });
 });

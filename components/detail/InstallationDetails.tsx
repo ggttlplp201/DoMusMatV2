@@ -1,6 +1,8 @@
+"use client";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -8,16 +10,17 @@ interface Props {
 }
 
 export function InstallationDetails({ product }: Props) {
+  const t = useT();
   const installation = product.standardization?.installation;
   if (!installation) return null;
 
-  const instructions = resolvePlaceholder(installation.instructions, fallbacks.installation);
+  const instructions = resolvePlaceholder(installation.instructions, t("install.pending"));
   const hasDoc = hasRealValue(installation.document);
   const mountingNodes = installation.mounting_nodes;
 
   return (
     <section>
-      <SectionLabel>Instalação</SectionLabel>
+      <SectionLabel>{t("install.title")}</SectionLabel>
       <div className="text-sm space-y-3">
         <p className="text-ink leading-relaxed">{instructions as string}</p>
 
@@ -42,7 +45,7 @@ export function InstallationDetails({ product }: Props) {
             rel="noopener noreferrer"
             className="inline-block text-xs text-brand underline"
           >
-            Manual de instalação
+            {t("install.manual")}
           </a>
         )}
       </div>

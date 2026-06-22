@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { buildBomLines } from "@/lib/bom";
+import { LocaleProvider } from "@/state/locale";
 import { ExportButton } from "./ExportButton";
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return <LocaleProvider>{children}</LocaleProvider>;
+}
 
 describe("ExportButton", () => {
   beforeEach(() => {
@@ -19,7 +24,7 @@ describe("ExportButton", () => {
 
   it("calls createObjectURL when CSV button is clicked", () => {
     const lines = buildBomLines([{ ref: "DMJR-TP200W003", quantity: 1 }]);
-    render(<ExportButton lines={lines} />);
+    render(<Wrapper><ExportButton lines={lines} /></Wrapper>);
     const csvBtn = screen.getByRole("button", { name: /exportar csv/i });
     fireEvent.click(csvBtn);
     expect(URL.createObjectURL).toHaveBeenCalled();

@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product, BimAsset } from "@/lib/types";
 
 gsap.registerPlugin(useGSAP);
@@ -15,9 +15,10 @@ const REVIT_ARCHICAD_FORMATS = new Set<string>(["IFC", "RFA", "PLA"]);
 
 interface AssetRowProps {
   asset: BimAsset;
+  unavailableLabel: string;
 }
 
-function AssetRow({ asset }: AssetRowProps) {
+function AssetRow({ asset, unavailableLabel }: AssetRowProps) {
   const hasFile = hasRealValue(asset.file);
   const rowLabel = asset.label || asset.format;
   return (
@@ -34,11 +35,11 @@ function AssetRow({ asset }: AssetRowProps) {
           download
           className="text-xs text-brand hover:underline whitespace-nowrap"
         >
-          {hasRealValue(asset.size) ? asset.size : "Descarregar"}
+          {hasRealValue(asset.size) ? asset.size : unavailableLabel}
         </a>
       ) : (
         <span className="text-xs text-aluminium-dark whitespace-nowrap">
-          {fallbacks.bimAsset}
+          {unavailableLabel}
         </span>
       )}
     </li>
@@ -50,6 +51,7 @@ interface DownloadMenuProps {
 }
 
 export function DownloadMenu({ product }: DownloadMenuProps) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const triggerContainerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -128,14 +130,16 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
     setOpen((prev) => !prev);
   };
 
+  const unavailableLabel = t("fb.bimAsset");
+
   return (
     <div className="relative" ref={triggerContainerRef}>
       <AnimatedButton
         onClick={handleTriggerClick}
-        aria-label="Descarregar formatos BIM / CAD"
+        aria-label={t("download.title")}
         aria-haspopup="menu"
         aria-expanded={open}
-        title="Descarregar BIM / CAD"
+        title={t("download.title")}
         className="flex items-center gap-1 rounded border border-aluminium px-2 py-1 text-xs text-aluminium-dark transition-colors hover:border-brand hover:text-brand"
       >
         <svg
@@ -154,35 +158,35 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
             strokeLinejoin="round"
           />
         </svg>
-        Descarregar
+        {t("download.trigger")}
       </AnimatedButton>
 
       {open && (
         <div
           ref={menuRef}
           role="menu"
-          aria-label="Formatos de descarga BIM / CAD"
+          aria-label={t("download.title")}
           className="absolute top-full left-0 z-50 mt-1 w-64 rounded border border-aluminium bg-white shadow-md"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="border-b border-aluminium px-3 py-2">
-            <SectionLabel>Descarregar BIM / CAD</SectionLabel>
+            <SectionLabel>{t("download.title")}</SectionLabel>
           </div>
 
           {primaryGroup.length === 0 && secondaryGroup.length === 0 ? (
             <p className="px-3 py-3 text-sm text-aluminium-dark">
-              {fallbacks.bimAsset}
+              {unavailableLabel}
             </p>
           ) : (
             <>
               {primaryGroup.length > 0 && (
                 <div>
                   <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
-                    Compatível com Revit &amp; ArchiCAD
+                    {t("download.revitArchicad")}
                   </p>
                   <ul>
                     {primaryGroup.map((asset) => (
-                      <AssetRow key={asset.format} asset={asset} />
+                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
                     ))}
                   </ul>
                 </div>
@@ -191,11 +195,11 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
               {secondaryGroup.length > 0 && (
                 <div className={primaryGroup.length > 0 ? "border-t border-aluminium" : ""}>
                   <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
-                    Outros formatos
+                    {t("download.otherFormats")}
                   </p>
                   <ul className="pb-1">
                     {secondaryGroup.map((asset) => (
-                      <AssetRow key={asset.format} asset={asset} />
+                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
                     ))}
                   </ul>
                 </div>

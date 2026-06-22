@@ -1,6 +1,9 @@
+"use client";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
 import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -8,6 +11,7 @@ interface Props {
 }
 
 export function BimMetadataSummary({ product }: Props) {
+  const t = useT();
   const meta = product.bim_metadata;
   if (!meta) return null;
 
@@ -44,7 +48,7 @@ export function BimMetadataSummary({ product }: Props) {
 
   return (
     <section>
-      <SectionLabel>Metadados BIM</SectionLabel>
+      <SectionLabel>{t("bim.metadata")}</SectionLabel>
       <dl className="divide-y divide-aluminium text-sm">
         {rows.map(({ label, value }) => (
           <div key={label} className="grid grid-cols-[40%_60%] gap-2 py-2">

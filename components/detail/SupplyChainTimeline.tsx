@@ -1,6 +1,8 @@
+"use client";
+
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export function SupplyChainTimeline({ product }: Props) {
+  const t = useT();
   const chain = product.supply_chain;
   if (!chain) return null;
 
@@ -15,7 +18,7 @@ export function SupplyChainTimeline({ product }: Props) {
 
   return (
     <section>
-      <SectionLabel>Cadeia de abastecimento</SectionLabel>
+      <SectionLabel>{t("supply.title")}</SectionLabel>
       <div className="overflow-x-auto">
         <ol className="flex items-start gap-0 text-sm min-w-max">
           {nodes.map((node, i) => (
@@ -26,7 +29,7 @@ export function SupplyChainTimeline({ product }: Props) {
                   {hasRealValue(node.status) ? node.status : "—"}
                 </p>
                 <p className="text-aluminium-dark text-xs">
-                  {resolvePlaceholder(node.eta, fallbacks.eta) as string}
+                  {resolvePlaceholder(node.eta, t("fb.eta")) as string}
                 </p>
               </div>
               {i < nodes.length - 1 && (
@@ -39,9 +42,9 @@ export function SupplyChainTimeline({ product }: Props) {
         </ol>
       </div>
       <p className="mt-3 text-sm text-aluminium-dark">
-        Stock:{" "}
+        {t("supply.stock")}:{" "}
         <span className="text-ink">
-          {resolvePlaceholder(chain.stock, fallbacks.stock) as string}
+          {resolvePlaceholder(chain.stock, t("fb.stock")) as string}
         </span>
       </p>
     </section>

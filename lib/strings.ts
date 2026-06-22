@@ -1,3 +1,5 @@
+// Static PT strings kept for backward-compat with non-client code (format.ts, etc.)
+// Components should use useT() from state/locale.tsx instead.
 export const t = {
   priceOnRequest: "Preço sob consulta",
   contactForLeadTime: "Prazo de entrega sob consulta",

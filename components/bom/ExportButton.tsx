@@ -1,8 +1,11 @@
 "use client";
 import type { BomLine } from "@/lib/bom";
 import { toCsv } from "@/lib/bom";
+import { useT } from "@/state/locale";
 
 export function ExportButton({ lines }: { lines: BomLine[] }) {
+  const t = useT();
+
   function handleCsv() {
     const csv = toCsv(lines);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -24,13 +27,13 @@ export function ExportButton({ lines }: { lines: BomLine[] }) {
         onClick={handleCsv}
         className="rounded border border-aluminium px-4 py-2 text-sm text-ink hover:bg-neutral-fill"
       >
-        Exportar CSV
+        {t("bom.exportCsv")}
       </button>
       <button
         onClick={handlePrint}
         className="rounded border border-aluminium px-4 py-2 text-sm text-ink hover:bg-neutral-fill"
       >
-        Imprimir / PDF
+        {t("bom.print")}
       </button>
     </div>
   );

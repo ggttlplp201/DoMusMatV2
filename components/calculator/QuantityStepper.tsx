@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/state/locale";
+
 interface QuantityStepperProps {
   value: number;
   min: number;
@@ -7,6 +9,8 @@ interface QuantityStepperProps {
 }
 
 export function QuantityStepper({ value, min, onChange }: QuantityStepperProps) {
+  const t = useT();
+
   const decrement = () => {
     if (value > min) onChange(value - 1);
   };
@@ -24,7 +28,7 @@ export function QuantityStepper({ value, min, onChange }: QuantityStepperProps) 
     <div className="flex items-center gap-2">
       <button
         type="button"
-        aria-label="Diminuir quantidade"
+        aria-label={t("qty.decrease")}
         onClick={decrement}
         disabled={value <= min}
         className="w-8 h-8 flex items-center justify-center rounded border border-aluminium text-ink disabled:opacity-40"
@@ -33,7 +37,7 @@ export function QuantityStepper({ value, min, onChange }: QuantityStepperProps) 
       </button>
       <input
         type="number"
-        aria-label="Quantidade"
+        aria-label={t("order.quantity")}
         value={value}
         min={min}
         onChange={handleInput}
@@ -41,7 +45,7 @@ export function QuantityStepper({ value, min, onChange }: QuantityStepperProps) 
       />
       <button
         type="button"
-        aria-label="Aumentar quantidade"
+        aria-label={t("qty.increase")}
         onClick={increment}
         className="w-8 h-8 flex items-center justify-center rounded border border-aluminium text-ink"
       >

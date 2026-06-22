@@ -1,6 +1,6 @@
 "use client";
 
-import { fallbacks } from "@/lib/strings";
+import { useT } from "@/state/locale";
 
 type ViewMode = "rendered" | "model";
 
@@ -11,6 +11,7 @@ interface ViewModeToggleProps {
 }
 
 export function ViewModeToggle({ mode, onChange, modelAvailable }: ViewModeToggleProps) {
+  const t = useT();
   const baseBtn =
     "px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand";
   const activeBtn = "border-b-2 border-brand text-brand";
@@ -26,21 +27,21 @@ export function ViewModeToggle({ mode, onChange, modelAvailable }: ViewModeToggl
         className={`${baseBtn} ${mode === "rendered" ? activeBtn : inactiveBtn}`}
         onClick={() => onChange("rendered")}
       >
-        Vista renderizada
+        {t("view.rendered")}
       </button>
       <button
         type="button"
         role="tab"
         aria-selected={mode === "model"}
         disabled={!modelAvailable}
-        title={!modelAvailable ? fallbacks.bimAsset : undefined}
+        title={!modelAvailable ? t("fb.bimAsset") : undefined}
         className={`${baseBtn} ${!modelAvailable ? disabledBtn : mode === "model" ? activeBtn : inactiveBtn}`}
         onClick={() => { if (modelAvailable) onChange("model"); }}
       >
-        Modelo 3D
+        {t("view.model3d")}
         {!modelAvailable && (
           <span className="ml-1 text-xs opacity-70" aria-hidden="true">
-            em breve
+            {t("detail.comingSoon")}
           </span>
         )}
       </button>
