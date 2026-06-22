@@ -58,11 +58,11 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
         return cats.find((c) => c.id === p.category)?.name ?? p.category;
       },
     },
-    { key: "power", label: "Potência", getValue: getPowerRange },
-    { key: "dimensions", label: "Dimensões", getValue: getFirstVariantDimensions },
+    { key: "power", label: t("spec.power"), getValue: getPowerRange },
+    { key: "dimensions", label: t("spec.dimensions"), getValue: getFirstVariantDimensions },
     {
       key: "ip",
-      label: "IP",
+      label: t("spec.ip"),
       getValue: (p) => {
         const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
         return hasRealValue(ip) ? `IP${ip}` : fallbacks.spec;
@@ -70,7 +70,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
     },
     {
       key: "color_temperature",
-      label: "Temp. cor",
+      label: t("spec.colorTemp"),
       getValue: (p) => {
         const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
         if (!hasRealValue(ct)) return fallbacks.spec;
@@ -79,7 +79,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
     },
     {
       key: "material",
-      label: "Material",
+      label: t("spec.material"),
       getValue: (p) => {
         const mat = (p.shared_specs as Record<string, unknown>).material;
         return hasRealValue(mat) ? String(mat) : fallbacks.spec;
@@ -87,7 +87,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
     },
     {
       key: "certificates",
-      label: "Certificações",
+      label: t("spec.certificates"),
       getValue: (p) => {
         const certs = (p.shared_specs as Record<string, unknown>).certificates;
         if (!hasRealValue(certs)) return fallbacks.spec;

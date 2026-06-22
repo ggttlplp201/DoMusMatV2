@@ -106,6 +106,7 @@ export interface Catalogue {
     address: string;
     phone: string;
     email: string;
+    phone_quotes?: string;
   };
   categories: Category[];
   products: Product[];

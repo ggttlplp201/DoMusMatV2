@@ -16,9 +16,10 @@ const REVIT_ARCHICAD_FORMATS = new Set<string>(["IFC", "RFA", "PLA"]);
 interface AssetRowProps {
   asset: BimAsset;
   unavailableLabel: string;
+  downloadLabel: string;
 }
 
-function AssetRow({ asset, unavailableLabel }: AssetRowProps) {
+function AssetRow({ asset, unavailableLabel, downloadLabel }: AssetRowProps) {
   const hasFile = hasRealValue(asset.file);
   const rowLabel = asset.label || asset.format;
   return (
@@ -35,7 +36,7 @@ function AssetRow({ asset, unavailableLabel }: AssetRowProps) {
           download
           className="text-xs text-brand hover:underline whitespace-nowrap"
         >
-          {hasRealValue(asset.size) ? asset.size : unavailableLabel}
+          {hasRealValue(asset.size) ? asset.size : downloadLabel}
         </a>
       ) : (
         <span className="text-xs text-aluminium-dark whitespace-nowrap">
@@ -186,7 +187,7 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
                   </p>
                   <ul>
                     {primaryGroup.map((asset) => (
-                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
+                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} downloadLabel={t("download.trigger")} />
                     ))}
                   </ul>
                 </div>
@@ -199,7 +200,7 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
                   </p>
                   <ul className="pb-1">
                     {secondaryGroup.map((asset) => (
-                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
+                      <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} downloadLabel={t("download.trigger")} />
                     ))}
                   </ul>
                 </div>

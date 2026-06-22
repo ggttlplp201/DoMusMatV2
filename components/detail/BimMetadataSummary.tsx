@@ -16,9 +16,9 @@ export function BimMetadataSummary({ product }: Props) {
   if (!meta) return null;
 
   const rows: { label: string; value: string }[] = [
-    { label: "ID do produto", value: String(resolvePlaceholder(meta.product_id, fallbacks.spec)) },
+    { label: t("bim.productId"), value: String(resolvePlaceholder(meta.product_id, fallbacks.spec)) },
     {
-      label: "Dimensões",
+      label: t("bim.dimensions"),
       value: meta.dimensions
         ? (() => {
             const real = Object.entries(meta.dimensions).filter(([, v]) => hasRealValue(v));
@@ -27,7 +27,7 @@ export function BimMetadataSummary({ product }: Props) {
         : fallbacks.spec,
     },
     {
-      label: "Materiais",
+      label: t("bim.materials"),
       value: hasRealValue(meta.materials)
         ? (meta.materials as string[]).filter(hasRealValue).join(", ")
         : fallbacks.spec,
@@ -43,7 +43,7 @@ export function BimMetadataSummary({ product }: Props) {
           })()
         : fallbacks.spec,
     },
-    { label: "Versão", value: String(resolvePlaceholder(meta.version, fallbacks.spec)) },
+    { label: t("bim.version"), value: String(resolvePlaceholder(meta.version, fallbacks.spec)) },
   ];
 
   return (
