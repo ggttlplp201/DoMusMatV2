@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { repo } from "@/lib/repository";
 import { hasRealValue } from "@/lib/placeholder";
 import { ModelViewer } from "./ModelViewer";
@@ -15,6 +15,7 @@ import { StandardSheet } from "./StandardSheet";
 import { InstallationDetails } from "./InstallationDetails";
 import { SupplyChainTimeline } from "./SupplyChainTimeline";
 import { OrderCalculator } from "@/components/calculator/OrderCalculator";
+import { useAnalytics } from "@/state/analytics";
 
 interface DetailViewProps {
   productId: string;
@@ -26,8 +27,19 @@ export function DetailView({ productId }: DetailViewProps) {
   const [selectedRef, setSelectedRef] = useState<string>(
     () => product?.variants[0]?.ref ?? ""
   );
+  const analytics = useAnalytics();
+
+  useEffect(() => {
+    if (product) analytics.track({ type: "view", ref: product.id });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
 
   if (!product) return null;
+
+  function handleVariantSelect(ref: string) {
+    setSelectedRef(ref);
+    analytics.track({ type: "view", ref });
+  }
 
   const selectedVariant =
     product.variants.find((v) => v.ref === selectedRef) ?? product.variants[0];
@@ -54,7 +66,7 @@ export function DetailView({ productId }: DetailViewProps) {
           <VariantSelector
             variants={product.variants}
             selectedRef={selectedRef}
-            onSelect={setSelectedRef}
+            onSelect={handleVariantSelect}
           />
           {/* TASK 14: OrderCalculator */}
           <OrderCalculator variantRef={selectedRef} />

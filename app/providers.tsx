@@ -2,6 +2,7 @@
 import { CartProvider } from "@/state/cart";
 import { ListsProvider } from "@/state/lists";
 import { CompareProvider } from "@/state/compare";
+import { AnalyticsProvider } from "@/state/analytics";
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <CartProvider><ListsProvider><CompareProvider>{children}</CompareProvider></ListsProvider></CartProvider>;
+  return <AnalyticsProvider><CartProvider><ListsProvider><CompareProvider>{children}</CompareProvider></ListsProvider></CartProvider></AnalyticsProvider>;
 }

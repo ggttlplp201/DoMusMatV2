@@ -8,6 +8,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Badge } from "@/components/ui/Badge";
 import { SaveButton } from "./SaveButton";
 import { useCompare } from "@/state/compare";
+import { useAnalytics } from "@/state/analytics";
 import type { Product } from "@/lib/types";
 
 function getCategoryName(categoryId: string): string {
@@ -40,6 +41,7 @@ function getFirstColorTemp(product: Product): string | null {
 export function ProductCard({ product }: { product: Product }) {
   const commercial = repo.getCommercial();
   const { toggle, has, canAdd } = useCompare();
+  const analytics = useAnalytics();
   const inCompare = has(product.id);
 
   const firstRef = product.variants[0]?.ref ?? "";
@@ -54,6 +56,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/products/${product.id}`}
+      onClick={() => analytics.track({ type: "view", ref: product.id })}
       className="group relative flex flex-col rounded border border-aluminium bg-white transition-shadow hover:shadow-md"
     >
       {/* Image area */}

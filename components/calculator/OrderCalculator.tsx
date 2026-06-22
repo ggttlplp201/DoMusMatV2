@@ -6,6 +6,7 @@ import { calculateOrder } from "@/lib/pricing";
 import { formatPrice, formatLeadTime } from "@/lib/format";
 import { t } from "@/lib/strings";
 import { useCart } from "@/state/cart";
+import { useAnalytics } from "@/state/analytics";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { QuantityStepper } from "./QuantityStepper";
 import { TierProgressBar } from "./TierProgressBar";
@@ -19,6 +20,7 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
   const [qty, setQty] = useState(1);
   const r = calculateOrder({ ref: variantRef, quantity: qty, commercial });
   const { add } = useCart();
+  const analytics = useAnalytics();
 
   return (
     <div className="sticky top-20 space-y-4 rounded border border-aluminium p-4">
@@ -52,14 +54,14 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
       <div className="flex flex-col gap-2">
         <button
           type="button"
-          onClick={() => add(variantRef, qty)}
+          onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_quote", ref: variantRef }); }}
           className="w-full rounded bg-brand px-4 py-2 text-sm font-medium text-white"
         >
           {t.addToQuote}
         </button>
         <button
           type="button"
-          onClick={() => add(variantRef, qty)}
+          onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_bom", ref: variantRef }); }}
           className="w-full rounded border border-aluminium px-4 py-2 text-sm font-medium text-ink"
         >
           {t.addToBom}
