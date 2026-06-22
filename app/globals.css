@@ -5,7 +5,7 @@
 /* Configured for Tailwind v4 using @theme directive (no tailwind.config.ts) */
 @theme {
   /* Typography */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-open-sans), "Open Sans", system-ui, sans-serif;
 
   /* Border radius: rounded = 4px */
   --radius: 4px;
