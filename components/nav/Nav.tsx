@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/state/cart";
+import { useBom } from "@/state/bom";
 import { useCompare } from "@/state/compare";
 import { useLists } from "@/state/lists";
 import { repo } from "@/lib/repository";
@@ -96,6 +97,9 @@ function MobileMenu({
         <Link href="/lists" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
           <BookmarkIcon /> {t.savedLists}
         </Link>
+        <Link href="/materiais" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
+          <BomListIcon /> Lista de materiais
+        </Link>
         <button className="rounded border border-aluminium px-3 py-1.5 text-sm text-left">
           B2B Login
         </button>
@@ -142,6 +146,15 @@ function CartIcon() {
   );
 }
 
+function BomListIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 6h6M7 10h6M7 14h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function HamburgerIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -152,6 +165,7 @@ function HamburgerIcon() {
 
 export function Nav() {
   const { count } = useCart();
+  const { count: bomCount } = useBom();
   const { refs } = useCompare();
   const { saved } = useLists();
   const [search, setSearch] = useState("");
@@ -202,6 +216,21 @@ export function Nav() {
               {saved.length > 0 && (
                 <span className="ml-1 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
                   {saved.length}
+                </span>
+              )}
+            </Link>
+
+            {/* Lista de materiais */}
+            <Link
+              href="/materiais"
+              aria-label="Lista de materiais"
+              title="Lista de materiais"
+              className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
+            >
+              <BomListIcon />
+              {bomCount > 0 && (
+                <span className="ml-1 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
+                  {bomCount}
                 </span>
               )}
             </Link>

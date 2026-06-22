@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CartProvider } from "@/state/cart";
+import { BomProvider } from "@/state/bom";
 import { AnalyticsProvider } from "@/state/analytics";
 import { OrderCalculator } from "./OrderCalculator";
 
@@ -9,7 +10,9 @@ describe("OrderCalculator", () => {
     render(
       <AnalyticsProvider>
         <CartProvider>
-          <OrderCalculator variantRef="DMJR-TP200W003" />
+          <BomProvider>
+            <OrderCalculator variantRef="DMJR-TP200W003" />
+          </BomProvider>
         </CartProvider>
       </AnalyticsProvider>
     );

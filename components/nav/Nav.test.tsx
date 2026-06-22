@@ -2,17 +2,20 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Nav } from "./Nav";
 import { CartProvider } from "@/state/cart";
+import { BomProvider } from "@/state/bom";
 import { CompareProvider } from "@/state/compare";
 import { ListsProvider } from "@/state/lists";
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
-      <CompareProvider>
-        <ListsProvider>
-          {children}
-        </ListsProvider>
-      </CompareProvider>
+      <BomProvider>
+        <CompareProvider>
+          <ListsProvider>
+            {children}
+          </ListsProvider>
+        </CompareProvider>
+      </BomProvider>
     </CartProvider>
   );
 }

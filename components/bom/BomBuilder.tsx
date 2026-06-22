@@ -1,11 +1,11 @@
 "use client";
-import { useCart } from "@/state/cart";
+import { useBom } from "@/state/bom";
 import { buildBomLines } from "@/lib/bom";
 import { BomTable } from "./BomTable";
 import { ExportButton } from "./ExportButton";
 
 export function BomBuilder() {
-  const { items, remove, clear } = useCart();
+  const { items, remove, clear } = useBom();
   const lines = buildBomLines(items);
 
   if (items.length === 0) {

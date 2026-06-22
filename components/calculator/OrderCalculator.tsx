@@ -6,6 +6,7 @@ import { calculateOrder } from "@/lib/pricing";
 import { formatPrice, formatLeadTime } from "@/lib/format";
 import { t } from "@/lib/strings";
 import { useCart } from "@/state/cart";
+import { useBom } from "@/state/bom";
 import { useAnalytics } from "@/state/analytics";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
@@ -20,7 +21,8 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
   const commercial = repo.getCommercial();
   const [qty, setQty] = useState(1);
   const r = calculateOrder({ ref: variantRef, quantity: qty, commercial });
-  const { add } = useCart();
+  const { add: addToCart } = useCart();
+  const { add: addToBom } = useBom();
   const analytics = useAnalytics();
 
   return (
@@ -54,13 +56,13 @@ export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
 
       <div className="flex flex-col gap-2">
         <AnimatedButton
-          onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_quote", ref: variantRef }); }}
+          onClick={() => { addToCart(variantRef, qty); analytics.track({ type: "add_to_quote", ref: variantRef }); }}
           className="w-full rounded bg-brand px-4 py-2 text-sm font-medium text-white"
         >
           {t.addToQuote}
         </AnimatedButton>
         <AnimatedButton
-          onClick={() => { add(variantRef, qty); analytics.track({ type: "add_to_bom", ref: variantRef }); }}
+          onClick={() => { addToBom(variantRef, qty); analytics.track({ type: "add_to_bom", ref: variantRef }); }}
           className="w-full rounded border border-aluminium px-4 py-2 text-sm font-medium text-ink"
         >
           {t.addToBom}
