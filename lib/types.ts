@@ -80,6 +80,7 @@ export interface Product {
   ref_prefix: string;
   description_pt: string;
   description_en: string;
+  description_zh: string;
   applications: string[];
   images: string[];
   shared_specs: Record<string, unknown>;

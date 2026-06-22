@@ -17,6 +17,7 @@ import { SupplyChainTimeline } from "./SupplyChainTimeline";
 import { OrderCalculator } from "@/components/calculator/OrderCalculator";
 import { useAnalytics } from "@/state/analytics";
 import { ViewModeToggle } from "./ViewModeToggle";
+import { useLocale } from "@/state/locale";
 
 interface DetailViewProps {
   productId: string;
@@ -34,6 +35,7 @@ export function DetailView({ productId }: DetailViewProps) {
     () => (modelAvailable ? "model" : "rendered")
   );
   const analytics = useAnalytics();
+  const { locale } = useLocale();
 
   useEffect(() => {
     if (product) analytics.track({ type: "view", ref: product.id });
@@ -41,6 +43,13 @@ export function DetailView({ productId }: DetailViewProps) {
   }, [product?.id]);
 
   if (!product) return null;
+
+  const description =
+    locale === "en" && hasRealValue(product.description_en)
+      ? product.description_en
+      : locale === "zh" && hasRealValue(product.description_zh)
+        ? product.description_zh
+        : product.description_pt;
 
   function handleVariantSelect(ref: string) {
     setSelectedRef(ref);
@@ -72,7 +81,7 @@ export function DetailView({ productId }: DetailViewProps) {
         {/* Right: product info */}
         <div className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold text-ink">{product.name}</h1>
-          <p className="text-aluminium-dark text-sm leading-relaxed">{product.description_pt}</p>
+          <p className="text-aluminium-dark text-sm leading-relaxed">{description}</p>
           <CertBadges product={product} />
           <VariantSelector
             variants={product.variants}
