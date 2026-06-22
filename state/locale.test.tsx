@@ -32,9 +32,9 @@ describe("useLocale()", () => {
     localStorage.clear();
   });
 
-  it("defaults to pt locale", () => {
+  it("defaults to zh locale", () => {
     const { result } = renderHook(() => useLocale(), { wrapper });
-    expect(result.current.locale).toBe("pt");
+    expect(result.current.locale).toBe("zh");
   });
 
   it("setLocale updates the locale", () => {
@@ -59,9 +59,9 @@ describe("useT()", () => {
     localStorage.clear();
   });
 
-  it("returns PT string for default locale", () => {
+  it("returns ZH string for default locale", () => {
     const { result } = renderHook(() => useT(), { wrapper });
-    expect(result.current("nav.login")).toBe("Iniciar sessão");
+    expect(result.current("nav.login")).toBe("登录");
   });
 
   it("returns ZH string after switching to zh", () => {

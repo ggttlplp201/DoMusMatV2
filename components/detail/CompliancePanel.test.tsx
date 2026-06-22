@@ -18,8 +18,8 @@ describe("CompliancePanel", () => {
     const ceElements = screen.getAllByText("CE");
     expect(ceElements.length).toBeGreaterThan(0);
 
-    // DoP and EPD are PLACEHOLDER so at least one Documentação a pedido chip should appear
-    const pendentes = screen.getAllByText("Documentação a pedido");
+    // DoP and EPD are PLACEHOLDER so at least one 资料按需提供 chip should appear
+    const pendentes = screen.getAllByText("资料按需提供");
     expect(pendentes.length).toBeGreaterThan(0);
   });
 });

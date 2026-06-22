@@ -15,8 +15,8 @@ describe("QuantityStepper", () => {
         <QuantityStepper value={5} min={5} onChange={onChange} />
       </Wrapper>
     );
-    // PT default: "Diminuir quantidade"
-    const decrementBtn = screen.getByRole("button", { name: "Diminuir quantidade" });
+    // ZH default: "减少数量"
+    const decrementBtn = screen.getByRole("button", { name: "减少数量" });
     fireEvent.click(decrementBtn);
     expect(onChange).not.toHaveBeenCalled();
   });

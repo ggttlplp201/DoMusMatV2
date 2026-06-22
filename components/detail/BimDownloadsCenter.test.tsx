@@ -18,8 +18,8 @@ describe("BimDownloadsCenter", () => {
     const glbLink = screen.getByRole("link", { name: /3D Model \(GLB\)/i });
     expect(glbLink).toHaveAttribute("href", "/models/high_bay_led_bar.glb");
 
-    // IFC/RFA/PLA/DWG/etc are PLACEHOLDER — at least one "Disponível a pedido"
-    const emBreves = screen.getAllByText("Disponível a pedido");
+    // IFC/RFA/PLA/DWG/etc are PLACEHOLDER — at least one "按需提供"
+    const emBreves = screen.getAllByText("按需提供");
     expect(emBreves.length).toBeGreaterThan(0);
   });
 });

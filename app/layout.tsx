@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt">
+    <html lang="zh-CN">
       <body className={`${openSans.variable} font-sans text-ink bg-white antialiased`}><Providers>{children}</Providers></body>
     </html>
   );

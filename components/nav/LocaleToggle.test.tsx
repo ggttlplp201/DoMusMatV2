@@ -19,14 +19,14 @@ describe("LocaleToggle", () => {
     expect(screen.getByRole("button", { name: "中文" })).toBeDefined();
   });
 
-  it("PT button has aria-pressed=true by default", () => {
+  it("中文 button has aria-pressed=true by default", () => {
     render(
       <Wrapper>
         <LocaleToggle />
       </Wrapper>
     );
-    const ptBtn = screen.getByRole("button", { name: "PT" });
-    expect(ptBtn.getAttribute("aria-pressed")).toBe("true");
+    const zhBtn = screen.getByRole("button", { name: "中文" });
+    expect(zhBtn.getAttribute("aria-pressed")).toBe("true");
   });
 
   it("clicking 中文 sets aria-pressed=true on 中文 button", () => {

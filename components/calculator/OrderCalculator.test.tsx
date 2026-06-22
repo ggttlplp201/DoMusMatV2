@@ -28,11 +28,11 @@ describe("OrderCalculator", () => {
       </Providers>
     );
 
-    // PT default: "Preço sob consulta"
-    expect(screen.getAllByText("Preço sob consulta").length).toBeGreaterThan(0);
-    expect(screen.getByText("Prazo de entrega sob consulta")).toBeInTheDocument();
+    // ZH default: "价格面议"
+    expect(screen.getAllByText("价格面议").length).toBeGreaterThan(0);
+    expect(screen.getByText("交期面议")).toBeInTheDocument();
 
-    const addToQuoteBtn = screen.getByRole("button", { name: "Adicionar ao orçamento" });
+    const addToQuoteBtn = screen.getByRole("button", { name: "加入报价单" });
     expect(addToQuoteBtn).toBeEnabled();
   });
 });

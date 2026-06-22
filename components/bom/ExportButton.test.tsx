@@ -25,7 +25,7 @@ describe("ExportButton", () => {
   it("calls createObjectURL when CSV button is clicked", () => {
     const lines = buildBomLines([{ ref: "DMJR-TP200W003", quantity: 1 }]);
     render(<Wrapper><ExportButton lines={lines} /></Wrapper>);
-    const csvBtn = screen.getByRole("button", { name: /exportar csv/i });
+    const csvBtn = screen.getByRole("button", { name: /导出 CSV/i });
     fireEvent.click(csvBtn);
     expect(URL.createObjectURL).toHaveBeenCalled();
   });

@@ -41,8 +41,8 @@ describe("Gallery", () => {
           <Gallery images={product.images} alt={product.name} />
         </Wrapper>
       );
-      expect(screen.getByRole("button", { name: "Imagem anterior" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Imagem seguinte" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "上一张" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "下一张" })).toBeInTheDocument();
     });
 
     it("clicking next advances the main image src", () => {
@@ -56,7 +56,7 @@ describe("Gallery", () => {
       const mainImg = screen.getAllByAltText(product.name)[0] as HTMLImageElement;
       const initialSrc = mainImg.getAttribute("src") ?? mainImg.src;
 
-      const nextBtn = screen.getByRole("button", { name: "Imagem seguinte" });
+      const nextBtn = screen.getByRole("button", { name: "下一张" });
       fireEvent.click(nextBtn);
 
       // After clicking next the src should have changed

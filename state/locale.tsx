@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { type Locale, translate } from "@/lib/i18n";
 
 const STORAGE_KEY = "dmm.locale";
-const DEFAULT_LOCALE: Locale = "pt";
+const DEFAULT_LOCALE: Locale = "zh";
 
 interface LocaleContextValue {
   locale: Locale;

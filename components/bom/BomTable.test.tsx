@@ -9,10 +9,11 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("BomTable", () => {
-  it("renders the ref and Preço sob consulta for a known ref", () => {
+  it("renders the ref and price fallback for a known ref", () => {
     const lines = buildBomLines([{ ref: "DMJR-TP200W003", quantity: 2 }]);
     render(<Wrapper><BomTable lines={lines} /></Wrapper>);
     expect(screen.getByText("DMJR-TP200W003")).toBeInTheDocument();
+    // buildBomLines uses fallbacks.price (PT string) when no priceFallback is provided
     expect(screen.getAllByText("Preço sob consulta").length).toBeGreaterThan(0);
   });
 
@@ -20,7 +21,7 @@ describe("BomTable", () => {
     const onRemove = vi.fn();
     const lines = buildBomLines([{ ref: "DMJR-TP200W003", quantity: 2 }]);
     render(<Wrapper><BomTable lines={lines} onRemove={onRemove} /></Wrapper>);
-    const removeBtn = screen.getByRole("button", { name: /Remover DMJR-TP200W003/i });
+    const removeBtn = screen.getByRole("button", { name: /移除 DMJR-TP200W003/i });
     fireEvent.click(removeBtn);
     expect(onRemove).toHaveBeenCalledWith("DMJR-TP200W003");
   });
@@ -28,6 +29,6 @@ describe("BomTable", () => {
   it("does not render remove buttons when onRemove is not provided", () => {
     const lines = buildBomLines([{ ref: "DMJR-TP200W003", quantity: 2 }]);
     render(<Wrapper><BomTable lines={lines} /></Wrapper>);
-    expect(screen.queryByRole("button", { name: /Remover/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /移除/i })).toBeNull();
   });
 });

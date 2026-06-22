@@ -16,8 +16,8 @@ describe("ComparisonTable", () => {
         />
       </Wrapper>
     );
-    expect(screen.getByText("Barra LED High Bay")).toBeInTheDocument();
-    expect(screen.getByText("Balizador de Jardim LED")).toBeInTheDocument();
-    expect(screen.getByText("Potência")).toBeInTheDocument();
+    expect(screen.getByText("High Bay LED 灯具")).toBeInTheDocument();
+    expect(screen.getByText("LED 花园柱灯")).toBeInTheDocument();
+    expect(screen.getByText("功率")).toBeInTheDocument();
   });
 });

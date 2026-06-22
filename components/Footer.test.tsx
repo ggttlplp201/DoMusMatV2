@@ -12,20 +12,20 @@ describe("Footer", () => {
     render(<Wrapper><Footer /></Wrapper>);
   });
 
-  it("renders the tagline (PT default)", () => {
+  it("renders the tagline (ZH default)", () => {
     render(<Wrapper><Footer /></Wrapper>);
     expect(
       screen.getByText(
-        "O nosso compromisso é com a qualidade, integridade e inovação, com foco no cliente e na sustentabilidade."
+        "我们致力于品质、诚信与创新，以客户和可持续发展为核心。"
       )
     ).toBeDefined();
   });
 
   it("renders three legal links", () => {
     render(<Wrapper><Footer /></Wrapper>);
-    expect(screen.getByText("Política de Privacidade e Cookies")).toBeDefined();
-    expect(screen.getByText("Termos e Condições")).toBeDefined();
-    expect(screen.getByText("Livro de Reclamações")).toBeDefined();
+    expect(screen.getByText("隐私与 Cookie 政策")).toBeDefined();
+    expect(screen.getByText("条款与条件")).toBeDefined();
+    expect(screen.getByText("投诉簿")).toBeDefined();
   });
 
   it("renders address", () => {

@@ -41,22 +41,22 @@ describe("Nav", () => {
     expect(screen.getByText("DoMusMat")).toBeDefined();
   });
 
-  it("renders the cart link with aria-label Orçamento", () => {
+  it("renders the cart link with aria-label 报价单", () => {
     render(
       <Providers>
         <Nav />
       </Providers>
     );
-    expect(screen.getByLabelText("Orçamento")).toBeDefined();
+    expect(screen.getByLabelText("报价单")).toBeDefined();
   });
 
-  it("renders Login button (general login, PT default)", () => {
+  it("renders Login button (general login, ZH default)", () => {
     render(
       <Providers>
         <Nav />
       </Providers>
     );
-    // PT default: "Iniciar sessão"
-    expect(screen.getAllByText("Iniciar sessão").length).toBeGreaterThan(0);
+    // ZH default: "登录"
+    expect(screen.getAllByText("登录").length).toBeGreaterThan(0);
   });
 });

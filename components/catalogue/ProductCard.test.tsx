@@ -59,14 +59,14 @@ describe("ProductCard", () => {
   describe("with barra-led-high-bay (has 3D model)", () => {
     const product = repo.getProduct("barra-led-high-bay")!;
 
-    it("renders the Ver 3D badge button", () => {
+    it("renders the 查看 3D badge button", () => {
       render(<Wrapper><ProductCard product={product} /></Wrapper>);
-      expect(screen.getByRole("button", { name: /ver 3d/i })).toBeDefined();
+      expect(screen.getByRole("button", { name: /查看 3D/i })).toBeDefined();
     });
 
     it("main image link points to /products/barra-led-high-bay (no ?view param)", () => {
       render(<Wrapper><ProductCard product={product} /></Wrapper>);
-      const link = screen.getByRole("link", { name: new RegExp(product.name, "i") });
+      const link = screen.getByRole("link", { name: /High Bay LED 灯具/i });
       expect(link.getAttribute("href")).toBe("/products/barra-led-high-bay");
     });
   });
