@@ -13,31 +13,17 @@ gsap.registerPlugin(useGSAP);
 
 const REVIT_ARCHICAD_FORMATS = new Set<string>(["IFC", "RFA", "PLA"]);
 
-function formatLabel(format: string): string {
-  const map: Record<string, string> = {
-    IFC: "IFC 4",
-    RFA: "Revit Family",
-    PLA: "ArchiCAD GDL",
-    DWG: "AutoCAD DWG",
-    GLB: "3D GLB",
-    STL: "3D STL",
-    PDF: "Ficha Técnica",
-    IES: "IES Fotométrico",
-    LDT: "DIALux LDT",
-  };
-  return map[format] ?? format;
-}
-
 interface AssetRowProps {
   asset: BimAsset;
 }
 
 function AssetRow({ asset }: AssetRowProps) {
   const hasFile = hasRealValue(asset.file);
+  const rowLabel = asset.label || asset.format;
   return (
     <li role="menuitem" className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-neutral-fill">
       <span className="flex items-center gap-2 text-sm text-ink">
-        {formatLabel(asset.format)}
+        {rowLabel}
         <span className="rounded bg-neutral-fill px-1.5 py-0.5 text-[10px] font-medium text-aluminium-dark border border-aluminium">
           {asset.format}
         </span>
@@ -46,10 +32,9 @@ function AssetRow({ asset }: AssetRowProps) {
         <a
           href={asset.file}
           download
-          onClick={(e) => e.stopPropagation()}
           className="text-xs text-brand hover:underline whitespace-nowrap"
         >
-          {asset.size && hasRealValue(asset.size) ? asset.size : "Descarregar"}
+          {hasRealValue(asset.size) ? asset.size : "Descarregar"}
         </a>
       ) : (
         <span className="text-xs text-aluminium-dark whitespace-nowrap">
@@ -177,37 +162,45 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
           ref={menuRef}
           role="menu"
           aria-label="Formatos de descarga BIM / CAD"
-          className="absolute bottom-full left-0 z-50 mb-1 w-64 rounded border border-aluminium bg-white shadow-md"
+          className="absolute top-full left-0 z-50 mt-1 w-64 rounded border border-aluminium bg-white shadow-md"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="border-b border-aluminium px-3 py-2">
             <SectionLabel>Descarregar BIM / CAD</SectionLabel>
           </div>
 
-          {primaryGroup.length > 0 && (
-            <div>
-              <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
-                Compatível com Revit &amp; ArchiCAD
-              </p>
-              <ul>
-                {primaryGroup.map((asset) => (
-                  <AssetRow key={asset.format} asset={asset} />
-                ))}
-              </ul>
-            </div>
-          )}
+          {primaryGroup.length === 0 && secondaryGroup.length === 0 ? (
+            <p className="px-3 py-3 text-sm text-aluminium-dark">
+              {fallbacks.bimAsset}
+            </p>
+          ) : (
+            <>
+              {primaryGroup.length > 0 && (
+                <div>
+                  <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
+                    Compatível com Revit &amp; ArchiCAD
+                  </p>
+                  <ul>
+                    {primaryGroup.map((asset) => (
+                      <AssetRow key={asset.format} asset={asset} />
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-          {secondaryGroup.length > 0 && (
-            <div className={primaryGroup.length > 0 ? "border-t border-aluminium" : ""}>
-              <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
-                Outros formatos
-              </p>
-              <ul className="pb-1">
-                {secondaryGroup.map((asset) => (
-                  <AssetRow key={asset.format} asset={asset} />
-                ))}
-              </ul>
-            </div>
+              {secondaryGroup.length > 0 && (
+                <div className={primaryGroup.length > 0 ? "border-t border-aluminium" : ""}>
+                  <p className="px-3 pt-2 pb-1 text-[11px] font-semibold text-aluminium-dark uppercase tracking-wide">
+                    Outros formatos
+                  </p>
+                  <ul className="pb-1">
+                    {secondaryGroup.map((asset) => (
+                      <AssetRow key={asset.format} asset={asset} />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

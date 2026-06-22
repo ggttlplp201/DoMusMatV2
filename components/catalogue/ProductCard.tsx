@@ -56,78 +56,81 @@ export function ProductCard({ product }: { product: Product }) {
   const variantCount = product.variants.length;
 
   return (
-    <Link
-      href={`/products/${product.id}`}
-      onClick={() => analytics.track({ type: "view", ref: product.id })}
-      className="group relative flex flex-col rounded border border-aluminium bg-white transition-shadow hover:shadow-md"
-    >
-      {/* Image area */}
-      <div className="relative h-48 w-full overflow-hidden rounded-t bg-neutral-fill">
-        {product.images.length > 0 ? (
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-neutral-fill p-4 text-center text-sm text-aluminium-dark">
-            {product.name}
-          </div>
-        )}
-        {/* 3D badge on hover */}
-        {hasRealValue(product.model3d) && (
-          <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <Badge>Ver 3D</Badge>
-          </div>
-        )}
-      </div>
-
-      {/* Card body */}
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        {/* Category label */}
-        <p className="text-xs text-aluminium-dark">{getCategoryName(product.category)}</p>
-
-        {/* Product name */}
-        <h3 className="text-sm font-semibold text-ink leading-snug">{product.name}</h3>
-
-        {/* Spec chips */}
-        {(powerRange || ipLabel || colorTemp) && (
-          <div className="flex flex-wrap gap-1">
-            {powerRange && <Chip label={powerRange} />}
-            {ipLabel && <Chip label={ipLabel} />}
-            {colorTemp && <Chip label={colorTemp} />}
-          </div>
-        )}
-
-        {/* Ref line */}
-        <p className="text-xs text-aluminium-dark">
-          {product.ref_prefix}
-          {variantCount > 1 ? ` · ${variantCount} referências` : variantCount === 1 ? ` · ${firstRef}` : ""}
-        </p>
-
-        {/* Price */}
-        <p className="mt-auto text-sm font-medium text-ink">{price}</p>
-
-        {/* Actions */}
-        <div className="flex gap-2" onClick={(e) => e.preventDefault()}>
-          <SaveButton productId={product.id} />
-          <AnimatedButton
-            onClick={(e) => { e.preventDefault(); toggle(product.id); }}
-            disabled={!inCompare && !canAdd}
-            aria-label={inCompare ? "Remover da comparação" : "Adicionar à comparação"}
-            className={`rounded border px-2 py-1 text-xs transition-colors disabled:opacity-40 ${
-              inCompare
-                ? "border-brand bg-brand text-white"
-                : "border-aluminium text-aluminium-dark hover:border-brand hover:text-brand"
-            }`}
-          >
-            {inCompare ? "✓ Comparar" : "+ Comparar"}
-          </AnimatedButton>
-          <DownloadMenu product={product} />
+    <div className="group relative flex flex-col rounded border border-aluminium bg-white transition-shadow hover:shadow-md">
+      {/* Clickable area: image + product info */}
+      <Link
+        href={`/products/${product.id}`}
+        onClick={() => analytics.track({ type: "view", ref: product.id })}
+        className="flex flex-col"
+      >
+        {/* Image area */}
+        <div className="relative h-48 w-full overflow-hidden rounded-t bg-neutral-fill">
+          {product.images.length > 0 ? (
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-neutral-fill p-4 text-center text-sm text-aluminium-dark">
+              {product.name}
+            </div>
+          )}
+          {/* 3D badge on hover */}
+          {hasRealValue(product.model3d) && (
+            <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+              <Badge>Ver 3D</Badge>
+            </div>
+          )}
         </div>
+
+        {/* Card info body */}
+        <div className="flex flex-1 flex-col gap-2 p-4 pb-2">
+          {/* Category label */}
+          <p className="text-xs text-aluminium-dark">{getCategoryName(product.category)}</p>
+
+          {/* Product name */}
+          <h3 className="text-sm font-semibold text-ink leading-snug">{product.name}</h3>
+
+          {/* Spec chips */}
+          {(powerRange || ipLabel || colorTemp) && (
+            <div className="flex flex-wrap gap-1">
+              {powerRange && <Chip label={powerRange} />}
+              {ipLabel && <Chip label={ipLabel} />}
+              {colorTemp && <Chip label={colorTemp} />}
+            </div>
+          )}
+
+          {/* Ref line */}
+          <p className="text-xs text-aluminium-dark">
+            {product.ref_prefix}
+            {variantCount > 1 ? ` · ${variantCount} referências` : variantCount === 1 ? ` · ${firstRef}` : ""}
+          </p>
+
+          {/* Price */}
+          <p className="mt-auto text-sm font-medium text-ink">{price}</p>
+        </div>
+      </Link>
+
+      {/* Actions row — outside the Link to avoid nested anchors */}
+      <div className="flex gap-2 px-4 pb-4">
+        <SaveButton productId={product.id} />
+        <AnimatedButton
+          onClick={() => toggle(product.id)}
+          disabled={!inCompare && !canAdd}
+          aria-label={inCompare ? "Remover da comparação" : "Adicionar à comparação"}
+          className={`rounded border px-2 py-1 text-xs transition-colors disabled:opacity-40 ${
+            inCompare
+              ? "border-brand bg-brand text-white"
+              : "border-aluminium text-aluminium-dark hover:border-brand hover:text-brand"
+          }`}
+        >
+          {inCompare ? "✓ Comparar" : "+ Comparar"}
+        </AnimatedButton>
+        <DownloadMenu product={product} />
       </div>
-    </Link>
+    </div>
   );
 }

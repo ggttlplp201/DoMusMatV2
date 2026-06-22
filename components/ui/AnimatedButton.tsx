@@ -6,16 +6,9 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-interface AnimatedButtonProps {
+type AnimatedButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  className?: string;
-  disabled?: boolean;
-  "aria-label"?: string;
-  "aria-pressed"?: boolean;
-  type?: "button" | "submit" | "reset";
-  title?: string;
-}
+};
 
 export function AnimatedButton({
   children,
@@ -23,8 +16,7 @@ export function AnimatedButton({
   className,
   disabled,
   type = "button",
-  title,
-  ...ariaProps
+  ...rest
 }: AnimatedButtonProps) {
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -55,9 +47,8 @@ export function AnimatedButton({
       type={type}
       disabled={disabled}
       className={className}
-      title={title}
       onClick={handleClick}
-      {...ariaProps}
+      {...rest}
     >
       {children}
     </button>

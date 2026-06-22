@@ -8,20 +8,17 @@ import { useCompare } from "@/state/compare";
 import { useLists } from "@/state/lists";
 import { repo } from "@/lib/repository";
 import { SearchBar } from "./SearchBar";
+import { t } from "@/lib/strings";
 
-// Separated so useSearchParams is inside Suspense boundary
-function CategoryBar() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+// Single shared markup for both fallback (activeId=null) and live render
+function CategoryBar({ activeId }: { activeId: string | null }) {
   const categories = repo.getCategories();
-  const activeCategoryId = pathname === "/" ? searchParams.get("category") : null;
-
   return (
     <div className="border-b border-aluminium bg-white">
       <div className="mx-auto max-w-[1440px] px-6">
         <ul className="flex items-center overflow-x-auto" role="list">
           {categories.map((cat, idx) => {
-            const isActive = activeCategoryId === cat.id;
+            const isActive = activeId === cat.id;
             return (
               <li key={cat.id} role="listitem" className="flex items-center">
                 {idx > 0 && (
@@ -46,6 +43,14 @@ function CategoryBar() {
       </div>
     </div>
   );
+}
+
+// Reads searchParams (must be inside Suspense boundary)
+function CategoryBarLive() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeCategoryId = pathname === "/" ? searchParams.get("category") : null;
+  return <CategoryBar activeId={activeCategoryId} />;
 }
 
 // Mobile menu panel
@@ -85,11 +90,11 @@ function MobileMenu({
         </ul>
       </nav>
       <div className="flex flex-col gap-2 px-6 py-3 border-t border-aluminium">
-        <Link href="/compare" className="flex items-center gap-2 text-sm text-ink py-1">
-          <CompareIcon /> Comparar
+        <Link href="/compare" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
+          <CompareIcon /> {t.compare}
         </Link>
-        <Link href="/lists" className="flex items-center gap-2 text-sm text-ink py-1">
-          <BookmarkIcon /> Listas guardadas
+        <Link href="/lists" onClick={onClose} className="flex items-center gap-2 text-sm text-ink py-1">
+          <BookmarkIcon /> {t.savedLists}
         </Link>
         <button className="rounded border border-aluminium px-3 py-1.5 text-sm text-left">
           B2B Login
@@ -168,10 +173,9 @@ export function Nav() {
             <SearchBar value={search} onChange={setSearch} />
           </div>
 
-          <div className="flex-1 md:hidden" />
 
           {/* Right cluster */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ml-auto md:ml-0">
             {/* Comparar */}
             <Link
               href="/compare"
@@ -237,8 +241,8 @@ export function Nav() {
 
       {/* Secondary category bar — desktop only */}
       <div className="hidden md:block">
-        <Suspense fallback={<CategoryBarFallback />}>
-          <CategoryBar />
+        <Suspense fallback={<CategoryBar activeId={null} />}>
+          <CategoryBarLive />
         </Suspense>
       </div>
 
@@ -253,25 +257,3 @@ export function Nav() {
   );
 }
 
-function CategoryBarFallback() {
-  const categories = repo.getCategories();
-  return (
-    <div className="border-b border-aluminium bg-white">
-      <div className="mx-auto max-w-[1440px] px-6">
-        <ul className="flex items-center overflow-x-auto" role="list">
-          {categories.map((cat, idx) => (
-            <li key={cat.id} role="listitem" className="flex items-center">
-              {idx > 0 && <span className="h-4 border-l border-aluminium" aria-hidden />}
-              <Link
-                href={`/?category=${cat.id}`}
-                className="px-4 py-2.5 text-sm whitespace-nowrap text-aluminium-dark hover:text-ink"
-              >
-                {cat.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
