@@ -43,3 +43,21 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
 }
+
+/* ─── Accessibility: focus-visible ring ─────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ─── Accessibility: reduce motion safety net ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

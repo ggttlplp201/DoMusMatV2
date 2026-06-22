@@ -65,15 +65,15 @@ export function CatalogueView() {
         <div className="lg:hidden">
           <button
             onClick={() => setShowFilters(v => !v)}
+            aria-expanded={showFilters}
+            aria-controls="mobile-filter-panel"
             className="mb-4 rounded border border-aluminium px-3 py-1.5 text-sm text-aluminium-dark"
           >
             {showFilters ? "Fechar filtros" : "Filtros"}
           </button>
-          {showFilters && (
-            <div className="mb-6">
-              <FilterSidebar filters={filters} onChange={setFilters} />
-            </div>
-          )}
+          <div id="mobile-filter-panel" className={showFilters ? "mb-6" : "hidden"}>
+            <FilterSidebar filters={filters} onChange={setFilters} />
+          </div>
         </div>
 
         {/* Desktop sidebar */}

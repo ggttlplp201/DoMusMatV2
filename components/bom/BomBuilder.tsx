@@ -18,7 +18,7 @@ export function BomBuilder() {
 
   return (
     <div>
-      <BomTable lines={lines} />
+      <BomTable lines={lines} onRemove={remove} />
       <div className="mt-4 flex items-center justify-between">
         <div className="flex gap-3">
           <ExportButton lines={lines} />
@@ -29,19 +29,6 @@ export function BomBuilder() {
         >
           Limpar
         </button>
-      </div>
-      <div className="mt-4 space-y-1">
-        {items.map((item) => (
-          <div key={item.ref} className="flex items-center justify-between text-sm">
-            <span className="font-mono text-xs text-aluminium-dark">{item.ref}</span>
-            <button
-              onClick={() => remove(item.ref)}
-              className="text-xs text-aluminium-dark hover:text-ink"
-            >
-              Remover
-            </button>
-          </div>
-        ))}
       </div>
     </div>
   );

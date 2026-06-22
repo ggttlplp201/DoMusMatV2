@@ -1,6 +1,11 @@
 import type { BomLine } from "@/lib/bom";
 
-export function BomTable({ lines }: { lines: BomLine[] }) {
+interface BomTableProps {
+  lines: BomLine[];
+  onRemove?: (ref: string) => void;
+}
+
+export function BomTable({ lines, onRemove }: BomTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm border-collapse">
@@ -13,6 +18,7 @@ export function BomTable({ lines }: { lines: BomLine[] }) {
             <th className="py-2 px-3 text-left font-medium">Conformidade</th>
             <th className="py-2 px-3 text-right font-medium">Preço unitário</th>
             <th className="py-2 px-3 text-right font-medium">Total</th>
+            {onRemove && <th className="py-2 px-3 text-right font-medium sr-only">Ação</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,6 +34,18 @@ export function BomTable({ lines }: { lines: BomLine[] }) {
               <td className="py-2 px-3 text-aluminium-dark">{line.complianceStatus}</td>
               <td className="py-2 px-3 text-right tabular-nums text-ink">{line.unitPrice}</td>
               <td className="py-2 px-3 text-right tabular-nums text-ink">{line.lineTotal}</td>
+              {onRemove && (
+                <td className="py-2 px-3 text-right">
+                  <button
+                    type="button"
+                    aria-label={`Remover ${line.ref}`}
+                    onClick={() => onRemove(line.ref)}
+                    className="text-xs text-aluminium-dark hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                  >
+                    ×
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

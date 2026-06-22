@@ -51,7 +51,7 @@ export function DetailView({ productId }: DetailViewProps) {
     product.variants.find((v) => v.ref === selectedRef) ?? product.variants[0];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 pb-24 lg:pb-0">
       {/* Two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8">
         {/* Left: 3D viewer or gallery */}
@@ -79,9 +79,16 @@ export function DetailView({ productId }: DetailViewProps) {
             selectedRef={selectedRef}
             onSelect={handleVariantSelect}
           />
-          {/* TASK 14: OrderCalculator */}
-          <OrderCalculator variantRef={selectedRef} />
+          {/* OrderCalculator: right rail on lg+, hidden here on mobile (shown in sticky bar below) */}
+          <div className="hidden lg:block">
+            <OrderCalculator variantRef={selectedRef} />
+          </div>
         </div>
+      </div>
+
+      {/* Mobile sticky bottom bar: only visible below lg */}
+      <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden border-t border-aluminium bg-white px-4 py-3 shadow-lg">
+        <OrderCalculator variantRef={selectedRef} />
       </div>
 
       {/* Full-width below sections */}
