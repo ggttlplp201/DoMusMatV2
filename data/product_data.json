@@ -426,8 +426,8 @@
         {
           "format": "PDF",
           "label": "Ficha Técnica",
-          "file": "PLACEHOLDER",
-          "size": "PLACEHOLDER",
+          "file": "/datasheets/high-bay-datasheet.pdf",
+          "size": "1928 KB",
           "primary": false
         }
       ],
