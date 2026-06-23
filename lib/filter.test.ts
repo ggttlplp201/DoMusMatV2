@@ -63,6 +63,25 @@ describe("filterProducts", () => {
     }
   });
 
+  it('lenient CJK: "镜子" returns the same results as "镜"', () => {
+    const a = filterProducts(repo.getProducts(), emptyFilters, "镜").map(p => p.id).sort();
+    const b = filterProducts(repo.getProducts(), emptyFilters, "镜子").map(p => p.id).sort();
+    expect(b.length).toBeGreaterThan(0);
+    expect(b).toEqual(a);
+  });
+
+  it('accent-insensitive: "iluminacao" matches lighting products', () => {
+    const r = filterProducts(repo.getProducts(), emptyFilters, "iluminacao");
+    expect(r.length).toBeGreaterThan(0);
+    expect(r.every(p => p.category === "iluminacao-led")).toBe(true);
+  });
+
+  it('accent-insensitive: "rodape" matches the rodapes category', () => {
+    const r = filterProducts(repo.getProducts(), emptyFilters, "rodape");
+    expect(r.length).toBeGreaterThan(0);
+    expect(r.some(p => p.category === "rodapes")).toBe(true);
+  });
+
   it("facetOptions power contains 200 and is sorted ascending", () => {
     const { power } = facetOptions(repo.getProducts());
     expect(power).toContain(200);

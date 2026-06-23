@@ -1,11 +1,35 @@
 import type { Product } from "./types";
 import { repo } from "./repository";
 
-// category id -> all localized names (pt/en/zh) joined, for multilingual search
+// Fold for lenient matching: lowercase + strip Latin diacritics (so PT "iluminacao"
+// matches "Iluminação", "rodape" matches "Rodapé"). CJK is unaffected by NFKD here.
+function fold(s: string): string {
+  return s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "");
+}
+
+// CJK noun-suffix / filler chars that can be dropped so e.g. "镜子" ≡ "镜", "灯具" ≡ "灯".
+const CJK_TRAILING = /[子儿头具]$/;
+
+// Expand a query into equivalent variants for lenient matching.
+function queryVariants(q: string): string[] {
+  const out = new Set<string>();
+  const base = q.trim();
+  if (!base) return [];
+  out.add(base);
+  // strip a trailing CJK filler/suffix char (镜子 -> 镜, 灯具 -> 灯)
+  let t = base;
+  while (t.length > 1 && CJK_TRAILING.test(t)) {
+    t = t.slice(0, -1);
+    out.add(t);
+  }
+  return [...out];
+}
+
+// category id -> all localized names (pt/en/zh) joined + folded, for multilingual search
 const CATEGORY_SEARCH: Record<string, string> = (() => {
   const m: Record<string, string> = {};
   for (const c of repo.getCategories()) {
-    m[c.id] = `${c.name} ${c.name_en ?? ""} ${c.name_zh ?? ""}`.toLowerCase();
+    m[c.id] = fold(`${c.name} ${c.name_en ?? ""} ${c.name_zh ?? ""}`);
   }
   return m;
 })();
@@ -34,18 +58,23 @@ function colorTempsOf(p: Product): string[] {
 }
 
 export function filterProducts(products: Product[], f: CatalogueFilters, query: string): Product[] {
-  const q = query.trim().toLowerCase();
+  const variants = queryVariants(query).map(fold).filter(Boolean);
+  const tokens = fold(query).split(/\s+/).filter(Boolean);
   return products.filter(p => {
     if (f.category.length && !f.category.includes(p.category)) return false;
     if (f.power.length && !powersOf(p).some(w => f.power.includes(w))) return false;
     if (f.ip.length) { const ip = ipOf(p); if (ip === undefined || !f.ip.includes(ip)) return false; }
     if (f.colorTemp.length && !colorTempsOf(p).some(c => f.colorTemp.includes(c))) return false;
     if ((f.format ?? []).length && !p.bim_assets.some(a => (f.format ?? []).includes(a.format))) return false;
-    if (q) {
-      // Search across PT/EN/ZH product names + localized category names + refs,
-      // so a query in any language matches (e.g. "镜" / "mirror" / "espelho").
-      const hay = `${p.name} ${p.name_en ?? ""} ${p.name_zh ?? ""} ${p.category} ${CATEGORY_SEARCH[p.category] ?? ""} ${p.ref_prefix} ${p.variants.map(v => v.ref).join(" ")}`.toLowerCase();
-      if (!hay.includes(q)) return false;
+    if (variants.length) {
+      // Folded haystack across PT/EN/ZH product names + localized category names + refs,
+      // so a query in any language matches (e.g. "镜"/"镜子", "mirror", "espelho").
+      const hay = fold(`${p.name} ${p.name_en ?? ""} ${p.name_zh ?? ""} ${p.category} ${CATEGORY_SEARCH[p.category] ?? ""} ${p.ref_prefix} ${p.variants.map(v => v.ref).join(" ")}`);
+      // match if any query variant is a substring, OR (multi-word) every token is present
+      const matched =
+        variants.some(v => hay.includes(v)) ||
+        (tokens.length > 1 && tokens.every(t => hay.includes(t)));
+      if (!matched) return false;
     }
     return true;
   });
