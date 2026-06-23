@@ -45,21 +45,19 @@ export function ModelViewer({ src, alt }: ModelViewerProps) {
         touch-action="pan-y"
         style={{ width: "100%", height: "480px", display: "block" }}
       />
-      {/* SAMPLE overlay — pointer-events-none so orbit/zoom/click pass through */}
+      {/* SAMPLE overlay — tiled diagonal watermark, pointer-events-none so orbit/zoom/click pass through */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background:
-            "repeating-linear-gradient(to right, rgba(20,20,20,0.06) 0 14px, transparent 14px 28px)",
-        }}
-      >
-        <span
-          className="absolute top-2 left-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/40 select-none"
-        >
-          {t("viewer.sample")}
-        </span>
-      </div>
+        style={(() => {
+          const word = t("viewer.sample");
+          const tile = `<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><text x='20' y='110' transform='rotate(-30 20 110)' font-family='Open Sans, system-ui, sans-serif' font-weight='700' font-size='26' letter-spacing='3' fill='rgba(20,20,20,0.08)'>${word}</text></svg>`;
+          return {
+            backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(tile)}")`,
+            backgroundRepeat: "repeat",
+          };
+        })()}
+      />
       <div className="absolute bottom-3 right-3 flex gap-2 z-20">
         <button
           aria-label={t("viewer.reset")}
