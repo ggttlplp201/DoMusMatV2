@@ -4,9 +4,8 @@ import Image from "next/image";
 import { repo } from "@/lib/repository";
 import { formatPrice, formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
 import { useT, useLocale } from "@/state/locale";
-import { localizedName } from "@/lib/i18n";
+import { localizedName, localizeSpecValue } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
 
 function getPowerRange(product: Product): string {
@@ -37,9 +36,9 @@ function getFirstVariantPrice(product: Product, priceFallback?: string): string 
   return formatPrice(commercial.unit_prices?.[firstRef], commercial.currency, priceFallback);
 }
 
-function getConformidade(product: Product): string {
+function getConformidade(product: Product, specFallback: string): string {
   const ce = product.compliance?.ce;
-  return ce && hasRealValue(ce.value) ? ce.value : fallbacks.spec;
+  return ce && hasRealValue(ce.value) ? ce.value : specFallback;
 }
 
 interface ComparisonTableProps {
@@ -50,6 +49,8 @@ interface ComparisonTableProps {
 export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) {
   const t = useT();
   const { locale } = useLocale();
+
+  const specFallback = t("fb.spec");
 
   const ROWS: { key: string; label: string; getValue: (p: Product) => string }[] = [
     {
@@ -68,7 +69,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       label: t("spec.ip"),
       getValue: (p) => {
         const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
-        return hasRealValue(ip) ? `IP${ip}` : fallbacks.spec;
+        return hasRealValue(ip) ? `IP${ip}` : specFallback;
       },
     },
     {
@@ -76,7 +77,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       label: t("spec.colorTemp"),
       getValue: (p) => {
         const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
-        if (!hasRealValue(ct)) return fallbacks.spec;
+        if (!hasRealValue(ct)) return specFallback;
         return Array.isArray(ct) ? ct.join(" / ") : String(ct);
       },
     },
@@ -85,7 +86,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       label: t("spec.material"),
       getValue: (p) => {
         const mat = (p.shared_specs as Record<string, unknown>).material;
-        return hasRealValue(mat) ? String(mat) : fallbacks.spec;
+        return hasRealValue(mat) ? localizeSpecValue(mat, locale) : specFallback;
       },
     },
     {
@@ -93,12 +94,12 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
       label: t("spec.certificates"),
       getValue: (p) => {
         const certs = (p.shared_specs as Record<string, unknown>).certificates;
-        if (!hasRealValue(certs)) return fallbacks.spec;
+        if (!hasRealValue(certs)) return specFallback;
         return Array.isArray(certs) ? certs.join(", ") : String(certs);
       },
     },
     { key: "price", label: t("order.unitPrice"), getValue: (p) => getFirstVariantPrice(p, t("fb.price")) },
-    { key: "conformidade", label: t("compliance.title"), getValue: getConformidade },
+    { key: "conformidade", label: t("compliance.title"), getValue: (p) => getConformidade(p, specFallback) },
   ];
 
   const products = productIds

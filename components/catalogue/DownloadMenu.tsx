@@ -13,6 +13,13 @@ gsap.registerPlugin(useGSAP);
 
 const REVIT_ARCHICAD_FORMATS = new Set<string>(["IFC", "RFA", "PLA"]);
 
+// Per-format CAD tool compatibility labels
+const CAD_TOOL_TAG: Record<string, string> = {
+  IFC: "Revit · ArchiCAD",
+  RFA: "Revit",
+  PLA: "ArchiCAD",
+};
+
 interface AssetRowProps {
   asset: BimAsset;
   unavailableLabel: string;
@@ -22,13 +29,19 @@ interface AssetRowProps {
 function AssetRow({ asset, unavailableLabel, downloadLabel }: AssetRowProps) {
   const hasFile = hasRealValue(asset.file);
   const rowLabel = asset.label || asset.format;
+  const cadTag = CAD_TOOL_TAG[asset.format];
   return (
     <li role="menuitem" className="flex items-center justify-between gap-2 px-3 py-2 hover:bg-neutral-fill">
-      <span className="flex items-center gap-2 text-sm text-ink">
+      <span className="flex items-center gap-2 text-sm text-ink flex-wrap">
         {rowLabel}
         <span className="rounded bg-neutral-fill px-1.5 py-0.5 text-[10px] font-medium text-aluminium-dark border border-aluminium">
           {asset.format}
         </span>
+        {cadTag && (
+          <span className="rounded bg-neutral-fill px-1.5 py-0.5 text-[10px] text-aluminium-dark border border-aluminium">
+            {cadTag}
+          </span>
+        )}
       </span>
       {hasFile ? (
         <a

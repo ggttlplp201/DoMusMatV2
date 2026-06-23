@@ -3,7 +3,8 @@
 import type { Product, Variant } from "@/lib/types";
 import { formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
-import { useT } from "@/state/locale";
+import { useT, useLocale } from "@/state/locale";
+import { localizeSpecValue, type Locale } from "@/lib/i18n";
 
 // Maps spec data keys to i18n message keys
 const SPEC_KEY_MAP: Record<string, string> = {
@@ -15,26 +16,25 @@ const SPEC_KEY_MAP: Record<string, string> = {
   cri: "spec.cri",
   ip_rating: "spec.ip",
   beam_angle_deg: "spec.beamAngle",
+  beam_type: "spec.beamType",
   material: "spec.material",
   finish: "spec.finish",
   energy_class: "spec.energyClass",
   luminous_efficacy: "spec.efficacy",
   warranty_years: "spec.warranty",
   certificates: "spec.certificates",
+  length_mm: "spec.length",
+  width_mm: "spec.width",
+  height_mm: "spec.height",
+  diameter_mm: "spec.diameter",
+  chip: "spec.chip",
+  lifetime_hours: "spec.lifetime",
 };
 
-// PT fallback labels for keys not in i18n map
-const PT_LABELS: Record<string, string> = {
-  length_mm: "Comprimento",
-  width_mm: "Largura",
-  height_mm: "Altura",
-  diameter_mm: "Diâmetro",
-  beam_type: "Tipo de feixe",
-  chip: "Chip",
-  lifetime_hours: "Vida útil",
-};
+// Keys whose values should be localized (material / finish / beam_type)
+const LOCALIZE_VALUE_KEYS = new Set(["material", "finish", "beam_type"]);
 
-function formatValue(key: string, value: unknown): string | null {
+function formatValue(key: string, value: unknown, yearUnit: string): string | null {
   if (!hasRealValue(value)) return null;
 
   if (key === "ip_rating") return `IP${value}`;
@@ -42,7 +42,7 @@ function formatValue(key: string, value: unknown): string | null {
   if (key === "power_w") return `${value} W`;
   if (key === "lumens") return `${value} lm`;
   if (key === "diameter_mm") return `Ø ${value} mm`;
-  if (key === "warranty_years") return `${value} anos`;
+  if (key === "warranty_years") return `${value} ${yearUnit}`;
   if (Array.isArray(value)) return value.join(" / ");
 
   return String(value);
@@ -54,12 +54,24 @@ interface SpecRow {
   value: string;
 }
 
-function buildRows(product: Product, variant: Variant, t: (key: string) => string): SpecRow[] {
+function buildRows(
+  product: Product,
+  variant: Variant,
+  t: (key: string) => string,
+  locale: Locale
+): SpecRow[] {
   const rows: SpecRow[] = [];
+  const yearUnit = t("unit.years");
 
   const getLabel = (key: string): string => {
     if (SPEC_KEY_MAP[key]) return t(SPEC_KEY_MAP[key]);
-    return PT_LABELS[key] ?? key;
+    return key;
+  };
+
+  const maybeLocalize = (key: string, raw: unknown): string => {
+    if (LOCALIZE_VALUE_KEYS.has(key)) return localizeSpecValue(raw, locale);
+    const formatted = formatValue(key, raw, yearUnit);
+    return formatted ?? String(raw);
   };
 
   // (a) Variant attrs — combine dimensions if all present
@@ -100,8 +112,8 @@ function buildRows(product: Product, variant: Variant, t: (key: string) => strin
   // Remaining variant attrs
   for (const [k, v] of Object.entries(rest)) {
     if (!hasRealValue(v)) continue;
-    const formatted = formatValue(k, v);
-    if (formatted) rows.push({ key: k, labelText: getLabel(k), value: formatted });
+    const value = maybeLocalize(k, v);
+    rows.push({ key: k, labelText: getLabel(k), value });
   }
 
   // (b) shared_specs
@@ -132,8 +144,8 @@ function buildRows(product: Product, variant: Variant, t: (key: string) => strin
   for (const k of sharedKeys) {
     const v = shared[k];
     if (!hasRealValue(v)) continue;
-    const formatted = formatValue(k, v);
-    if (formatted) rows.push({ key: k, labelText: getLabel(k), value: formatted });
+    const value = maybeLocalize(k, v);
+    rows.push({ key: k, labelText: getLabel(k), value });
   }
 
   return rows;
@@ -141,7 +153,8 @@ function buildRows(product: Product, variant: Variant, t: (key: string) => strin
 
 export function SpecTable({ product, variant }: { product: Product; variant: Variant }) {
   const t = useT();
-  const rows = buildRows(product, variant, t);
+  const { locale } = useLocale();
+  const rows = buildRows(product, variant, t, locale);
 
   if (rows.length === 0) return null;
 

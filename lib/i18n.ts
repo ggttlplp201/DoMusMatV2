@@ -125,6 +125,14 @@ export const messages: Record<Locale, Record<string, string>> = {
     "spec.energyClass": "Classe energética",
     "spec.warranty": "Garantia",
     "spec.certificates": "Certificações",
+    "spec.length": "Comprimento",
+    "spec.width": "Largura",
+    "spec.height": "Altura",
+    "spec.diameter": "Diâmetro",
+    "spec.beamType": "Tipo de feixe",
+    "spec.chip": "Chip",
+    "spec.lifetime": "Vida útil",
+    "unit.years": "anos",
     "bim.productId": "ID do produto",
     "bim.version": "Versão",
     "bim.materials": "Materiais",
@@ -258,6 +266,14 @@ export const messages: Record<Locale, Record<string, string>> = {
     "spec.energyClass": "Energy class",
     "spec.warranty": "Warranty",
     "spec.certificates": "Certifications",
+    "spec.length": "Length",
+    "spec.width": "Width",
+    "spec.height": "Height",
+    "spec.diameter": "Diameter",
+    "spec.beamType": "Beam type",
+    "spec.chip": "Chip",
+    "spec.lifetime": "Lifetime",
+    "unit.years": "yr",
     "bim.productId": "Product ID",
     "bim.version": "Version",
     "bim.materials": "Materials",
@@ -391,6 +407,14 @@ export const messages: Record<Locale, Record<string, string>> = {
     "spec.energyClass": "能效等级",
     "spec.warranty": "质保",
     "spec.certificates": "认证",
+    "spec.length": "长度",
+    "spec.width": "宽度",
+    "spec.height": "高度",
+    "spec.diameter": "直径",
+    "spec.beamType": "光束类型",
+    "spec.chip": "灯珠",
+    "spec.lifetime": "使用寿命",
+    "unit.years": "年",
     "bim.productId": "产品编号",
     "bim.version": "版本",
     "bim.materials": "材料",
@@ -416,6 +440,75 @@ export function translate(locale: Locale, key: string): string {
  * Returns the locale-appropriate name for a category or product object.
  * Falls back to `name` (Portuguese) when the locale-specific field is absent or empty.
  */
+// ── Spec-value localizer ──────────────────────────────────────────────────────
+// Translates Portuguese material / finish / beam_type values.
+// Values not in the map (numbers, codes, etc.) pass through unchanged.
+const SPEC_VALUE_MAP: Record<string, { en: string; zh: string }> = {
+  // Materials
+  "Alumínio":                         { en: "Aluminium",        zh: "铝" },
+  "Alumínio/PC":                      { en: "Aluminium/PC",     zh: "铝/PC" },
+  "Alumínio+PC":                      { en: "Aluminium+PC",     zh: "铝+PC" },
+  "PC+UV-resistant":                  { en: "PC+UV-resistant",  zh: "PC+防紫外线" },
+  "PVC+PC/PMMA":                      { en: "PVC+PC/PMMA",      zh: "PVC+PC/PMMA" },
+  "Inox+alumínio+vidro+plástico":     { en: "Stainless steel+aluminium+glass+plastic", zh: "不锈钢+铝+玻璃+塑料" },
+  "Alumínio+inox+vidro+plástico":     { en: "Aluminium+stainless steel+glass+plastic", zh: "铝+不锈钢+玻璃+塑料" },
+  "madeira natural":                  { en: "Natural wood",     zh: "天然木材" },
+  "Vinílico multicamadas":            { en: "Multilayer vinyl", zh: "多层乙烯基" },
+  "Núcleo rígido vinílico":           { en: "Rigid vinyl core", zh: "硬质乙烯基芯" },
+  "MDF":                              { en: "MDF",              zh: "MDF" },
+  "Resina composta/BMC":              { en: "Resina composta/BMC", zh: "复合树脂/BMC" },
+  "Aço inoxidável":                   { en: "Stainless steel",  zh: "不锈钢" },
+  "Inox":                             { en: "Stainless steel",  zh: "不锈钢" },
+  "MDF/CPL/LVL":                      { en: "MDF/CPL/LVL",      zh: "MDF/CPL/LVL" },
+  "aço galvanizado":                  { en: "Galvanised steel", zh: "镀锌钢" },
+  "Aço S275 JR galvanizado":          { en: "Galvanised steel S275 JR", zh: "镀锌钢 S275 JR" },
+  "PET técnico alta resistência":     { en: "High-strength technical PET", zh: "高强度工程 PET" },
+  "PC":                               { en: "PC",               zh: "PC" },
+  "PVC":                              { en: "PVC",              zh: "PVC" },
+  "Aço":                              { en: "Steel",            zh: "钢" },
+  "Aglomerado":                       { en: "Chipboard",        zh: "刨花板" },
+  "Madeira":                          { en: "Wood",             zh: "木材" },
+  // Finishes
+  "Branco":                           { en: "White",            zh: "白色" },
+  "Preto":                            { en: "Black",            zh: "黑色" },
+  "Dourado":                          { en: "Gold",             zh: "金色" },
+  "verniz UV":                        { en: "UV varnish",       zh: "UV 清漆" },
+  "verniz+óleo natural":              { en: "Varnish+natural oil", zh: "清漆+天然油" },
+  "texturado":                        { en: "Textured",         zh: "纹理" },
+  "melamina/CPL/lacado":              { en: "Melamine/CPL/lacquered", zh: "三聚氰胺/CPL/烤漆" },
+  "laminado/lacada":                  { en: "Laminated/lacquered", zh: "贴面/烤漆" },
+  "aço pintado opcional":             { en: "Optional painted steel", zh: "可选烤漆钢" },
+  // Beam types
+  "simétrico":                        { en: "Symmetric",        zh: "对称" },
+  "assimétrico":                      { en: "Asymmetric",       zh: "非对称" },
+};
+
+/**
+ * Translates a Portuguese spec value (material / finish / beam_type) to the
+ * given locale.  Arrays (finish can be an array) are joined with " / ".
+ * Slash-separated combos like "Branco/Preto" are split and each part translated.
+ * Values not in the map pass through unchanged.
+ */
+export function localizeSpecValue(value: unknown, locale: Locale): string {
+  if (Array.isArray(value)) {
+    return value.map((v) => localizeSpecValue(v, locale)).join(" / ");
+  }
+  const str = String(value);
+  if (locale === "pt") return str;
+  // Direct match first
+  const direct = SPEC_VALUE_MAP[str];
+  if (direct) return direct[locale] ?? str;
+  // Try slash-split for combos like "Branco/Preto"
+  if (str.includes("/")) {
+    const parts = str.split("/").map((p) => {
+      const match = SPEC_VALUE_MAP[p.trim()];
+      return match ? (match[locale] ?? p.trim()) : p.trim();
+    });
+    return parts.join("/");
+  }
+  return str;
+}
+
 export function localizedName(
   obj: { name: string; name_en?: string; name_zh?: string },
   locale: Locale
