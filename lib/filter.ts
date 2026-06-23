@@ -5,6 +5,7 @@ export interface CatalogueFilters {
   power: number[];
   ip: number[];
   colorTemp: string[];
+  format: string[];
 }
 
 function ipOf(p: Product): number | undefined {
@@ -29,6 +30,7 @@ export function filterProducts(products: Product[], f: CatalogueFilters, query: 
     if (f.power.length && !powersOf(p).some(w => f.power.includes(w))) return false;
     if (f.ip.length) { const ip = ipOf(p); if (ip === undefined || !f.ip.includes(ip)) return false; }
     if (f.colorTemp.length && !colorTempsOf(p).some(c => f.colorTemp.includes(c))) return false;
+    if ((f.format ?? []).length && !p.bim_assets.some(a => (f.format ?? []).includes(a.format))) return false;
     if (q) {
       const hay = `${p.name} ${p.category} ${p.ref_prefix} ${p.variants.map(v => v.ref).join(" ")}`.toLowerCase();
       if (!hay.includes(q)) return false;

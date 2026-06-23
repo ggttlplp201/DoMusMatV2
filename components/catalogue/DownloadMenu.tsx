@@ -62,9 +62,10 @@ function AssetRow({ asset, unavailableLabel, downloadLabel }: AssetRowProps) {
 
 interface DownloadMenuProps {
   product: Product;
+  iconOnly?: boolean;
 }
 
-export function DownloadMenu({ product }: DownloadMenuProps) {
+export function DownloadMenu({ product, iconOnly }: DownloadMenuProps) {
   const t = useT();
   const [open, setOpen] = useState(false);
   const triggerContainerRef = useRef<HTMLDivElement>(null);
@@ -148,32 +149,61 @@ export function DownloadMenu({ product }: DownloadMenuProps) {
 
   return (
     <div className="relative" ref={triggerContainerRef}>
-      <AnimatedButton
-        onClick={handleTriggerClick}
-        aria-label={t("download.title")}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        title={t("download.title")}
-        className="flex items-center gap-1 rounded border border-aluminium px-2 py-1 text-xs text-aluminium-dark transition-colors hover:border-brand hover:text-brand"
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
+      {iconOnly ? (
+        <button
+          type="button"
+          onClick={handleTriggerClick}
+          aria-label={t("download.title")}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          title={t("download.title")}
+          className="w-[34px] h-[34px] flex items-center justify-center bg-[#17181C] text-white rounded hover:bg-[#DA1E28] transition-colors"
         >
-          <path
-            d="M7 1v8M4 6l3 3 3-3M2 11h10"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {t("download.trigger")}
-      </AnimatedButton>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M7 1v8M4 6l3 3 3-3M2 11h10"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      ) : (
+        <AnimatedButton
+          onClick={handleTriggerClick}
+          aria-label={t("download.title")}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          title={t("download.title")}
+          className="flex items-center gap-1 rounded border border-aluminium px-2 py-1 text-xs text-aluminium-dark transition-colors hover:border-brand hover:text-brand"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M7 1v8M4 6l3 3 3-3M2 11h10"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {t("download.trigger")}
+        </AnimatedButton>
+      )}
 
       {open && (
         <div

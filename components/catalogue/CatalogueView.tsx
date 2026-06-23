@@ -5,21 +5,28 @@ import { repo } from "@/lib/repository";
 import { filterProducts } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
 import { useT } from "@/state/locale";
-import { SearchBar } from "@/components/nav/SearchBar";
 import { FilterSidebar } from "./FilterSidebar";
 import { SortDropdown } from "./SortDropdown";
 import type { SortOption } from "./SortDropdown";
 import { ProductCard } from "./ProductCard";
 import type { Product } from "@/lib/types";
 
-const EMPTY_FILTERS: CatalogueFilters = { category: [], power: [], ip: [], colorTemp: [] };
+type Density = "spacious" | "balanced" | "dense";
+
+const EMPTY_FILTERS: CatalogueFilters = { category: [], power: [], ip: [], colorTemp: [], format: [] };
 
 function sortProducts(products: Product[], sort: SortOption): Product[] {
   const copy = [...products];
   if (sort === "name-az") return copy.sort((a, b) => a.name.localeCompare(b.name));
   if (sort === "category") return copy.sort((a, b) => a.category.localeCompare(b.category));
-  return copy; // featured: original order
+  return copy;
 }
+
+const DENSITY_COLS: Record<Density, string> = {
+  spacious: "grid-cols-1 sm:grid-cols-2",
+  balanced: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  dense:    "grid-cols-2 sm:grid-cols-2 lg:grid-cols-4",
+};
 
 export function CatalogueView() {
   const searchParams = useSearchParams();
@@ -30,75 +37,99 @@ export function CatalogueView() {
     ...EMPTY_FILTERS,
     category: initialCategory ? [initialCategory] : [],
   }));
-  const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
-  const [showFilters, setShowFilters] = useState(false);
+  const [density, setDensity] = useState<Density>("balanced");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Sync category param when URL changes
   useEffect(() => {
     const cat = searchParams.get("category");
     setFilters(prev => ({ ...prev, category: cat ? [cat] : [] }));
   }, [searchParams]);
 
   const allProducts = repo.getProducts();
-  const filtered = filterProducts(allProducts, filters, query);
+  const filtered = filterProducts(allProducts, filters, "");
   const sorted = sortProducts(filtered, sort);
 
-  return (
-    <main className="mx-auto max-w-[1440px] px-4 sm:px-6 py-8">
-      {/* Breadcrumb + results count */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs text-aluminium-dark">{t("cat.breadcrumb")}</p>
-          <p className="text-sm text-aluminium-dark">
-            <span className="font-semibold text-ink">{sorted.length}</span> {t("cat.results")}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex-1 min-w-[160px] sm:w-64 sm:flex-none">
-            <SearchBar value={query} onChange={setQuery} />
-          </div>
-          <SortDropdown value={sort} onChange={setSort} />
-        </div>
-      </div>
+  const DENSITY_OPTIONS: { value: Density; label: string }[] = [
+    { value: "spacious", label: t("cat.density.spacious") },
+    { value: "balanced", label: t("cat.density.balanced") },
+    { value: "dense",    label: t("cat.density.dense") },
+  ];
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Mobile filter toggle */}
-        <div className="lg:hidden w-full">
-          <button
-            onClick={() => setShowFilters(v => !v)}
-            aria-expanded={showFilters}
-            aria-controls="mobile-filter-panel"
-            className="mb-4 min-h-[44px] rounded border border-aluminium px-3 py-1.5 text-sm text-aluminium-dark"
-          >
-            {showFilters ? t("cat.mobileFilterOpen") : t("cat.mobileFilterClosed")}
-          </button>
-          <div id="mobile-filter-panel" className={showFilters ? "mb-6" : "hidden"}>
+  return (
+    <main className="grid grid-cols-1 lg:grid-cols-[276px_1fr] max-w-[1600px] mx-auto">
+      {/* Mobile filter toggle */}
+      <div className="lg:hidden px-4 pt-4">
+        <button
+          onClick={() => setShowMobileFilters(v => !v)}
+          aria-expanded={showMobileFilters}
+          aria-controls="mobile-filter-panel"
+          className="mb-4 h-[38px] rounded border border-[#E6E5DE] px-3 text-sm text-[#3A3B40]"
+        >
+          {showMobileFilters ? t("cat.mobileFilterOpen") : t("cat.mobileFilterClosed")}
+        </button>
+        {showMobileFilters && (
+          <div id="mobile-filter-panel" className="mb-6">
             <FilterSidebar filters={filters} onChange={setFilters} />
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Desktop sidebar */}
-        <div className="hidden lg:block">
-          <FilterSidebar filters={filters} onChange={setFilters} />
-        </div>
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block">
+        <FilterSidebar filters={filters} onChange={setFilters} />
+      </div>
 
-        {/* Product grid */}
-        <section className="min-w-0 flex-1">
-          {sorted.length === 0 ? (
-            <div className="py-20 text-center text-aluminium-dark">
-              <p className="text-lg">{t("cat.noResults")}</p>
-              <p className="mt-1 text-sm">{t("cat.noResultsHint")}</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {sorted.map(product => (
-                <ProductCard key={product.id} product={product} />
+      {/* Results section */}
+      <section className="px-9 pt-[34px] pb-24">
+        {/* Results header */}
+        <div className="flex items-flex-end justify-between gap-5 flex-wrap mb-7">
+          <div>
+            <p className="font-mono text-[11.5px] tracking-[0.1em] uppercase text-[#8C8C84] mb-2">
+              {t("cat.breadcrumb")}
+            </p>
+            <h1 className="text-[30px] font-semibold tracking-[-0.02em]">
+              {t("cat.allProducts")}{" "}
+              <span className="text-[#B4B4AC] font-normal">{sorted.length}</span>
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Density segmented control */}
+            <div className="flex items-center border border-[#E6E5DE] rounded overflow-hidden">
+              {DENSITY_OPTIONS.map((opt, i) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setDensity(opt.value)}
+                  className={`px-[13px] py-2 text-[13px] cursor-pointer transition-colors ${
+                    i > 0 ? "border-l border-[#E6E5DE]" : ""
+                  } ${
+                    density === opt.value
+                      ? "bg-[#17181C] text-white"
+                      : "bg-white text-[#17181C] hover:bg-[#F6F5F0]"
+                  }`}
+                >
+                  {opt.label}
+                </button>
               ))}
             </div>
-          )}
-        </section>
-      </div>
+            <SortDropdown value={sort} onChange={setSort} />
+          </div>
+        </div>
+
+        {sorted.length === 0 ? (
+          <div className="py-20 text-center text-[#8C8C84]">
+            <p className="text-lg">{t("cat.noResults")}</p>
+            <p className="mt-1 text-sm">{t("cat.noResultsHint")}</p>
+          </div>
+        ) : (
+          <div className={`grid gap-5 ${DENSITY_COLS[density]}`}>
+            {sorted.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }

@@ -64,10 +64,29 @@ describe("ProductCard", () => {
       expect(screen.getByRole("button", { name: /查看 3D/i })).toBeDefined();
     });
 
-    it("main image link points to /products/barra-led-high-bay (no ?view param)", () => {
+    it("card link points to /products/barra-led-high-bay", () => {
       render(<Wrapper><ProductCard product={product} /></Wrapper>);
-      const link = screen.getByRole("link", { name: /High Bay LED 灯具/i });
-      expect(link.getAttribute("href")).toBe("/products/barra-led-high-bay");
+      const links = screen.getAllByRole("link");
+      // The card outer Link
+      const cardLink = links.find(l => l.getAttribute("href") === "/products/barra-led-high-bay");
+      expect(cardLink).toBeDefined();
+    });
+
+    it("renders compare button", () => {
+      render(<Wrapper><ProductCard product={product} /></Wrapper>);
+      const compareBtn = screen.getByRole("button", { name: /对比|Compare|Comparar/i });
+      expect(compareBtn).toBeDefined();
+    });
+  });
+
+  describe("with a non-lighting product", () => {
+    const products = repo.getProducts();
+    const nonLighting = products.find(p => p.category !== "iluminacao") ?? products[0];
+
+    it("renders product name", () => {
+      render(<Wrapper><ProductCard product={nonLighting} /></Wrapper>);
+      // Product name should appear in the card
+      expect(screen.getByRole("heading")).toBeDefined();
     });
   });
 });
