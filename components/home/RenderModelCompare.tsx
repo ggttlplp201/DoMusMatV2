@@ -181,6 +181,15 @@ export function RenderModelCompare({
     [cancelHint]
   );
 
+  // Auto-fade corner labels after ~3.5s
+  const [labelsVisible, setLabelsVisible] = useState(true);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setLabelsVisible(false);
+    }, 3500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const renderLabel = t("detail.tab.render.label") || "渲染图 · RENDER";
   const modelLabel = t("detail.tab.model.label") || "3D 模型";
   const compareHint = t("home.compareHint") || "Drag to compare";
@@ -258,22 +267,7 @@ export function RenderModelCompare({
         aria-hidden="true"
       />
 
-      {/* Divider line */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: `${pos}%`,
-          width: "2px",
-          background: "rgba(255,255,255,0.9)",
-          transform: "translateX(-50%)",
-          pointerEvents: "none",
-          zIndex: 7,
-        }}
-      />
-
-      {/* Grab handle — draggable, focusable */}
+      {/* Grab handle — draggable, focusable; transparent hit area, no visible background */}
       <div
         role="slider"
         aria-label="Drag to compare render and 3D model"
@@ -291,29 +285,30 @@ export function RenderModelCompare({
           top: "50%",
           left: `${pos}%`,
           transform: "translate(-50%, -50%)",
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          background: "#fff",
-          border: "1.5px solid #E6E5DE",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.18)",
+          width: "44px",
+          height: "44px",
+          background: "transparent",
+          border: "none",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "ew-resize",
           zIndex: 10,
           outline: "none",
+          borderRadius: "4px",
         }}
         onFocus={(e) => {
-          e.currentTarget.style.boxShadow = "0 0 0 3px rgba(218,30,40,0.35), 0 2px 12px rgba(0,0,0,0.18)";
+          e.currentTarget.style.outline = "2px solid rgba(218,30,40,0.6)";
+          e.currentTarget.style.outlineOffset = "2px";
         }}
         onBlur={(e) => {
-          e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.18)";
+          e.currentTarget.style.outline = "none";
         }}
       >
-        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
-          <path d="M5 7H1m0 0 3-3M1 7l3 3" stroke="#17181C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M13 7h4m0 0-3-3m3 3-3 3" stroke="#17181C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg width="20" height="16" viewBox="0 0 20 16" fill="none" aria-hidden="true"
+          style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.55)) drop-shadow(0 0 4px rgba(255,255,255,0.4))" }}>
+          <path d="M6 8H1m0 0 3.5-3.5M1 8l3.5 3.5" stroke="#1a1b1f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M14 8h5m0 0L15.5 4.5M19 8l-3.5 3.5" stroke="#1a1b1f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
 
@@ -350,7 +345,7 @@ export function RenderModelCompare({
         {compareHint}
       </div>
 
-      {/* Corner pill: render label (left side) */}
+      {/* Corner pill: render label (left side) — auto-fades after 3.5s */}
       <div
         className="font-mono"
         style={{
@@ -366,14 +361,15 @@ export function RenderModelCompare({
           backdropFilter: "blur(4px)",
           pointerEvents: "none",
           zIndex: 5,
-          opacity: pos < 15 ? 0 : 1,
-          transition: "opacity 0.2s",
+          opacity: !labelsVisible || pos < 15 ? 0 : 1,
+          transition: "opacity 0.6s ease",
         }}
+        aria-hidden="true"
       >
         {renderLabel}
       </div>
 
-      {/* Corner pill: model label (right side) */}
+      {/* Corner pill: model label (right side) — auto-fades after 3.5s */}
       <div
         className="font-mono"
         style={{
@@ -389,9 +385,10 @@ export function RenderModelCompare({
           backdropFilter: "blur(4px)",
           pointerEvents: "none",
           zIndex: 5,
-          opacity: pos > 85 ? 0 : 1,
-          transition: "opacity 0.2s",
+          opacity: !labelsVisible || pos > 85 ? 0 : 1,
+          transition: "opacity 0.6s ease",
         }}
+        aria-hidden="true"
       >
         {modelLabel}
       </div>
