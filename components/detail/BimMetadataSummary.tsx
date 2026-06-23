@@ -2,7 +2,6 @@
 
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
 import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
@@ -15,35 +14,36 @@ export function BimMetadataSummary({ product }: Props) {
   const meta = product.bim_metadata;
   if (!meta) return null;
 
+  const fbSpec = t("fb.spec");
   const rows: { label: string; value: string }[] = [
-    { label: t("bim.productId"), value: String(resolvePlaceholder(meta.product_id, fallbacks.spec)) },
+    { label: t("bim.productId"), value: String(resolvePlaceholder(meta.product_id, fbSpec)) },
     {
       label: t("bim.dimensions"),
       value: meta.dimensions
         ? (() => {
             const real = Object.entries(meta.dimensions).filter(([, v]) => hasRealValue(v));
-            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join(", ") : fallbacks.spec;
+            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join(", ") : fbSpec;
           })()
-        : fallbacks.spec,
+        : fbSpec,
     },
     {
       label: t("bim.materials"),
       value: hasRealValue(meta.materials)
         ? (meta.materials as string[]).filter(hasRealValue).join(", ")
-        : fallbacks.spec,
+        : fbSpec,
     },
     {
-      label: "Propriedades IFC",
+      label: t("bim.ifcProperties"),
       value: meta.ifc_properties
         ? (() => {
             const real = Object.entries(meta.ifc_properties)
               .filter(([, v]) => hasRealValue(v))
               .slice(0, 3);
-            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join("; ") : fallbacks.spec;
+            return real.length > 0 ? real.map(([k, v]) => `${k}: ${v}`).join("; ") : fbSpec;
           })()
-        : fallbacks.spec,
+        : fbSpec,
     },
-    { label: t("bim.version"), value: String(resolvePlaceholder(meta.version, fallbacks.spec)) },
+    { label: t("bim.version"), value: String(resolvePlaceholder(meta.version, fbSpec)) },
   ];
 
   return (

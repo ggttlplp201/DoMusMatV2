@@ -2,7 +2,6 @@
 
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { resolvePlaceholder } from "@/lib/placeholder";
-import { fallbacks } from "@/lib/strings";
 import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
 
@@ -16,9 +15,9 @@ export function StandardSheet({ product }: Props) {
   if (!s) return null;
 
   const rows = [
-    { label: t("std.priceRange"), value: resolvePlaceholder(s.price_range, fallbacks.spec) },
-    { label: t("std.deliveryPeriod"), value: resolvePlaceholder(s.delivery_period, fallbacks.spec) },
-    { label: t("std.maintenance"), value: resolvePlaceholder(s.maintenance_cycle, fallbacks.spec) },
+    { label: t("std.priceRange"), value: resolvePlaceholder(s.price_range, t("fb.spec")) },
+    { label: t("std.deliveryPeriod"), value: resolvePlaceholder(s.delivery_period, t("fb.spec")) },
+    { label: t("std.maintenance"), value: resolvePlaceholder(s.maintenance_cycle, t("fb.spec")) },
   ];
 
   return (

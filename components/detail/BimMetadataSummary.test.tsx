@@ -37,9 +37,9 @@ describe("BimMetadataSummary", () => {
     expect(container.textContent).toContain("width_mm: 150");
     expect(container.textContent).toContain("height_mm: 67");
 
-    // materials: all PLACEHOLDER → should show "Sob consulta"
-    // ifc_properties: all PLACEHOLDER → should show "Sob consulta"
+    // materials: all PLACEHOLDER → should show locale-aware fallback (面议 in zh)
+    // ifc_properties: all PLACEHOLDER → should show locale-aware fallback (面议 in zh)
     // The fallback should appear (at least one)
-    expect(container.textContent).toContain("Sob consulta");
+    expect(container.textContent).toContain("面议");
   });
 });
