@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { repo } from "@/lib/repository";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
+import { RenderModelCompare } from "@/components/home/RenderModelCompare";
 
 // ─── Data (computed once at module level for perf) ─────────────────────────
 
@@ -75,10 +76,14 @@ function DownloadIcon() {
 
 // ─── Hero ──────────────────────────────────────────────────────────────────
 
+// High Bay product for the hero compare slider
+const HIGH_BAY_ID = "barra-led-high-bay";
+const HIGH_BAY_MODEL = "/models/high_bay_led_bar.glb";
+const highBayProduct = repo.getProduct(HIGH_BAY_ID);
+const highBayImage = highBayProduct?.images?.[0] ?? null;
+
 function HeroSection() {
   const t = useT();
-  const heroProduct = repo.getProducts().find((p) => p.images && p.images.length > 0);
-  const heroImage = heroProduct?.images?.[0] ?? null;
 
   const titleLines = t("home.heroTitle").split("\n");
 
@@ -167,7 +172,7 @@ function HeroSection() {
             {t("home.cta.browse")}
           </Link>
           <Link
-            href="/products/barra-led-high-bay"
+            href="/downloads"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -191,47 +196,25 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Right: hero image */}
-      <div
-        style={{
-          position: "relative",
-          aspectRatio: "4/3",
-          background: "#F6F5F0",
-          border: "1px solid #E6E5DE",
-          borderRadius: "14px",
-          overflow: "hidden",
-        }}
-      >
-        {heroImage ? (
-          <Image
-            src={heroImage}
-            alt="DoMusMat product render"
-            fill
-            style={{ objectFit: "cover" }}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            priority
-          />
-        ) : (
-          <div style={{ position: "absolute", inset: 0, background: "#F6F5F0" }} />
-        )}
+      {/* Right: render / 3D compare slider */}
+      {highBayImage ? (
+        <RenderModelCompare
+          imageSrc={highBayImage}
+          modelSrc={HIGH_BAY_MODEL}
+          imageAlt="High Bay LED render"
+        />
+      ) : (
         <div
-          className="font-mono"
           style={{
-            position: "absolute",
-            left: "16px",
-            bottom: "16px",
-            fontSize: "11px",
-            letterSpacing: "0.08em",
-            color: "#fff",
-            background: "rgba(0,0,0,0.55)",
-            padding: "5px 9px",
-            borderRadius: "3px",
-            backdropFilter: "blur(4px)",
+            position: "relative",
+            aspectRatio: "4/3",
+            background: "#F6F5F0",
+            border: "1px solid #E6E5DE",
+            borderRadius: "14px",
+            overflow: "hidden",
           }}
-        >
-          渲染图 · RENDER
-        </div>
-      </div>
+        />
+      )}
     </section>
   );
 }

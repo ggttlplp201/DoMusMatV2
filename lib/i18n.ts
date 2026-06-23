@@ -245,6 +245,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "detail.unitPrice": "Preço unitário",
     "detail.leadTime": "Prazo de entrega",
     "supply.installNote": "Instruções de instalação a pedido",
+    "downloads.title": "Downloads BIM / CAD",
+    "downloads.subtitle": "Consulte todos os ficheiros descarregáveis de cada produto.",
   },
   en: {
     "search.placeholder": "Search products, references…",
@@ -484,6 +486,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "detail.unitPrice": "Unit price",
     "detail.leadTime": "Lead time",
     "supply.installNote": "Installation instructions on request",
+    "downloads.title": "BIM / CAD downloads",
+    "downloads.subtitle": "Browse all downloadable files for every product.",
   },
   zh: {
     "search.placeholder": "搜索产品、型号…",
@@ -723,6 +727,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "detail.unitPrice": "单价",
     "detail.leadTime": "交货期",
     "supply.installNote": "安装说明按需提供",
+    "downloads.title": "BIM / CAD 下载",
+    "downloads.subtitle": "浏览全部产品的可下载文件。",
   },
 };
 
