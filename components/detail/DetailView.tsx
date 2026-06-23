@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { repo } from "@/lib/repository";
 import { hasRealValue } from "@/lib/placeholder";
@@ -43,13 +44,16 @@ export function DetailView({ productId }: DetailViewProps) {
   const t = useT();
   const { add: addToCart } = useCart();
   const { add: addToBom } = useBom();
+  const searchParams = useSearchParams();
 
   const modelAvailable = hasRealValue(product?.model3d);
 
   const [selectedRef, setSelectedRef] = useState<string>(
     () => product?.variants[0]?.ref ?? ""
   );
-  const [mediaTab, setMediaTab] = useState<"render" | "model" | "tech">("render");
+  const [mediaTab, setMediaTab] = useState<"render" | "model" | "tech">(
+    () => (searchParams.get("view") === "3d" && modelAvailable ? "model" : "render")
+  );
   const [qty, setQty] = useState(1);
 
   useEffect(() => {
