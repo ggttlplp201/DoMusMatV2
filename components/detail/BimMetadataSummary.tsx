@@ -1,6 +1,5 @@
 "use client";
 
-import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue, resolvePlaceholder } from "@/lib/placeholder";
 import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
@@ -47,16 +46,13 @@ export function BimMetadataSummary({ product }: Props) {
   ];
 
   return (
-    <section>
-      <SectionLabel>{t("bim.metadata")}</SectionLabel>
-      <dl className="divide-y divide-aluminium text-sm">
-        {rows.map(({ label, value }) => (
-          <div key={label} className="grid grid-cols-[40%_60%] gap-2 py-2">
-            <dt className="text-aluminium-dark">{label}</dt>
-            <dd className="text-ink truncate">{value}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
+    <div>
+      {rows.map(({ label, value }) => (
+        <div key={label} className="flex justify-between gap-6 py-3 border-b border-[#EFEEE8]">
+          <span className="text-sm text-[#8C8C84]">{label}</span>
+          <span className="font-mono text-[13px] text-[#17181C] text-right">{value}</span>
+        </div>
+      ))}
+    </div>
   );
 }

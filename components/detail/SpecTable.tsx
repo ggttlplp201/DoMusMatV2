@@ -242,10 +242,10 @@ export function SpecTable({ product, variant }: { product: Product; variant: Var
               key={row.key}
               className={i % 2 === 0 ? "bg-neutral-fill" : "bg-white"}
             >
-              <td className="py-2 px-3 text-aluminium-dark font-medium w-1/2">
+              <td className="py-[13px] px-4 text-aluminium-dark font-medium w-1/2">
                 {row.labelText}
               </td>
-              <td className="py-2 px-3 text-ink tabular">
+              <td className="py-[13px] px-4 text-ink tabular text-right">
                 {row.value}
               </td>
             </tr>

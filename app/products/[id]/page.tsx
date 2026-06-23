@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[1440px] px-4 sm:px-6 py-8">
+      <main className="mx-auto max-w-[1440px] px-9">
         <Suspense fallback={null}>
           <DetailView productId={id} />
         </Suspense>

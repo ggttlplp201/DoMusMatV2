@@ -1,6 +1,5 @@
 "use client";
 
-import { SectionLabel } from "@/components/ui/SectionLabel";
 import { hasRealValue } from "@/lib/placeholder";
 import { useT } from "@/state/locale";
 import type { Product } from "@/lib/types";
@@ -27,43 +26,40 @@ export function CompliancePanel({ product }: Props) {
   const fields = Object.keys(LABELS) as Array<keyof typeof LABELS>;
 
   return (
-    <section>
-      <SectionLabel>{t("compliance.title")}</SectionLabel>
-      <ul className="divide-y divide-aluminium text-sm">
-        {fields.map((key) => {
-          const field = compliance[key as keyof typeof compliance];
-          if (!field) return null;
-          const hasValue = hasRealValue(field.value);
-          const hasDoc = hasRealValue(field.document);
+    <div>
+      {fields.map((key) => {
+        const field = compliance[key as keyof typeof compliance];
+        if (!field) return null;
+        const hasValue = hasRealValue(field.value);
+        const hasDoc = hasRealValue(field.document);
 
-          return (
-            <li key={key} className="flex items-center justify-between gap-4 py-2">
-              <span className="text-ink font-medium">{LABELS[key]}</span>
-              <div className="flex items-center gap-2 ml-auto">
-                {hasDoc && (
-                  <a
-                    href={field.document}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-brand underline"
-                  >
-                    {t("compliance.document")}
-                  </a>
-                )}
-                <span
-                  className={`px-2 py-0.5 rounded text-xs font-medium ${
-                    hasValue
-                      ? "bg-green-100 text-green-800"
-                      : "bg-neutral-fill text-aluminium-dark"
-                  }`}
+        return (
+          <div key={key} className="flex items-center justify-between py-3 border-b border-[#EFEEE8]">
+            <span className="text-[14.5px] font-medium text-[#17181C]">{LABELS[key]}</span>
+            <div className="flex items-center gap-2 ml-auto">
+              {hasDoc && (
+                <a
+                  href={field.document}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-brand underline"
                 >
-                  {hasValue ? field.value : t("compliance.pending")}
-                </span>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+                  {t("compliance.document")}
+                </a>
+              )}
+              <span
+                className={
+                  hasValue
+                    ? "flex items-center gap-1.5 text-[12.5px] font-semibold text-[#1F8A5B] bg-[#E8F2EC] rounded-[3px] px-[10px] py-1"
+                    : "text-[12.5px] text-[#8C8C84] bg-[#F6F5F0] rounded-[3px] px-[10px] py-1"
+                }
+              >
+                {hasValue ? field.value : t("compliance.pending")}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
