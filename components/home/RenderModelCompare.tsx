@@ -234,6 +234,30 @@ export function RenderModelCompare({
         />
       </div>
 
+      {/* Frosted-glass seam band — sits above the image/model layers, below the handle */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: `${pos}%`,
+          width: "36px",
+          transform: "translateX(-50%)",
+          pointerEvents: "none",
+          zIndex: 6,
+          /* Soft translucent gradient that blends the two sides */
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 50%, transparent 100%)",
+          /* Frosted blur — falls back gracefully where unsupported */
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          /* Subtle 1px inner highlight on each edge for a glass-edge feel */
+          boxShadow:
+            "inset 1px 0 0 rgba(255,255,255,0.45), inset -1px 0 0 rgba(255,255,255,0.45)",
+        }}
+        aria-hidden="true"
+      />
+
       {/* Divider line */}
       <div
         style={{
@@ -245,6 +269,7 @@ export function RenderModelCompare({
           background: "rgba(255,255,255,0.9)",
           transform: "translateX(-50%)",
           pointerEvents: "none",
+          zIndex: 7,
         }}
       />
 
