@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { useT } from "@/state/locale";
+
+gsap.registerPlugin(useGSAP);
 
 interface RenderModelCompareProps {
   /** URL of the render image (base layer) */
@@ -28,6 +32,11 @@ export function RenderModelCompare({
   const [pos, setPos] = useState(55); // render occupies left 55% by default
   const [dragging, setDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const hintRef = useRef<HTMLDivElement>(null);
+
+  // Track whether the user has interacted — used to cancel nudge + fade hint
+  const hasInteracted = useRef(false);
+  const nudgeTweenRef = useRef<gsap.core.Tween | null>(null);
 
   // Load model-viewer web component client-side only
   useEffect(() => {
@@ -44,21 +53,96 @@ export function RenderModelCompare({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // Proxy object so GSAP can tween the pos state
+  const posProxy = useRef({ value: 55 });
+
+  // Cancel hint + stop nudge on first interaction
+  const cancelHint = useCallback(() => {
+    if (hasInteracted.current) return;
+    hasInteracted.current = true;
+
+    // Kill the nudge tween
+    if (nudgeTweenRef.current) {
+      nudgeTweenRef.current.kill();
+      nudgeTweenRef.current = null;
+    }
+
+    // Fade out the hint pill
+    if (hintRef.current) {
+      gsap.to(hintRef.current, { opacity: 0, duration: 0.25, ease: "power1.out" });
+    }
+  }, []);
+
+  // GSAP nudge animation on mount
+  useGSAP(
+    () => {
+      if (reducedMotion) return;
+
+      // Small delay so the page settles first
+      const delayTimer = window.setTimeout(() => {
+        if (hasInteracted.current) return;
+
+        const tween = gsap.to(posProxy.current, {
+          value: 55, // dummy; we use keyframes below
+          duration: 0,
+          onComplete: () => {},
+        });
+        tween.kill();
+
+        // Keyframe tween: 55 → 64 → 40 → 55
+        const t = gsap.timeline({
+          onUpdate: () => {
+            if (hasInteracted.current) return;
+            setPos(posProxy.current.value);
+          },
+          onComplete: () => {
+            nudgeTweenRef.current = null;
+            // Auto-fade hint after animation completes + 1.5s delay
+            if (!hasInteracted.current && hintRef.current) {
+              gsap.to(hintRef.current, {
+                opacity: 0,
+                duration: 0.4,
+                delay: 1.5,
+                ease: "power1.out",
+              });
+            }
+          },
+        });
+
+        posProxy.current.value = 55;
+
+        t.to(posProxy.current, { value: 64, duration: 0.35, ease: "power2.out" })
+          .to(posProxy.current, { value: 40, duration: 0.5, ease: "power2.inOut" })
+          .to(posProxy.current, { value: 55, duration: 0.35, ease: "power2.in" });
+
+        nudgeTweenRef.current = t as unknown as gsap.core.Tween;
+      }, 800);
+
+      return () => {
+        window.clearTimeout(delayTimer);
+        nudgeTweenRef.current?.kill();
+      };
+    },
+    { dependencies: [reducedMotion], scope: containerRef }
+  );
+
   const updatePosFromPointer = useCallback((clientX: number) => {
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
     const pct = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
     setPos(pct);
+    posProxy.current.value = pct;
   }, []);
 
   // Pointer events on the handle
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      cancelHint();
       e.currentTarget.setPointerCapture(e.pointerId);
       setDragging(true);
       updatePosFromPointer(e.clientX);
     },
-    [updatePosFromPointer]
+    [updatePosFromPointer, cancelHint]
   );
 
   const handlePointerMove = useCallback(
@@ -78,17 +162,28 @@ export function RenderModelCompare({
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        setPos((p) => Math.max(0, p - 2));
+        cancelHint();
+        setPos((p) => {
+          const next = Math.max(0, p - 2);
+          posProxy.current.value = next;
+          return next;
+        });
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        setPos((p) => Math.min(100, p + 2));
+        cancelHint();
+        setPos((p) => {
+          const next = Math.min(100, p + 2);
+          posProxy.current.value = next;
+          return next;
+        });
       }
     },
-    []
+    [cancelHint]
   );
 
   const renderLabel = t("detail.tab.render.label") || "渲染图 · RENDER";
   const modelLabel = t("detail.tab.model.label") || "3D 模型";
+  const compareHint = t("home.compareHint") || "Drag to compare";
 
   return (
     <div
@@ -195,6 +290,39 @@ export function RenderModelCompare({
           <path d="M5 7H1m0 0 3-3M1 7l3 3" stroke="#17181C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M13 7h4m0 0-3-3m3 3-3 3" stroke="#17181C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
+      </div>
+
+      {/* Drag hint pill — fades out after nudge completes or first interaction */}
+      <div
+        ref={hintRef}
+        className="font-mono"
+        style={{
+          position: "absolute",
+          bottom: "48px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: "5px",
+          fontSize: "10.5px",
+          letterSpacing: "0.06em",
+          color: "#fff",
+          background: "rgba(23,24,28,0.62)",
+          backdropFilter: "blur(6px)",
+          padding: "5px 10px",
+          borderRadius: "20px",
+          pointerEvents: "none",
+          zIndex: 8,
+          whiteSpace: "nowrap",
+        }}
+        aria-hidden="true"
+      >
+        {/* ⟷ icon */}
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M3.5 5H1m0 0 2-2M1 5l2 2" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10.5 5H13m0 0-2-2m2 2-2 2" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        {compareHint}
       </div>
 
       {/* Corner pill: render label (left side) */}
