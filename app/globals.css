@@ -5,9 +5,10 @@
 /* Configured for Tailwind v4 using @theme directive (no tailwind.config.ts) */
 @theme {
   /* Typography */
-  --font-sans: var(--font-open-sans), "Open Sans", system-ui, sans-serif;
+  --font-sans: var(--font-archivo), var(--font-noto-sc), system-ui, sans-serif;
+  --font-mono: var(--font-mono, 'IBM Plex Mono'), 'IBM Plex Mono', monospace;
 
-  /* Border radius: rounded = 4px */
+  /* Border radius */
   --radius: 4px;
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -15,27 +16,44 @@
   --radius-xl: 12px;
   --radius-2xl: 16px;
 
-  /* Brand colours */
-  --color-ink: #141414;
-  --color-brand: #C8102E;
-  --color-aluminium: #CDD1D6;
-  --color-aluminium-dark: #AAAEB4;
-  --color-neutral-fill: #F5F5F0;
+  /* Brand colours — redesign palette */
+  --color-brand: #DA1E28;
+  --color-brand-hover: #B5161F;
+  --color-ink: #17181C;
+  --color-body: #3A3B40;
+  --color-muted: #8C8C84;
+  --color-faint: #B4B4AC;
+  --color-hairline: #E6E5DE;
+  --color-hairline-light: #EFEEE8;
+  --color-hairline-hover: #D8D7CF;
+  --color-wash: #F6F5F0;
+  --color-success: #1F8A5B;
+  --color-success-bg: #E8F2EC;
+  --color-footer: #141414;
+  --color-footer-text: #C9C9C2;
+  --color-footer-muted: #76766F;
+  --color-footer-rule: #2A2A2A;
   --color-white: #FFFFFF;
+
+  /* Remap old aliases so existing classes reskin automatically */
+  --color-aluminium: #E6E5DE;
+  --color-aluminium-dark: #8C8C84;
+  --color-neutral-fill: #F6F5F0;
 
   /* Default background/foreground */
   --color-background: #ffffff;
-  --color-foreground: #141414;
+  --color-foreground: #17181C;
 }
 
 /* ─── Utility classes ────────────────────────────────────────────────────── */
 .tabular { font-variant-numeric: tabular-nums; }
+.font-mono, .mono { font-family: var(--font-mono); }
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #AAAEB4;
+  color: #8C8C84;
 }
 @media print { .no-print { display: none !important; } }
 
@@ -44,6 +62,15 @@ body {
   color: var(--color-foreground);
   /* prevent horizontal overflow on narrow viewports */
   overflow-x: hidden;
+}
+
+/* ─── Selection + placeholder ────────────────────────────────────────────── */
+::selection {
+  background: #DA1E28;
+  color: #fff;
+}
+::placeholder {
+  color: #A8A89F;
 }
 
 /* ─── Accessibility: focus-visible ring ─────────────────────────────────── */

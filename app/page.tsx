@@ -1,16 +1,14 @@
-import { Suspense } from "react";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
-import { CatalogueView } from "@/components/catalogue/CatalogueView";
-import { translate } from "@/lib/i18n";
 
 export default function Home() {
   return (
     <>
       <Nav />
-      <Suspense fallback={<div className="py-20 text-center text-aluminium-dark text-sm">{translate("zh", "cat.loading")}</div>}>
-        <CatalogueView />
-      </Suspense>
+      {/* TODO R2: full Home */}
+      <main className="mx-auto max-w-[1440px] px-9 py-20">
+        <h1 className="text-[40px] font-semibold tracking-[-0.025em] text-ink">DoMusMat</h1>
+      </main>
       <Footer />
     </>
   );

@@ -2,62 +2,138 @@
 
 import { useState, Suspense } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCart } from "@/state/cart";
 import { useBom } from "@/state/bom";
 import { useCompare } from "@/state/compare";
 import { useLists } from "@/state/lists";
 import { useT, useLocale } from "@/state/locale";
+import { LOCALES } from "@/lib/i18n";
 import { localizedName } from "@/lib/i18n";
 import { repo } from "@/lib/repository";
-import { SearchBar } from "./SearchBar";
-import { LocaleToggle } from "./LocaleToggle";
 
-// Single shared markup for both fallback (activeId=null) and live render
-function CategoryBar({ activeId }: { activeId: string | null }) {
-  const categories = repo.getCategories();
-  const { locale } = useLocale();
+// ─── Icons ───────────────────────────────────────────────────────────────────
+
+function SearchIcon() {
   return (
-    <div className="border-b border-aluminium bg-white">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-        <ul className="flex items-center overflow-x-auto scrollbar-none" role="list">
-          {categories.map((cat, idx) => {
-            const isActive = activeId === cat.id;
-            return (
-              <li key={cat.id} role="listitem" className="flex items-center">
-                {idx > 0 && (
-                  <span className="h-4 border-l border-aluminium" aria-hidden />
-                )}
-                <Link
-                  href={`/?category=${cat.id}`}
-                  className={[
-                    "px-4 py-2.5 text-sm whitespace-nowrap transition-colors",
-                    isActive
-                      ? "border-b-2 border-brand text-ink font-medium"
-                      : "text-aluminium-dark hover:text-ink",
-                  ].join(" ")}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  {localizedName(cat, locale)}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C8C84" strokeWidth="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
+function CompareIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <rect x="3" y="4" width="7" height="16" rx="1" />
+      <rect x="14" y="4" width="7" height="11" rx="1" />
+    </svg>
+  );
+}
+
+function BookmarkIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function BomListIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+    </svg>
+  );
+}
+
+function CartIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <circle cx="9" cy="20" r="1.4" />
+      <circle cx="18" cy="20" r="1.4" />
+      <path d="M2 3h3l2.5 12.5a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L22 7H6" />
+    </svg>
+  );
+}
+
+function HamburgerIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// ─── Language Switch ──────────────────────────────────────────────────────────
+
+function LanguageSwitch() {
+  const { locale, setLocale } = useLocale();
+  return (
+    <div
+      role="group"
+      aria-label="Idioma / Language / 语言"
+      className="flex items-center border border-hairline rounded overflow-hidden flex-none"
+    >
+      {LOCALES.map(({ code, label }, i) => (
+        <button
+          key={code}
+          type="button"
+          aria-pressed={locale === code}
+          onClick={() => setLocale(code)}
+          className={[
+            "px-[11px] py-[7px] text-[13px] font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+            i > 0 ? "border-l border-hairline" : "",
+            locale === code
+              ? "bg-brand text-white font-semibold"
+              : "text-muted hover:text-ink hover:bg-wash",
+          ].join(" ")}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   );
 }
 
-// Reads searchParams (must be inside Suspense boundary)
+// ─── Category nav ─────────────────────────────────────────────────────────────
+
+function CategoryBar({ activeId }: { activeId: string | null }) {
+  const categories = repo.getCategories();
+  const { locale } = useLocale();
+  return (
+    <nav
+      aria-label="产品分类"
+      className="flex items-center gap-0.5 h-[52px] px-9 border-t border-hairline-light overflow-x-auto scrollbar-none"
+    >
+      {categories.map((cat) => (
+        <Link
+          key={cat.id}
+          href={`/catalogue?category=${cat.id}`}
+          className={[
+            "px-[14px] py-[6px] text-[14.5px] text-body whitespace-nowrap rounded transition-colors",
+            activeId === cat.id
+              ? "bg-wash text-ink font-medium"
+              : "hover:bg-wash hover:text-ink",
+          ].join(" ")}
+          aria-current={activeId === cat.id ? "page" : undefined}
+        >
+          {localizedName(cat, locale)}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
 function CategoryBarLive() {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const activeCategoryId = pathname === "/" ? searchParams.get("category") : null;
+  const activeCategoryId = searchParams ? searchParams.get("category") : null;
   return <CategoryBar activeId={activeCategoryId} />;
 }
 
-// Mobile menu panel
+// ─── Mobile menu ─────────────────────────────────────────────────────────────
+
 function MobileMenu({
   open,
   search,
@@ -76,18 +152,30 @@ function MobileMenu({
   if (!open) return null;
 
   return (
-    <div className="border-b border-aluminium bg-white md:hidden">
-      <div className="px-6 py-3">
-        <SearchBar value={search} onChange={onSearchChange} />
+    <div className="border-b border-hairline bg-white md:hidden">
+      {/* Mobile search */}
+      <div className="px-6 py-3 relative">
+        <span className="absolute left-9 top-1/2 -translate-y-1/2 pointer-events-none">
+          <SearchIcon />
+        </span>
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder={t("search.placeholder")}
+          className="w-full h-[46px] border border-hairline bg-wash rounded pl-[42px] pr-4 text-[15px] text-ink outline-none focus:border-ink"
+        />
       </div>
+
+      {/* Categories */}
       <nav aria-label={t("nav.categories")}>
         <ul>
           {categories.map((cat) => (
             <li key={cat.id}>
               <Link
-                href={`/?category=${cat.id}`}
+                href={`/catalogue?category=${cat.id}`}
                 onClick={onClose}
-                className="flex items-center px-6 min-h-[44px] text-sm text-aluminium-dark hover:text-ink hover:bg-neutral-fill"
+                className="flex items-center px-6 min-h-[44px] text-sm text-body hover:text-ink hover:bg-wash"
               >
                 {localizedName(cat, locale)}
               </Link>
@@ -95,7 +183,9 @@ function MobileMenu({
           ))}
         </ul>
       </nav>
-      <div className="flex flex-col gap-1 px-6 py-3 border-t border-aluminium">
+
+      {/* Actions */}
+      <div className="flex flex-col gap-1 px-6 py-3 border-t border-hairline">
         <Link href="/compare" onClick={onClose} className="flex items-center gap-2 text-sm text-ink min-h-[44px]">
           <CompareIcon /> {t("nav.compare")}
         </Link>
@@ -105,71 +195,18 @@ function MobileMenu({
         <Link href="/materiais" onClick={onClose} className="flex items-center gap-2 text-sm text-ink min-h-[44px]">
           <BomListIcon /> {t("nav.materialList")}
         </Link>
-        <button className="flex items-center rounded border border-aluminium px-3 min-h-[44px] text-sm text-left">
+        <button className="flex items-center rounded border border-ink px-3 min-h-[44px] text-sm text-left hover:bg-ink hover:text-white transition-colors">
           {t("nav.login")}
         </button>
         <div className="pt-2 pb-1">
-          <LocaleToggle />
+          <LanguageSwitch />
         </div>
       </div>
     </div>
   );
 }
 
-function CompareIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="1" y="3" width="8" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="7" y="3" width="8" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" fill="white" />
-    </svg>
-  );
-}
-
-function BookmarkIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M4 2h8a1 1 0 011 1v10l-5-3-5 3V3a1 1 0 011-1z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CartIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path
-        d="M2 2h2l2.5 9h8l2-6H6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="8.5" cy="14.5" r="1" fill="currentColor" />
-      <circle cx="14.5" cy="14.5" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function BomListIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <rect x="3" y="2" width="14" height="16" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M7 6h6M7 10h6M7 14h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function HamburgerIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
+// ─── Nav ─────────────────────────────────────────────────────────────────────
 
 export function Nav() {
   const { count } = useCart();
@@ -181,97 +218,114 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40">
+    <header className="sticky top-0 z-50">
       {/* Primary bar */}
-      <div className="border-b border-aluminium bg-white">
-        <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:gap-6 sm:px-6">
+      <div
+        className="border-b border-hairline"
+        style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "saturate(160%) blur(8px)" }}
+      >
+        <div className="flex items-center gap-7 h-[74px] px-9">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-ink flex-shrink-0">
-            <span className="inline-block h-4 w-4 rotate-45 bg-brand" aria-hidden />
-            DoMusMat
+          <Link
+            href="/"
+            className="flex items-center gap-[11px] flex-none text-ink hover:opacity-80 transition-opacity"
+          >
+            <span
+              className="block w-[18px] h-[18px] bg-brand rotate-45 rounded-sm flex-none"
+              aria-hidden
+            />
+            <span className="text-[21px] font-bold tracking-[-0.02em]">DoMusMat</span>
           </Link>
 
-          {/* SearchBar — center, hidden on mobile */}
-          <div className="hidden md:flex flex-1 max-w-md mx-auto">
-            <SearchBar value={search} onChange={setSearch} />
+          {/* Search — flex-1, hidden on mobile */}
+          <div className="hidden md:flex flex-1 max-w-[560px] relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+              <SearchIcon />
+            </span>
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("search.placeholder")}
+              className="w-full h-[46px] border border-hairline bg-wash rounded pl-[42px] pr-4 text-[15px] text-ink outline-none focus:border-ink"
+            />
           </div>
 
-
           {/* Right cluster */}
-          <div className="flex items-center gap-3 ml-auto md:ml-0 sm:gap-4">
-            {/* Language toggle — desktop */}
-            <div className="hidden md:flex">
-              <LocaleToggle />
+          <div className="flex items-center gap-[6px] ml-auto text-body">
+            {/* Language switch — desktop */}
+            <div className="hidden md:flex mr-[6px]">
+              <LanguageSwitch />
             </div>
 
-            {/* Comparar */}
+            {/* Compare */}
             <Link
               href="/compare"
               aria-label={t("nav.compare")}
               title={t("nav.compare")}
-              className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
+              className="relative hidden md:grid w-[38px] h-[38px] place-items-center rounded hover:bg-wash transition-colors"
             >
               <CompareIcon />
               {refs.length > 0 && (
-                <span className="ml-1 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-brand text-white text-[10px] font-semibold rounded-full grid place-items-center leading-none">
                   {refs.length}
                 </span>
               )}
             </Link>
 
-            {/* Listas */}
+            {/* Favorites */}
             <Link
               href="/lists"
               aria-label={t("nav.savedLists")}
               title={t("nav.savedLists")}
-              className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
+              className="relative hidden md:grid w-[38px] h-[38px] place-items-center rounded hover:bg-wash transition-colors"
             >
               <BookmarkIcon />
               {saved.length > 0 && (
-                <span className="ml-1 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-brand text-white text-[10px] font-semibold rounded-full grid place-items-center leading-none">
                   {saved.length}
                 </span>
               )}
             </Link>
 
-            {/* Lista de materiais */}
+            {/* Material list */}
             <Link
               href="/materiais"
               aria-label={t("nav.materialList")}
               title={t("nav.materialList")}
-              className="relative hidden md:flex items-center text-aluminium-dark hover:text-ink"
+              className="relative hidden md:grid w-[38px] h-[38px] place-items-center rounded hover:bg-wash transition-colors"
             >
               <BomListIcon />
               {bomCount > 0 && (
-                <span className="ml-1 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-brand text-white text-[10px] font-semibold rounded-full grid place-items-center leading-none">
                   {bomCount}
                 </span>
               )}
             </Link>
 
-            {/* Cart */}
+            {/* Cart / Quote */}
             <Link
               href="/cart"
               aria-label={t("nav.quote")}
               title={t("nav.quote")}
-              className="relative flex items-center text-ink"
+              className="relative grid w-[38px] h-[38px] place-items-center rounded hover:bg-wash transition-colors"
             >
               <CartIcon />
               {count > 0 && (
-                <span className="absolute -right-2 -top-2 rounded-full bg-brand px-1.5 text-[10px] text-white leading-4">
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-brand text-white text-[10px] font-semibold rounded-full grid place-items-center leading-none">
                   {count}
                 </span>
               )}
             </Link>
 
             {/* Login — desktop */}
-            <button className="hidden md:inline-flex rounded border border-aluminium px-3 py-1.5 text-sm text-ink hover:border-ink transition-colors">
+            <button className="hidden md:inline-flex items-center ml-2 h-10 px-5 border border-ink rounded text-[14px] font-medium text-ink bg-white hover:bg-ink hover:text-white transition-colors">
               {t("nav.login")}
             </button>
 
             {/* Hamburger — mobile */}
             <button
-              className="md:hidden flex items-center justify-center min-h-[44px] min-w-[44px] text-ink"
+              className="md:hidden grid place-items-center w-[44px] h-[44px] text-ink"
               aria-label="Menu"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((prev) => !prev)}
@@ -282,8 +336,11 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Secondary category bar — desktop only */}
-      <div className="hidden md:block">
+      {/* Category nav — desktop */}
+      <div
+        className="hidden md:block"
+        style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "saturate(160%) blur(8px)" }}
+      >
         <Suspense fallback={<CategoryBar activeId={null} />}>
           <CategoryBarLive />
         </Suspense>
