@@ -6,8 +6,8 @@ import { Providers } from "@/app/providers";
 const openSans = Open_Sans({ subsets: ["latin"], variable: "--font-open-sans" });
 
 export const metadata: Metadata = {
-  title: "DoMusMat — B2B Catalogue",
-  description: "Industrial lighting BIM catalogue",
+  title: "DoMusMat — B2B 产品目录",
+  description: "工业照明 BIM 产品目录",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

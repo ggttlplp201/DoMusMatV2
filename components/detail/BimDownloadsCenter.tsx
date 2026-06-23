@@ -9,7 +9,24 @@ interface Props {
   product: Product;
 }
 
-function AssetRow({ asset, unavailableLabel }: { asset: Product["bim_assets"][number]; unavailableLabel: string }) {
+/** Maps known Portuguese asset labels to i18n keys */
+const ASSET_LABEL_KEY: Record<string, string> = {
+  "Ficha Técnica": "bim.asset.fichatecnica",
+};
+
+function AssetRow({
+  asset,
+  unavailableLabel,
+  t,
+}: {
+  asset: Product["bim_assets"][number];
+  unavailableLabel: string;
+  t: (key: string) => string;
+}) {
+  const localizedLabel = ASSET_LABEL_KEY[asset.label]
+    ? t(ASSET_LABEL_KEY[asset.label])
+    : asset.label;
+
   if (hasRealValue(asset.file)) {
     return (
       <a
@@ -17,7 +34,7 @@ function AssetRow({ asset, unavailableLabel }: { asset: Product["bim_assets"][nu
         download
         className="flex items-center gap-2 rounded border border-aluminium p-3 text-sm hover:bg-neutral-fill transition-colors"
       >
-        <span className="font-medium text-ink">{asset.label}</span>
+        <span className="font-medium text-ink">{localizedLabel}</span>
         <span className="text-aluminium-dark text-xs">
           {asset.format}
           {hasRealValue(asset.size) ? ` · ${asset.size}` : ""}
@@ -27,7 +44,7 @@ function AssetRow({ asset, unavailableLabel }: { asset: Product["bim_assets"][nu
   }
   return (
     <div className="flex items-center gap-2 rounded border border-aluminium p-3 text-sm opacity-60 cursor-not-allowed">
-      <span className="font-medium text-ink">{asset.label}</span>
+      <span className="font-medium text-ink">{localizedLabel}</span>
       <span className="text-aluminium-dark text-xs">{asset.format}</span>
       <span className="ml-auto text-xs text-aluminium-dark italic">{unavailableLabel}</span>
     </div>
@@ -46,14 +63,14 @@ export function BimDownloadsCenter({ product }: Props) {
       {primary.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           {primary.map((asset) => (
-            <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
+            <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} t={t} />
           ))}
         </div>
       )}
       {secondary.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {secondary.map((asset) => (
-            <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} />
+            <AssetRow key={asset.format} asset={asset} unavailableLabel={unavailableLabel} t={t} />
           ))}
         </div>
       )}

@@ -66,7 +66,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
     { key: "dimensions", label: t("spec.dimensions"), getValue: getFirstVariantDimensions },
     {
       key: "ip",
-      label: t("spec.ip"),
+      label: t("spec.ip_rating"),
       getValue: (p) => {
         const ip = (p.shared_specs as Record<string, unknown>).ip_rating;
         return hasRealValue(ip) ? `IP${ip}` : specFallback;
@@ -74,7 +74,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
     },
     {
       key: "color_temperature",
-      label: t("spec.colorTemp"),
+      label: t("spec.color_temperature"),
       getValue: (p) => {
         const ct = (p.shared_specs as Record<string, unknown>).color_temperature;
         if (!hasRealValue(ct)) return specFallback;

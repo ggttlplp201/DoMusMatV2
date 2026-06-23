@@ -16,8 +16,8 @@ const EMPTY_FILTERS: CatalogueFilters = { category: [], power: [], ip: [], color
 
 function sortProducts(products: Product[], sort: SortOption): Product[] {
   const copy = [...products];
-  if (sort === "name-az") return copy.sort((a, b) => a.name.localeCompare(b.name, "pt"));
-  if (sort === "category") return copy.sort((a, b) => a.category.localeCompare(b.category, "pt"));
+  if (sort === "name-az") return copy.sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "category") return copy.sort((a, b) => a.category.localeCompare(b.category));
   return copy; // featured: original order
 }
 

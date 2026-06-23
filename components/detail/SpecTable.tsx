@@ -134,6 +134,10 @@ function buildRows(
   };
 
   const maybeLocalize = (key: string, raw: unknown): string => {
+    // Localize booleans as "Sim"/"Não" → localizeSpecValue handles the mapping
+    if (typeof raw === "boolean") {
+      return localizeSpecValue(raw ? "Sim" : "Não", locale);
+    }
     // Always try to localize string values unless it's a pure numeric/code format key
     if (!SKIP_LOCALIZE_VALUE_KEYS.has(key) && typeof raw === "string") {
       return localizeSpecValue(raw, locale);

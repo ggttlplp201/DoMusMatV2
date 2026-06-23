@@ -207,6 +207,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "footer.requestQuotes": "(pedido de orçamentos)",
     "footer.nationalLandline": "(chamada para a rede fixa nacional)",
     "footer.rights": "Todos os direitos reservados.",
+    "cat.loading": "A carregar catálogo…",
+    "bim.asset.fichatecnica": "Ficha Técnica",
   },
   en: {
     "search.placeholder": "Search products, references…",
@@ -408,6 +410,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "footer.requestQuotes": "(request quotes)",
     "footer.nationalLandline": "(call to national landline)",
     "footer.rights": "All rights reserved.",
+    "cat.loading": "Loading catalogue…",
+    "bim.asset.fichatecnica": "Technical Sheet",
   },
   zh: {
     "search.placeholder": "搜索产品、型号…",
@@ -609,6 +613,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "footer.requestQuotes": "（报价咨询）",
     "footer.nationalLandline": "（拨打国内固定电话）",
     "footer.rights": "版权所有。",
+    "cat.loading": "正在加载产品目录…",
+    "bim.asset.fichatecnica": "技术规格书",
   },
 };
 
