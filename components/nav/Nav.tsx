@@ -134,7 +134,7 @@ function CategoryBar({ activeId }: { activeId: string | null }) {
       ))}
       <Link
         href="/downloads"
-        className="flex items-center gap-[5px] px-[14px] py-[6px] text-[14.5px] text-body whitespace-nowrap rounded transition-colors hover:bg-wash hover:text-ink ml-1 border-l border-hairline pl-[18px]"
+        className="flex items-center gap-[5px] px-[14px] py-[6px] text-[14.5px] text-body whitespace-nowrap rounded transition-colors hover:bg-wash hover:text-ink"
       >
         <DownloadIcon />
         {t("nav.downloads")}
