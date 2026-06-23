@@ -50,7 +50,7 @@ export function ModelViewer({ src, alt }: ModelViewerProps) {
         aria-hidden="true"
         className="absolute inset-0 z-10 pointer-events-none"
         style={(() => {
-          const word = t("viewer.sample");
+          const word = "SAMPLE"; // watermark stays English in all locales
           const tile = `<svg xmlns='http://www.w3.org/2000/svg' width='240' height='160'><text x='20' y='110' transform='rotate(-30 20 110)' font-family='Open Sans, system-ui, sans-serif' font-weight='700' font-size='26' letter-spacing='3' fill='rgba(20,20,20,0.08)'>${word}</text></svg>`;
           return {
             backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(tile)}")`,
