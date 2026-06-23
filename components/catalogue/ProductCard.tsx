@@ -11,8 +11,7 @@ import { useAnalytics } from "@/state/analytics";
 import { useRouter } from "next/navigation";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
-import { DownloadMenu } from "./DownloadMenu";
-import type { Product } from "@/lib/types";
+import type { Product, BimAssetFormat } from "@/lib/types";
 
 gsap.registerPlugin(useGSAP);
 
@@ -43,8 +42,18 @@ function getFirstColorTemp(product: Product): string | null {
   return null;
 }
 
-function getFormats(product: Product): string[] {
-  return [...new Set(product.bim_assets.map(a => a.format))];
+const FORMAT_PRIORITY: BimAssetFormat[] = ["IFC", "RFA", "DWG", "PDF"];
+
+function getFormats(product: Product): { visible: BimAssetFormat[]; extra: number } {
+  const all = [...new Set(product.bim_assets.map(a => a.format))];
+  // Sort by priority order first, then others
+  const sorted: BimAssetFormat[] = [
+    ...FORMAT_PRIORITY.filter(f => all.includes(f)),
+    ...all.filter(f => !FORMAT_PRIORITY.includes(f)),
+  ];
+  const visible = sorted.slice(0, 4);
+  const extra = sorted.length - visible.length;
+  return { visible, extra };
 }
 
 export function ProductCard({ product }: { product: Product }) {
@@ -58,7 +67,7 @@ export function ProductCard({ product }: { product: Product }) {
   const powerRange = getPowerRange(product);
   const ipLabel = getIpLabel(product);
   const colorTemp = getFirstColorTemp(product);
-  const formats = getFormats(product);
+  const { visible: formats, extra: formatsExtra } = getFormats(product);
   const variantCount = product.variants.length;
   const firstRef = product.variants[0]?.ref ?? "";
 
@@ -221,13 +230,16 @@ export function ProductCard({ product }: { product: Product }) {
 
         {/* File row */}
         {formats.length > 0 && (
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-[11px] text-[#B4B4AC]">{t("cat.fileLabel")}</span>
+          <div className="flex flex-wrap items-center gap-1 mb-2">
+            <span className="text-[11px] text-[#B4B4AC] mr-1">{t("cat.fileLabel")}</span>
             {formats.map(fmt => (
               <span key={fmt} className="font-mono text-[10px] border border-[#E6E5DE] rounded-[2px] px-1 text-[#3A3B40]">
                 {fmt}
               </span>
             ))}
+            {formatsExtra > 0 && (
+              <span className="font-mono text-[10px] text-[#8C8C84] px-1">+{formatsExtra}</span>
+            )}
           </div>
         )}
       </div>
@@ -258,13 +270,21 @@ export function ProductCard({ product }: { product: Product }) {
               <rect x="14" y="4" width="7" height="11" rx="1"/>
             </svg>
           </button>
-          {/* Download button — wraps DownloadMenu popover */}
-          <div
-            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-            className="relative"
+          {/* Download button — navigates to product detail download panel */}
+          <button
+            type="button"
+            aria-label={t("download.title")}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/products/${product.id}`);
+            }}
+            className="w-[34px] h-[34px] flex items-center justify-center bg-[#17181C] text-white rounded hover:bg-[#DA1E28] transition-colors"
           >
-            <DownloadMenu product={product} iconOnly />
-          </div>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
       </div>
     </Link>

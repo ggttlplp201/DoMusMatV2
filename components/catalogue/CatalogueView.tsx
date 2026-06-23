@@ -61,6 +61,7 @@ export function CatalogueView() {
       {/* Mobile filter toggle */}
       <div className="lg:hidden px-4 pt-4">
         <button
+          type="button"
           onClick={() => setShowMobileFilters(v => !v)}
           aria-expanded={showMobileFilters}
           aria-controls="mobile-filter-panel"
@@ -95,11 +96,12 @@ export function CatalogueView() {
           </div>
           <div className="flex items-center gap-3">
             {/* Density segmented control */}
-            <div className="flex items-center border border-[#E6E5DE] rounded overflow-hidden">
+            <div role="group" aria-label={t("cat.density.balanced")} className="flex items-center border border-[#E6E5DE] rounded overflow-hidden">
               {DENSITY_OPTIONS.map((opt, i) => (
                 <button
                   key={opt.value}
                   type="button"
+                  aria-pressed={density === opt.value}
                   onClick={() => setDensity(opt.value)}
                   className={`px-[13px] py-2 text-[13px] cursor-pointer transition-colors ${
                     i > 0 ? "border-l border-[#E6E5DE]" : ""

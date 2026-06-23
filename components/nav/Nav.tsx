@@ -195,7 +195,11 @@ function MobileMenu({
         <Link href="/materiais" onClick={onClose} className="flex items-center gap-2 text-sm text-ink min-h-[44px]">
           <BomListIcon /> {t("nav.materialList")}
         </Link>
-        <button className="flex items-center rounded border border-ink px-3 min-h-[44px] text-sm text-left hover:bg-ink hover:text-white transition-colors">
+        <button
+          type="button"
+          aria-label={t("nav.login")}
+          className="flex items-center rounded border border-ink px-3 min-h-[44px] text-sm text-left hover:bg-ink hover:text-white transition-colors"
+        >
           {t("nav.login")}
         </button>
         <div className="pt-2 pb-1">
@@ -319,7 +323,11 @@ export function Nav() {
             </Link>
 
             {/* Login — desktop */}
-            <button className="hidden md:inline-flex items-center ml-2 h-10 px-5 border border-ink rounded text-[14px] font-medium text-ink bg-white hover:bg-ink hover:text-white transition-colors">
+            <button
+              type="button"
+              aria-label={t("nav.login")}
+              className="hidden md:inline-flex items-center ml-2 h-10 px-5 border border-ink rounded text-[14px] font-medium text-ink bg-white hover:bg-ink hover:text-white transition-colors"
+            >
               {t("nav.login")}
             </button>
 

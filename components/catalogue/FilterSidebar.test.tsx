@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { FilterSidebar } from "./FilterSidebar";
 import { LocaleProvider } from "@/state/locale";
 import type { CatalogueFilters } from "@/lib/filter";
+import { repo } from "@/lib/repository";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -89,5 +90,46 @@ describe("FilterSidebar", () => {
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ format: [], category: [], power: [], ip: [], colorTemp: [] })
     );
+  });
+
+  it("category filters use real checkboxes (input[type=checkbox])", () => {
+    render(
+      <Wrapper>
+        <FilterSidebar filters={EMPTY} onChange={() => {}} />
+      </Wrapper>
+    );
+    // Should have real checkbox inputs
+    const checkboxes = screen.getAllByRole("checkbox");
+    expect(checkboxes.length).toBeGreaterThan(0);
+  });
+
+  it("checking a category checkbox calls onChange with that category", () => {
+    const onChange = vi.fn();
+    render(
+      <Wrapper>
+        <FilterSidebar filters={EMPTY} onChange={onChange} />
+      </Wrapper>
+    );
+    const checkboxes = screen.getAllByRole("checkbox");
+    // Click the first category checkbox
+    fireEvent.click(checkboxes[0]);
+    expect(onChange).toHaveBeenCalledOnce();
+    // The call should include a non-empty category array
+    const arg = onChange.mock.calls[0][0] as CatalogueFilters;
+    expect(arg.category.length).toBe(1);
+  });
+
+  it("checked category checkbox reflects checked state", () => {
+    const categories = repo.getCategories();
+    const firstCatId = categories[0].id;
+    const filters: CatalogueFilters = { ...EMPTY, category: [firstCatId] };
+    render(
+      <Wrapper>
+        <FilterSidebar filters={filters} onChange={() => {}} />
+      </Wrapper>
+    );
+    const checkboxes = screen.getAllByRole("checkbox");
+    // First checkbox should be checked
+    expect((checkboxes[0] as HTMLInputElement).checked).toBe(true);
   });
 });

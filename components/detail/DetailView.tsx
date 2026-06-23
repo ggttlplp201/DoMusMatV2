@@ -129,9 +129,13 @@ export function DetailView({ productId }: DetailViewProps) {
         {/* LEFT: Media column */}
         <div>
           {/* Tab row */}
-          <div className="flex gap-7 border-b border-[#E6E5DE] mb-[22px]">
+          <div role="tablist" aria-label={t("detail.tab.render") || "Media"} className="flex gap-7 border-b border-[#E6E5DE] mb-[22px]">
             <button
               type="button"
+              role="tab"
+              aria-selected={mediaTab === "render"}
+              aria-controls="media-panel"
+              id="tab-render"
               className={`${tabBase} ${mediaTab === "render" ? tabActive : tabInactive}`}
               onClick={() => setMediaTab("render")}
             >
@@ -139,6 +143,10 @@ export function DetailView({ productId }: DetailViewProps) {
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected={mediaTab === "model"}
+              aria-controls="media-panel"
+              id="tab-model"
               className={`${tabBase} flex items-center gap-2 ${
                 mediaTab === "model" ? tabActive : modelAvailable ? tabInactive : tabDisabled
               }`}
@@ -154,6 +162,10 @@ export function DetailView({ productId }: DetailViewProps) {
             </button>
             <button
               type="button"
+              role="tab"
+              aria-selected={mediaTab === "tech"}
+              aria-controls="media-panel"
+              id="tab-tech"
               className={`${tabBase} ${mediaTab === "tech" ? tabActive : tabInactive}`}
               onClick={() => setMediaTab("tech")}
             >
@@ -162,7 +174,12 @@ export function DetailView({ productId }: DetailViewProps) {
           </div>
 
           {/* Media area */}
-          <div className="relative">
+          <div
+            id="media-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${mediaTab}`}
+            className="relative"
+          >
             {mediaTab === "render" && (
               <Gallery images={product.images} alt={localizedName(product, locale)} />
             )}

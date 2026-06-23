@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { ProductCard } from "./ProductCard";
 import { LocaleProvider } from "@/state/locale";
 import { CompareProvider } from "@/state/compare";
@@ -76,6 +76,29 @@ describe("ProductCard", () => {
       render(<Wrapper><ProductCard product={product} /></Wrapper>);
       const compareBtn = screen.getByRole("button", { name: /对比|Compare|Comparar/i });
       expect(compareBtn).toBeDefined();
+    });
+
+    it("download button navigates to product detail page", () => {
+      render(<Wrapper><ProductCard product={product} /></Wrapper>);
+      // Download button has aria-label for download.title
+      const downloadBtn = screen.getByRole("button", { name: /下载|Download|Descarregar/i });
+      expect(downloadBtn).toBeDefined();
+      // Click should trigger router.push (not open a popover)
+      fireEvent.click(downloadBtn);
+      expect(mockPush).toHaveBeenCalledWith(`/products/${product.id}`);
+    });
+
+    it("caps format badges at 4 with +N chip when product has more formats", () => {
+      // barra-led-high-bay has many formats
+      const formats = [...new Set(product.bim_assets.map(a => a.format))];
+      render(<Wrapper><ProductCard product={product} /></Wrapper>);
+      if (formats.length > 4) {
+        // Should show +N chip somewhere in the card
+        const container = document.body;
+        const text = container.textContent ?? "";
+        const extra = formats.length - 4;
+        expect(text).toContain(`+${extra}`);
+      }
     });
   });
 

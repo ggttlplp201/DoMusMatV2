@@ -65,23 +65,28 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
             return (
               <li key={cat.id}>
                 <label className="flex items-center gap-[10px] py-[6px] cursor-pointer text-[14.5px] text-[#3A3B40]">
-                  <span
-                    className={`w-4 h-4 border-[1.5px] rounded-[3px] flex-none flex items-center justify-center transition-colors ${
-                      checked
-                        ? "border-[#17181C] bg-[#17181C]"
-                        : "border-[#C9C8C0] bg-white"
-                    }`}
-                    onClick={() => onChange({ ...filters, category: toggleItem(filters.category, cat.id) })}
-                    role="checkbox"
-                    aria-checked={checked}
-                    tabIndex={0}
-                    onKeyDown={e => { if (e.key === " " || e.key === "Enter") onChange({ ...filters, category: toggleItem(filters.category, cat.id) }); }}
-                  >
-                    {checked && (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M2 5l2.5 2.5L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    )}
+                  {/* Visually-styled real checkbox */}
+                  <span className="relative flex-none w-4 h-4">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => onChange({ ...filters, category: toggleItem(filters.category, cat.id) })}
+                      className="sr-only"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`absolute inset-0 border-[1.5px] rounded-[3px] flex items-center justify-center transition-colors ${
+                        checked
+                          ? "border-[#17181C] bg-[#17181C]"
+                          : "border-[#C9C8C0] bg-white"
+                      }`}
+                    >
+                      {checked && (
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path d="M2 5l2.5 2.5L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </span>
                   </span>
                   <span className="flex-1">{localizedName(cat, locale)}</span>
                   <span className="font-mono text-[12px] text-[#B4B4AC]">{count}</span>
