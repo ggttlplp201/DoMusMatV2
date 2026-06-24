@@ -19,6 +19,17 @@ export function BomBuilder() {
   }
 
   if (items.length === 0) {
+    if (orderId) {
+      return (
+        <div className="mt-4 rounded border border-aluminium bg-neutral-fill px-4 py-3 text-sm">
+          <p className="font-medium text-ink">{t("order.submittedTitle")}</p>
+          <p className="text-aluminium-dark">{t("order.submittedBody")}</p>
+          <p className="mt-2 text-aluminium-dark">
+            {t("order.orderRef")}: <span className="font-mono">{orderId}</span>
+          </p>
+        </div>
+      );
+    }
     return (
       <p className="text-aluminium-dark py-8 text-center">
         {t("bom.empty")}
@@ -32,7 +43,8 @@ export function BomBuilder() {
       {orderId && (
         <div className="mt-4 rounded border border-aluminium bg-neutral-fill px-4 py-3 text-sm">
           <p className="font-medium text-ink">{t("order.submittedTitle")}</p>
-          <p className="text-aluminium-dark">
+          <p className="text-aluminium-dark">{t("order.submittedBody")}</p>
+          <p className="mt-2 text-aluminium-dark">
             {t("order.orderRef")}: <span className="font-mono">{orderId}</span>
           </p>
         </div>
