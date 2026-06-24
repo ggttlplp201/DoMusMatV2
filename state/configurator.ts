@@ -16,6 +16,8 @@ interface ConfiguratorState {
   tool: Tool;
   selectedId: string | null;
   editingId: string | null;
+  timeOfDay: number;                 // hours, 6..18 (drives the sun angle/colour)
+  ceilingLightCount: number;         // number of recessed ceiling lights shown
   loadScene(doc: SceneDocument): void;
   setTool(tool: Tool): void;
   paintSurface(surfaceId: string, materialId: string): void;
@@ -31,6 +33,8 @@ interface ConfiguratorState {
   /** fill a preset slot with a product ref */
   assignSlot(slotId: string, ref: string): void;
   clearSlot(slotId: string): void;
+  setTimeOfDay(hours: number): void;
+  setCeilingLightCount(n: number): void;
 }
 
 export const useConfigurator = create<ConfiguratorState>((set) => ({
@@ -38,6 +42,8 @@ export const useConfigurator = create<ConfiguratorState>((set) => ({
   tool: { kind: "look" },
   selectedId: null,
   editingId: null,
+  timeOfDay: 9,
+  ceilingLightCount: 6,
 
   loadScene: (doc) => set({ scene: doc, selectedId: null, editingId: null, tool: { kind: "look" } }),
   setTool: (tool) => set({ tool, selectedId: null }),
@@ -88,4 +94,7 @@ export const useConfigurator = create<ConfiguratorState>((set) => ({
       delete slots[slotId];
       return { scene: { ...st.scene, slots } };
     }),
+
+  setTimeOfDay: (hours) => set({ timeOfDay: hours }),
+  setCeilingLightCount: (n) => set({ ceilingLightCount: n }),
 }));

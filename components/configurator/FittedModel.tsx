@@ -13,13 +13,15 @@ import { useGLTF } from "@react-three/drei";
 import type { ProductMeta } from "@/lib/configurator/types";
 
 export default function FittedModel({
-  url, realDimsMm, ground = true, modelRotY = 0, castShadow = true,
+  url, realDimsMm, ground = true, modelRotY = 0, castShadow = true, uniform = false, fitMaxSize,
 }: {
   url: string;
   realDimsMm: ProductMeta["realDimsMm"];
   ground?: boolean;
   modelRotY?: number;
   castShadow?: boolean;
+  uniform?: boolean;
+  fitMaxSize?: number;               // m — scale so the largest dimension = this (orientation-agnostic)
 }) {
   const { scene } = useGLTF(url);
   const fitted = useMemo(() => {
@@ -31,9 +33,14 @@ export default function FittedModel({
     const center = new THREE.Vector3();
     box.getSize(size);
     box.getCenter(center);
-    const sx = size.x > 1e-4 ? (realDimsMm.w / 1000) / size.x : 1;
-    const sy = size.y > 1e-4 ? (realDimsMm.h / 1000) / size.y : 1;
-    const sz = size.z > 1e-4 ? (realDimsMm.d / 1000) / size.z : 1;
+    const rx = size.x > 1e-4 ? (realDimsMm.w / 1000) / size.x : 1;
+    const ry = size.y > 1e-4 ? (realDimsMm.h / 1000) / size.y : 1;
+    const rz = size.z > 1e-4 ? (realDimsMm.d / 1000) / size.z : 1;
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const s = fitMaxSize
+      ? new THREE.Vector3().setScalar(maxDim > 1e-4 ? fitMaxSize / maxDim : 1) // scale longest axis to target
+      : uniform ? new THREE.Vector3().setScalar(Math.min(rx, ry))             // fit inside footprint, no squish
+      : new THREE.Vector3(rx, ry, rz);                                        // per-axis to real dims
     root.position.set(-center.x, ground ? -box.min.y : -center.y, -center.z);
     root.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -41,8 +48,8 @@ export default function FittedModel({
     });
     const wrap = new THREE.Group();
     wrap.add(root);
-    wrap.scale.set(sx, sy, sz);
+    wrap.scale.copy(s);
     return wrap;
-  }, [scene, realDimsMm.w, realDimsMm.h, realDimsMm.d, ground, modelRotY, castShadow]);
+  }, [scene, realDimsMm.w, realDimsMm.h, realDimsMm.d, ground, modelRotY, castShadow, uniform]);
   return <primitive object={fitted} />;
 }

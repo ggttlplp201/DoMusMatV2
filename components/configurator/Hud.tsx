@@ -21,6 +21,10 @@ export default function Hud({ palette }: HudProps) {
   const deleteItem = useConfigurator((s) => s.deleteItem);
   const saveEdit   = useConfigurator((s) => s.saveEdit);
   const escape     = useConfigurator((s) => s.escape);
+  const timeOfDay          = useConfigurator((s) => s.timeOfDay);
+  const setTimeOfDay       = useConfigurator((s) => s.setTimeOfDay);
+  const ceilingLightCount  = useConfigurator((s) => s.ceilingLightCount);
+  const setCeilingLightCount = useConfigurator((s) => s.setCeilingLightCount);
 
   // ---- keyboard shortcuts (client-side only, inside useEffect) ---------------
   useEffect(() => {
@@ -56,8 +60,38 @@ export default function Hud({ palette }: HudProps) {
         : "bg-black/40 text-white border-white/30 hover:border-white/70"
     }`;
 
+  const fmtTime = (t: number) => {
+    const h = Math.floor(t), m = Math.round((t - h) * 60);
+    return `${h}:${m === 0 ? "00" : m}`;
+  };
+
   return (
     <>
+      {/* ---- bottom control bar: time of day + ceiling lights ---- */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-5 rounded-lg bg-black/55 backdrop-blur px-4 py-2">
+        <label className="flex items-center gap-2 text-xs">
+          <span className="opacity-70">🕑 Time</span>
+          <input
+            type="range" min={6} max={18} step={0.5} value={timeOfDay}
+            onChange={(e) => setTimeOfDay(+e.target.value)}
+            className="w-36 accent-amber-300"
+          />
+          <span className="tabular-nums w-9">{fmtTime(timeOfDay)}</span>
+        </label>
+        <div className="flex items-center gap-1.5 text-xs">
+          <span className="opacity-70">💡 Ceiling</span>
+          {[0, 3, 6, 9].map((n) => (
+            <button
+              key={n}
+              onClick={() => setCeilingLightCount(n)}
+              className={`px-2 py-0.5 rounded ${ceilingLightCount === n ? "bg-white text-black" : "bg-black/40 border border-white/30 hover:border-white/70"}`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ---- left tool panel (dimmed / pointer-blocked while editing) ---- */}
       <div
         className={`absolute top-3 left-3 flex flex-col gap-3 p-3 rounded-lg bg-black/55 backdrop-blur w-60 transition ${

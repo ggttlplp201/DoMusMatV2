@@ -17,7 +17,7 @@ export default function Fixtures({ room }: { room: RoomShell }) {
         <group key={f.id} position={f.pos} rotation={[0, f.rotY, 0]}>
           <Suspense fallback={null}>
             {/* castShadow off so windows let sunlight through onto the floor */}
-            <FittedModel url={f.modelUrl} realDimsMm={f.realDimsMm} ground={f.ground ?? true} castShadow={false} />
+            <FittedModel url={f.modelUrl} realDimsMm={f.realDimsMm} ground={f.ground ?? true} uniform={f.uniform} castShadow={false} />
           </Suspense>
         </group>
       ))}

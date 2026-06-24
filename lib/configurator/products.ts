@@ -49,6 +49,15 @@ export const MATERIALS: MaterialDef[] = [
       repeatMeters: 1.5,
     },
   },
+  {
+    id: "tiles-002", name: "Floor Tiles", color: "#cfcabf",
+    textures: {
+      color:     "/textures/Tiles002_1K-JPG/Tiles002_1K-JPG_Color.jpg",
+      normal:    "/textures/Tiles002_1K-JPG/Tiles002_1K-JPG_NormalGL.jpg",
+      roughness: "/textures/Tiles002_1K-JPG/Tiles002_1K-JPG_Roughness.jpg",
+      repeatMeters: 0.6,
+    },
+  },
 ];
 
 /** keyed by catalogue product `id` (see data/product_data.json).

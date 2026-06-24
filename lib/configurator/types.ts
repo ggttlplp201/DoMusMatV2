@@ -31,6 +31,7 @@ export interface Fixture {
   rotY: number;
   realDimsMm: { w: number; h: number; d: number };
   ground?: boolean;                  // false → centre at pos (e.g. elevated windows)
+  uniform?: boolean;                 // true → uniform scale (fit inside, no distortion)
 }
 
 export interface RoomShell {
@@ -38,6 +39,7 @@ export interface RoomShell {
   surfaces: SurfaceDef[];
   slots: ItemSlot[];                                         // preset item locations
   fixtures: Fixture[];                                       // fixed décor (windows, …)
+  ceilingLightAnchors: [number, number, number][];          // preset recessed-light grid (first N shown)
   bounds: { min: [number, number]; max: [number, number] }; // walkable x/z extent (m)
   eyeHeight: number;                                         // m
   defaultMaterials: Record<string, string>;                 // surfaceId -> materialId

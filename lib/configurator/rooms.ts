@@ -4,7 +4,8 @@ import type { Fixture, ItemSlot, RoomShell, SurfaceDef, SurfaceKind } from "./ty
 const FT = 0.3048;
 const W = 40 * FT;   // 12.19 m  (x, west→east)
 const D = 30 * FT;   //  9.14 m  (z, south→north)
-const H = 3.4;       // ceiling height (taller for this scene)
+const H = 3.1;          // ceiling height
+const WALL_TOP = H + 0.06; // walls extend just above the ceiling (avoids z-fighting seam)
 const HX = W / 2;
 const HZ = D / 2;
 
@@ -23,7 +24,7 @@ function floorFt(id: string, xa: number, ya: number, xb: number, yb: number): Su
 }
 
 const DOOR_OPENING_H = 2.1;          // doorway opening height (m); wall above is a header
-const WIN_SILL = 0.95, WIN_HEAD = 2.15; // window band (m)
+const WIN_SILL = 0.95, WIN_HEAD = 1.985; // window band (m) — sized to the window model's 1.32 aspect (no top/bottom gap)
 
 /** an opening in a wall run; sill defaults to 0 (door), head defaults to door height */
 type Opening = { a: number; b: number; sill?: number; head?: number };
@@ -47,12 +48,12 @@ function wallRun(idBase: string, axis: "x" | "z", fixed: number, from: number, t
   const segs: SurfaceDef[] = [];
   let i = 0, cursor = lo;
   for (const o of ops) {
-    if (o.a - cursor > 0.05) segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, cursor, o.a, 0, H)); // beside, full height
+    if (o.a - cursor > 0.05) segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, cursor, o.a, 0, WALL_TOP)); // beside, full height
     if (o.sill > 0.05)       segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, o.a, o.b, 0, o.sill)); // sill below window
-    if (o.head < H - 0.05)   segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, o.a, o.b, o.head, H)); // header above
+    if (o.head < H - 0.05)   segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, o.a, o.b, o.head, WALL_TOP)); // header above
     cursor = Math.max(cursor, o.b);
   }
-  if (hi - cursor > 0.05) segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, cursor, hi, 0, H));
+  if (hi - cursor > 0.05) segs.push(wallPiece(`${idBase}-${i++}`, axis, fixed, cursor, hi, 0, WALL_TOP));
   return segs;
 }
 
@@ -73,20 +74,23 @@ function vWallFt(id: string, x: number, ya: number, yb: number, openings: Array<
 
 /** Procedural shell following the 40'×30' floor plan exactly (rooms, walls, door
  *  openings per spec). Replaced by roomShellFromGltf when a real GLB exists. */
-// fixed exterior windows (plan coords, ft) — cut openings + place models, never editable
-const WIN_URLS = ["/models/window.glb"];
-const WINDOWS: { wall: "south" | "north" | "west" | "east"; a: number; b: number }[] = [
-  { wall: "north", a: 2,  b: 5 },
-  { wall: "north", a: 15, b: 18 },
-  { wall: "north", a: 30, b: 36 },
-  { wall: "west",  a: 4,  b: 9 },
-  { wall: "west",  a: 22, b: 27 },
-  { wall: "south", a: 2,  b: 6 },
-  { wall: "south", a: 20, b: 25 },
-  { wall: "east",  a: 21, b: 27 },
+// fixed exterior windows (plan coords, ft) — cut openings + place models, never editable.
+// All openings are the SAME width so the window model fits uniformly (no squish).
+const WIN_URL = "/models/window.glb";
+const WIN_WIDTH_FT = 4.5;
+const WINDOWS: { wall: "south" | "north" | "west" | "east"; center: number }[] = [
+  { wall: "north", center: 3.5 },
+  { wall: "north", center: 16.5 },
+  { wall: "north", center: 33 },
+  { wall: "west",  center: 6.5 },
+  { wall: "west",  center: 24.5 },
+  { wall: "south", center: 4 },
+  { wall: "south", center: 22.5 },
+  { wall: "east",  center: 24 },
 ];
+const winSpan = (w: { center: number }) => ({ a: w.center - WIN_WIDTH_FT / 2, b: w.center + WIN_WIDTH_FT / 2 });
 const winOpenings = (wall: string): Opening[] =>
-  WINDOWS.filter((w) => w.wall === wall).map((w) => ({ a: w.a, b: w.b, sill: WIN_SILL, head: WIN_HEAD }));
+  WINDOWS.filter((w) => w.wall === wall).map((w) => ({ ...winSpan(w), sill: WIN_SILL, head: WIN_HEAD }));
 
 export function primitiveHouse(): RoomShell {
   const surfaces: SurfaceDef[] = [
@@ -97,16 +101,15 @@ export function primitiveHouse(): RoomShell {
     floorFt("floor-bedroom3", 13, 18, 22, 30),
     floorFt("floor-bathroom", 22, 18, 27, 30),
     floorFt("floor-master",   27, 18, 40, 30),
-    // east service column
+    // east service column (washroom now runs to the south wall — no living-room notch)
     floorFt("floor-mcloset",  34, 10, 40, 18),
-    floorFt("floor-washroom", 34, 3, 40, 10),
-    floorFt("floor-entry",    34, 0, 40, 3),
+    floorFt("floor-washroom", 34, 0, 40, 10),
     // open living area (no internal walls)
     floorFt("floor-family",   0, 0, 15, 18),
     floorFt("floor-dining",   15, 0, 24, 18),
     floorFt("floor-kitchen",  24, 0, 34, 18),
     // ---------- ceiling ----------
-    { id: "ceiling", kind: "ceiling", pos: [0, H, 0], rot: [Math.PI / 2, 0, 0], size: [W, D], normal: [0, -1, 0] },
+    { id: "ceiling", kind: "ceiling", pos: [0, H, 0], rot: [Math.PI / 2, 0, 0], size: [W + 0.16, D + 0.16], normal: [0, -1, 0] },
     // ---------- exterior shell (entry/washroom doors + windows) ----------
     ...hWallFt("wall-south", 0,  0, 40, [{ a: 13, b: 16 }, ...winOpenings("south")]),
     ...hWallFt("wall-north", 30, 0, 40, winOpenings("north")),
@@ -120,10 +123,9 @@ export function primitiveHouse(): RoomShell {
     ...vWallFt("wall-br3-bath",    22, 18, 30),
     ...vWallFt("wall-bath-master", 27, 18, 30),
     // ---------- east service block ----------
-    ...vWallFt("wall-service-w", 34, 3, 18, [[4, 7]]),       // washroom door from open area
+    ...vWallFt("wall-service-w", 34, 0, 18, [[4, 7]]),       // service west wall (full) + washroom door
     ...hWallFt("wall-closet-wash", 10, 34, 40),              // closet ↔ washroom
     ...hWallFt("wall-master-closet", 18, 34, 40, [[36, 38]]),// master ↔ closet opening
-    ...hWallFt("wall-washroom-s", 3, 34, 40),                // washroom south wall
   ];
 
   // defaults: wood floor, plaster walls + ceiling
@@ -147,26 +149,33 @@ export function primitiveHouse(): RoomShell {
     { id: "slot-cabinet-entry",   category: "cabinet",  pos: [px(18), 0, pz(1.5)], rotY: 0,        label: "Add cabinet",  outline: [0.9, 1.0] },
   ];
 
-  // fixed window models, centred in their wall openings
+  // fixed window models, centred in their (equal-size) wall openings; uniform fit = no squish
   const midY = (WIN_SILL + WIN_HEAD) / 2;
   const winH = (WIN_HEAD - WIN_SILL) * 1000;
+  const winW = WIN_WIDTH_FT * FT * 1000;
   const fixtures: Fixture[] = WINDOWS.map((w, idx) => {
-    const url = WIN_URLS[idx % WIN_URLS.length];
+    const { a, b } = winSpan(w);
+    const dims = { w: winW, h: winH, d: 120 };
     if (w.wall === "north" || w.wall === "south") {
       const z = w.wall === "north" ? pz(30) : pz(0);
-      const widthM = Math.abs(px(w.b) - px(w.a));
-      return { id: `win-${idx}`, modelUrl: url, pos: [px((w.a + w.b) / 2), midY, z], rotY: 0, realDimsMm: { w: widthM * 1000, h: winH, d: 120 }, ground: false };
+      return { id: `win-${idx}`, modelUrl: WIN_URL, pos: [px((a + b) / 2), midY, z], rotY: 0, realDimsMm: dims, ground: false, uniform: true };
     }
     const x = w.wall === "west" ? px(0) : px(40);
-    const widthM = Math.abs(pz(w.b) - pz(w.a));
-    return { id: `win-${idx}`, modelUrl: url, pos: [x, midY, pz((w.a + w.b) / 2)], rotY: Math.PI / 2, realDimsMm: { w: widthM * 1000, h: winH, d: 120 }, ground: false };
+    return { id: `win-${idx}`, modelUrl: WIN_URL, pos: [x, midY, pz((a + b) / 2)], rotY: Math.PI / 2, realDimsMm: dims, ground: false, uniform: true };
   });
+
+  // recessed ceiling-light grid over the open living area (rows ordered centre→front→back
+  // so 3/6/9 lights stay sensibly spread); first N are shown per the user's quantity choice
+  const ceilY = H - 0.02;
+  const ceilingLightAnchors: [number, number, number][] = [];
+  for (const yft of [9, 4, 14]) for (const xft of [7, 17, 27]) ceilingLightAnchors.push([px(xft), ceilY, pz(yft)]);
 
   return {
     id: "house-40x30",
     surfaces,
     slots,
     fixtures,
+    ceilingLightAnchors,
     bounds: { min: [-HX, -HZ], max: [HX, HZ] },
     eyeHeight: 1.6,
     defaultMaterials,
@@ -194,7 +203,7 @@ export function roomShellFromGltf(root: THREE_NS.Object3D, id: string): RoomShel
       normal: ud.normal ?? (kind === "floor" ? [0, 1, 0] : kind === "ceiling" ? [0, -1, 0] : [0, 0, 1]),
     });
   });
-  return { id, surfaces, slots: [], fixtures: [], bounds: { min: [-HX, -HZ], max: [HX, HZ] }, eyeHeight: 1.6, defaultMaterials: {} };
+  return { id, surfaces, slots: [], fixtures: [], ceilingLightAnchors: [], bounds: { min: [-HX, -HZ], max: [HX, HZ] }, eyeHeight: 1.6, defaultMaterials: {} };
 }
 
 export function getRoomShell(id: string, gltf?: THREE_NS.Object3D): RoomShell {
