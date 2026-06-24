@@ -35,6 +35,7 @@ export default function AccountPage() {
     supabase
       .from("orders")
       .select("*, order_items(*)")
+      .eq("user_id", profile.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (active && data) setOrders(data as OrderRow[]);

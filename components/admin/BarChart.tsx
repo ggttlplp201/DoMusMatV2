@@ -11,8 +11,8 @@ export function BarChart({ data, valueSuffix }: { data: Datum[]; valueSuffix?: s
   const max = Math.max(1, ...data.map((d) => d.value));
   return (
     <div className="flex flex-col gap-1.5">
-      {data.map((d) => (
-        <div key={d.label} className="flex items-center gap-2 text-sm">
+      {data.map((d, i) => (
+        <div key={`${d.label}-${i}`} className="flex items-center gap-2 text-sm">
           <span className="w-32 shrink-0 truncate text-aluminium-dark" title={d.label}>{d.label}</span>
           <span className="relative h-5 flex-1 overflow-hidden rounded bg-neutral-fill">
             <span
