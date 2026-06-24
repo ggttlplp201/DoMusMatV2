@@ -312,6 +312,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "order.status.cancelled": "Cancelado",
     "order.source.cart": "Orçamento",
     "order.source.bom": "Lista de materiais",
+    "admin.changeStatus": "Alterar estado",
+    "admin.statusUpdateError": "Não foi possível atualizar o estado.",
   },
   en: {
     "search.placeholder": "Search products, references…",
@@ -618,6 +620,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "order.status.cancelled": "Cancelled",
     "order.source.cart": "Quote",
     "order.source.bom": "Material list",
+    "admin.changeStatus": "Change status",
+    "admin.statusUpdateError": "Could not update the status.",
   },
   zh: {
     "search.placeholder": "搜索产品、型号…",
@@ -924,6 +928,8 @@ export const messages: Record<Locale, Record<string, string>> = {
     "order.status.cancelled": "已取消",
     "order.source.cart": "报价单",
     "order.source.bom": "材料清单",
+    "admin.changeStatus": "更改状态",
+    "admin.statusUpdateError": "无法更新状态。",
   },
 };
 

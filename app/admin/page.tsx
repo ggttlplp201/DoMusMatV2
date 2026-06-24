@@ -40,6 +40,8 @@ interface OrderRow {
   order_items: OrderItemRow[];
 }
 
+const ORDER_STATUSES = ["submitted", "in_review", "quoted", "fulfilled", "cancelled"] as const;
+
 const LOCALE_TAG: Record<Locale, string> = {
   pt: "pt-PT",
   en: "en-GB",
@@ -55,6 +57,8 @@ export default function AdminPage() {
   const [fetched, setFetched] = useState(false);
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [ordersFetched, setOrdersFetched] = useState(false);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [statusError, setStatusError] = useState<string | null>(null);
 
   useEffect(() => {
     if (loading || role !== "manager") return;
@@ -85,6 +89,18 @@ export default function AdminPage() {
       });
     return () => { cancelled = true; };
   }, [loading, role, supabase]);
+
+  async function updateStatus(orderId: string, newStatus: string) {
+    setSavingId(orderId);
+    setStatusError(null);
+    const { error } = await supabase.from("orders").update({ status: newStatus }).eq("id", orderId);
+    if (error) {
+      setStatusError(t("admin.statusUpdateError"));
+    } else {
+      setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status: newStatus } : o));
+    }
+    setSavingId(null);
+  }
 
   // Compute by-country breakdown
   const byCountry: { label: string; value: number }[] = (() => {
@@ -239,6 +255,9 @@ export default function AdminPage() {
                   {/* Recent orders table */}
                   <section>
                     <h3 className="mb-3 text-base font-semibold text-ink">{t("admin.recentOrders")}</h3>
+                    {statusError && (
+                      <p className="mb-2 text-sm text-red-600">{statusError}</p>
+                    )}
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm border-collapse">
                         <thead>
@@ -262,7 +281,17 @@ export default function AdminPage() {
                                 {new Date(order.created_at).toLocaleDateString(LOCALE_TAG[locale])}
                               </td>
                               <td className="py-2 px-3 text-ink">
-                                {t(`order.status.${order.status}`)}
+                                <select
+                                  value={order.status}
+                                  aria-label={t("admin.changeStatus")}
+                                  disabled={savingId === order.id}
+                                  onChange={(e) => updateStatus(order.id, e.target.value)}
+                                  className="border border-hairline rounded px-2 py-1 text-sm bg-white"
+                                >
+                                  {ORDER_STATUSES.map((s) => (
+                                    <option key={s} value={s}>{t(`order.status.${s}`)}</option>
+                                  ))}
+                                </select>
                               </td>
                               <td className="py-2 px-3 tabular-nums text-right text-ink">
                                 {order.total_quantity}
