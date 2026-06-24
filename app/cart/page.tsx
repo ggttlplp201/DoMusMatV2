@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
 import { useCart } from "@/state/cart";
@@ -112,12 +113,20 @@ export default function CartPage() {
               >
                 {t("common.clear")}
               </button>
-              <button
-                onClick={handleSubmit}
-                className="rounded bg-brand px-6 py-2 min-h-[44px] text-sm font-medium text-white hover:opacity-90"
-              >
-                {t("quote.request")}
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/configurator"
+                  className="rounded border border-aluminium px-4 py-2 min-h-[44px] text-sm text-aluminium-dark hover:bg-neutral-fill inline-flex items-center"
+                >
+                  Open in playground
+                </Link>
+                <button
+                  onClick={handleSubmit}
+                  className="rounded bg-brand px-6 py-2 min-h-[44px] text-sm font-medium text-white hover:opacity-90"
+                >
+                  {t("quote.request")}
+                </button>
+              </div>
             </div>
           </>
         )}
