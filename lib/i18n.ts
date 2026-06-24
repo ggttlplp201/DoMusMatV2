@@ -286,6 +286,12 @@ export const messages: Record<Locale, Record<string, string>> = {
     "admin.col.role": "Tipo",
     "admin.col.joined": "Registo",
     "admin.empty": "Ainda não há clientes.",
+    "order.submitRequest": "Submeter pedido",
+    "order.submitting": "A submeter…",
+    "order.submittedTitle": "Pedido submetido",
+    "order.submittedBody": "A nossa equipa entrará em contacto em breve.",
+    "order.orderRef": "Referência do pedido",
+    "order.submitError": "Não foi possível submeter o pedido. Tente novamente.",
   },
   en: {
     "search.placeholder": "Search products, references…",
@@ -566,6 +572,12 @@ export const messages: Record<Locale, Record<string, string>> = {
     "admin.col.role": "Role",
     "admin.col.joined": "Joined",
     "admin.empty": "No customers yet.",
+    "order.submitRequest": "Submit order request",
+    "order.submitting": "Submitting…",
+    "order.submittedTitle": "Order submitted",
+    "order.submittedBody": "Our team will be in touch shortly.",
+    "order.orderRef": "Order reference",
+    "order.submitError": "Could not submit the order. Please try again.",
   },
   zh: {
     "search.placeholder": "搜索产品、型号…",
@@ -846,6 +858,12 @@ export const messages: Record<Locale, Record<string, string>> = {
     "admin.col.role": "角色",
     "admin.col.joined": "注册时间",
     "admin.empty": "暂无客户。",
+    "order.submitRequest": "提交订单请求",
+    "order.submitting": "提交中…",
+    "order.submittedTitle": "订单已提交",
+    "order.submittedBody": "我们的团队会尽快与您联系。",
+    "order.orderRef": "订单编号",
+    "order.submitError": "无法提交订单，请重试。",
   },
 };
 
