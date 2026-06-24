@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { useCart } from "@/state/cart";
 import { buildBomLines } from "@/lib/bom";
 import { useT, useLocale } from "@/state/locale";
+import { useSubmitOrder } from "@/state/useSubmitOrder";
 
 export default function CartPage() {
   const { items, remove, setQty, clear, count } = useCart();
@@ -13,10 +14,14 @@ export default function CartPage() {
   const { locale } = useLocale();
   const lines = buildBomLines(items, { locale, priceFallback: t("fb.price") });
   const [submitted, setSubmitted] = useState(false);
+  const { submit, busy, error: submitError, orderId } = useSubmitOrder("cart", "/cart");
 
-  function handleSubmit() {
-    setSubmitted(true);
-    clear();
+  async function handleSubmit() {
+    const id = await submit(items);
+    if (id) {
+      clear();
+      setSubmitted(true);
+    }
   }
 
   return (
@@ -33,8 +38,13 @@ export default function CartPage() {
 
         {submitted && (
           <div className="rounded border border-aluminium bg-neutral-fill px-6 py-8 text-center">
-            <p className="text-ink font-medium">{t("quote.requested")}</p>
-            <p className="mt-1 text-sm text-aluminium-dark">{t("quote.followUp")}</p>
+            <p className="text-ink font-medium">{t("order.submittedTitle")}</p>
+            <p className="mt-1 text-sm text-aluminium-dark">{t("order.submittedBody")}</p>
+            {orderId && (
+              <p className="mt-2 text-sm text-aluminium-dark">
+                {t("order.orderRef")}: <span className="font-mono">{orderId}</span>
+              </p>
+            )}
           </div>
         )}
 
@@ -120,11 +130,15 @@ export default function CartPage() {
                 >
                   Open in playground
                 </Link>
+                {submitError && (
+                  <p className="text-xs text-brand">{t("order.submitError")}</p>
+                )}
                 <button
                   onClick={handleSubmit}
-                  className="rounded bg-brand px-6 py-2 min-h-[44px] text-sm font-medium text-white hover:opacity-90"
+                  disabled={busy}
+                  className="rounded bg-brand px-6 py-2 min-h-[44px] text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
                 >
-                  {t("quote.request")}
+                  {busy ? t("order.submitting") : t("order.submitRequest")}
                 </button>
               </div>
             </div>

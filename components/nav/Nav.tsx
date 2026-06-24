@@ -11,6 +11,7 @@ import { useT, useLocale } from "@/state/locale";
 import { LOCALES } from "@/lib/i18n";
 import { localizedName } from "@/lib/i18n";
 import { repo } from "@/lib/repository";
+import { AccountMenu } from "@/components/nav/AccountMenu";
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
 
@@ -251,13 +252,7 @@ function MobileMenu({
         <Link href="/materiais" onClick={onClose} className="flex items-center gap-2 text-sm text-ink min-h-[44px]">
           <BomListIcon /> {t("nav.materialList")}
         </Link>
-        <button
-          type="button"
-          aria-label={t("nav.login")}
-          className="flex items-center rounded border border-ink px-3 min-h-[44px] text-sm text-left hover:bg-ink hover:text-white transition-colors"
-        >
-          {t("nav.login")}
-        </button>
+        <AccountMenu variant="mobile" />
         <div className="pt-2 pb-1">
           <LanguageSwitch />
         </div>
@@ -395,14 +390,8 @@ export function Nav() {
               )}
             </Link>
 
-            {/* Login — desktop */}
-            <button
-              type="button"
-              aria-label={t("nav.login")}
-              className="hidden md:inline-flex items-center ml-2 h-10 px-5 border border-ink rounded text-[14px] font-medium text-ink bg-white hover:bg-ink hover:text-white transition-colors"
-            >
-              {t("nav.login")}
-            </button>
+            {/* Account / Login — desktop */}
+            <AccountMenu variant="desktop" />
 
             {/* Hamburger — mobile */}
             <button
