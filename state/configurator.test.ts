@@ -76,3 +76,30 @@ describe("modes", () => {
     expect(s().tool).toEqual({ kind: "look" });
   });
 });
+
+describe("selection side-effects", () => {
+  it("setTool clears the current selection", () => {
+    const id = s().placeItem(lamp, floor, [0,0,0])!;
+    expect(s().selectedId).toBe(id);
+    s().setTool({ kind: "paint", material: "oak" });
+    expect(s().selectedId).toBeNull();
+  });
+
+  it("escape from a tool clears selection and returns to look", () => {
+    s().placeItem(lamp, floor, [0,0,0]);
+    s().setTool({ kind: "place", ref: "balizador" });
+    s().select("item-1");
+    s().escape();
+    expect(s().tool).toEqual({ kind: "look" });
+    expect(s().selectedId).toBeNull();
+  });
+
+  it("saveEdit exits edit mode and clears selection", () => {
+    const id = s().placeItem(lamp, floor, [0,0,0])!;
+    s().beginEdit(id);
+    expect(s().editingId).toBe(id);
+    s().saveEdit();
+    expect(s().editingId).toBeNull();
+    expect(s().selectedId).toBeNull();
+  });
+});
