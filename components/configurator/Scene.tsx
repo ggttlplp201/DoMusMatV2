@@ -17,7 +17,7 @@
  *   item double-click (look) → beginEdit(id)
  */
 
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
@@ -31,35 +31,50 @@ import SlotMarkers from "./SlotMarkers";
 import Fixtures from "./Fixtures";
 import LightFixtures from "./LightFixtures";
 
-// ---- time-of-day sun ------------------------------------------------------
-function sunFromTime(t: number) {
-  const u = Math.min(1, Math.max(0, (t - 6) / 12)); // 0..1 across 6→18h
-  const el = Math.sin(u * Math.PI);                 // elevation 0(dawn)→1(noon)→0(dusk)
-  const az = Math.cos(u * Math.PI);                 // +1 east → −1 west
-  const dir = new THREE.Vector3(az, Math.max(0.12, el), 0.55).normalize();
-  const intensity = 0.5 + 3.2 * el;                 // dim at dawn/dusk, bright at noon
-  const color = new THREE.Color("#ff9442").lerp(new THREE.Color("#fff4e2"), el);
-  return { position: dir.multiplyScalar(22).toArray() as [number, number, number], intensity, color: `#${color.getHexString()}` };
-}
-
+// ---- time-of-day sun (real moving direction, not just brightness) ---------
 function Sun() {
-  const t = useConfigurator((s) => s.timeOfDay);
-  const sun = useMemo(() => sunFromTime(t), [t]);
+  const time = useConfigurator((s) => s.timeOfDay);
+  const lightRef = useRef<THREE.DirectionalLight>(null);
+  const targetRef = useRef<THREE.Object3D>(null);
+
+  useEffect(() => {
+    const sun = lightRef.current;
+    const target = targetRef.current;
+    if (!sun || !target) return;
+    sun.target = target;
+    const t = Math.min(1, Math.max(0, (time - 6) / 14)); // 0 sunrise(6h) → 1 sunset(20h)
+    const azimuth = THREE.MathUtils.lerp(-Math.PI * 0.75, Math.PI * 0.75, t); // sweeps E→W
+    const elevation = Math.sin(t * Math.PI) * Math.PI * 0.45 + 0.08;          // arcs up then down
+    const r = 30;
+    sun.position.set(
+      Math.cos(azimuth) * Math.cos(elevation) * r,
+      Math.sin(elevation) * r,
+      Math.sin(azimuth) * Math.cos(elevation) * r,
+    );
+    sun.intensity = Math.max(0.2, Math.sin(t * Math.PI) * 3.0);
+    target.position.set(0, 0, 0); // room centre
+    target.updateMatrixWorld();
+    sun.updateMatrixWorld();
+  }, [time]);
+
   return (
-    <directionalLight
-      castShadow
-      position={sun.position}
-      intensity={sun.intensity}
-      color={sun.color}
-      shadow-mapSize={[2048, 2048]}
-      shadow-bias={-0.0004}
-      shadow-camera-near={0.5}
-      shadow-camera-far={60}
-      shadow-camera-left={-10}
-      shadow-camera-right={10}
-      shadow-camera-top={10}
-      shadow-camera-bottom={-10}
-    />
+    <>
+      <directionalLight
+        ref={lightRef}
+        castShadow
+        color="#fff4e2"
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
+        shadow-camera-near={0.5}
+        shadow-camera-far={80}
+        shadow-camera-left={-11}
+        shadow-camera-right={11}
+        shadow-camera-top={11}
+        shadow-camera-bottom={-11}
+      />
+      <object3D ref={targetRef} />
+    </>
   );
 }
 

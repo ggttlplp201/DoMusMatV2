@@ -72,7 +72,7 @@ export default function Hud({ palette }: HudProps) {
         <label className="flex items-center gap-2 text-xs">
           <span className="opacity-70">🕑 Time</span>
           <input
-            type="range" min={6} max={18} step={0.5} value={timeOfDay}
+            type="range" min={6} max={20} step={0.5} value={timeOfDay}
             onChange={(e) => setTimeOfDay(+e.target.value)}
             className="w-36 accent-amber-300"
           />

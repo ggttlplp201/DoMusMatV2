@@ -16,7 +16,7 @@ interface ConfiguratorState {
   tool: Tool;
   selectedId: string | null;
   editingId: string | null;
-  timeOfDay: number;                 // hours, 6..18 (drives the sun angle/colour)
+  timeOfDay: number;                 // hours, 6..20 (drives the sun direction)
   ceilingLightCount: number;         // number of recessed ceiling lights shown
   loadScene(doc: SceneDocument): void;
   setTool(tool: Tool): void;

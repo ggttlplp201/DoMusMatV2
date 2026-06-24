@@ -43,12 +43,12 @@ function CeilingLight({ position, shadow }: { position: [number, number, number]
   }, []);
   return (
     <group position={position}>
-      {/* fixture model, laid flat & recessed into the ceiling (disk X-Y → horizontal) */}
-      <group rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+      {/* fixture model, laid flat & recessed into the ceiling, facing DOWN */}
+      <group rotation={[Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
         <FittedModel url="/models/ceiling_light_round.glb" realDimsMm={{ w: 1, h: 1, d: 1 }} fitMaxSize={0.3} ground={false} castShadow={false} />
       </group>
-      {/* emissive lens (glow only) */}
-      <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      {/* emissive lens (glow only), facing down */}
+      <mesh position={[0, -0.01, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.085, 24]} />
         <meshStandardMaterial color="#ffffff" emissive={WARM} emissiveIntensity={2.6} toneMapped={false} />
       </mesh>
