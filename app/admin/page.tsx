@@ -329,7 +329,7 @@ export default function AdminPage() {
                       <table className="w-full text-sm border-collapse">
                         <thead>
                           <tr className="bg-neutral-fill text-aluminium-dark">
-                            <th className="py-2 px-2 w-8" />
+                            <th className="py-2 px-3 text-left font-medium">{t("admin.col.details")}</th>
                             <th className="py-2 px-3 text-left font-medium">{t("admin.col.customer")}</th>
                             <th className="py-2 px-3 text-left font-medium">{t("admin.col.date")}</th>
                             <th className="py-2 px-3 text-left font-medium">{t("admin.col.status")}</th>
@@ -344,12 +344,12 @@ export default function AdminPage() {
                               <Fragment key={order.id}>
                                 <tr className={rowBg}>
                                   {/* Expand toggle */}
-                                  <td className="py-2 px-2 text-center">
+                                  <td className="py-2 px-3 text-center">
                                     <button
                                       onClick={() => toggleExpand(order.id)}
                                       aria-label={t("admin.expand")}
                                       aria-expanded={isExpanded}
-                                      className="text-aluminium-dark hover:text-ink text-xs leading-none px-1"
+                                      className="text-aluminium-dark hover:text-ink text-xl leading-none px-2 py-1"
                                     >
                                       {isExpanded ? "▾" : "▸"}
                                     </button>
