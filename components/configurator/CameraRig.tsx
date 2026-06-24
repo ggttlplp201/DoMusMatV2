@@ -12,7 +12,7 @@
  *   drag threshold: > 6 px
  */
 
-import { useEffect, useRef, createContext, useContext } from "react";
+import { useEffect, useRef, createContext, useContext, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { clampToBounds } from "@/lib/configurator/geometry";
@@ -123,10 +123,10 @@ export default function CameraRig({
   const apiRef = useRef<CameraRigAPI | null>(null);
 
   // stable context value — forwards to whatever apiRef.current holds
-  const stableApi: CameraRigAPI = {
+  const stableApi = useMemo<CameraRigAPI>(() => ({
     walkTo: (p) => apiRef.current?.walkTo(p),
     wasDrag: () => apiRef.current?.wasDrag() ?? false,
-  };
+  }), []);
 
   return (
     <CameraRigCtx.Provider value={stableApi}>
