@@ -17,18 +17,21 @@
  *   item double-click (look) → beginEdit(id)
  */
 
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { useConfigurator } from "@/state/configurator";
 import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
-import type { RoomShell, SurfaceDef } from "@/lib/configurator/types";
+import type { ItemSlot, RoomShell, SurfaceDef } from "@/lib/configurator/types";
 import CameraRig, { useCameraRig } from "./CameraRig";
 import RoomShellView from "./RoomShellView";
 import ItemView from "./ItemView";
+import SlotMarkers from "./SlotMarkers";
+import Fixtures from "./Fixtures";
 
 // ---- inner scene (needs to be inside CameraRig's context provider) -------
-function SceneInner({ room }: { room: RoomShell }) {
+function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
   const { walkTo, wasDrag } = useCameraRig();
 
   const scene      = useConfigurator((s) => s.scene);
@@ -94,51 +97,74 @@ function SceneInner({ room }: { room: RoomShell }) {
 
   return (
     <>
-      {/* ---- lights (ambient 0.7 + directional 0.8 + point) -------------- */}
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[2, 4, 2]} intensity={0.8} />
-      <pointLight position={[0, 2.3, 0]} intensity={6} distance={9} />
-
-      {/* ---- room shell -------------------------------------------------- */}
-      <RoomShellView
-        room={room}
-        assignedMaterials={scene.surfaces}
-        onClick={onSurfaceClick}
-        onPointerMove={onSurfaceMove}
+      {/* HDRI environment — image-based lighting, reflections + sky background */}
+      <Suspense fallback={null}>
+        <Environment files="/hdris/MorningSkyHDRI014B_1K_HDR.exr" background />
+      </Suspense>
+      {/* sun — aimed to stream in through the south window onto the floor; casts shadows */}
+      <directionalLight
+        castShadow
+        position={[-4.9, 8, 13.5]}
+        intensity={3.4}
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0004}
+        shadow-camera-near={0.5}
+        shadow-camera-far={60}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
       />
+      {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}
+      <ambientLight intensity={0.12} />
 
-      {/* ---- placed items ------------------------------------------------ */}
-      {scene.items.map((item) => (
-        <ItemView
-          key={item.id}
-          item={item}
-          selected={item.id === selectedId}
-          editing={item.id === editingId}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (editingIdRef.current) return;
-            if (wasDrag()) return;
-            if (toolRef.current.kind === "look") select(item.id);
-          }}
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            if (toolRef.current.kind === "look") beginEdit(item.id);
-          }}
+      {/* room shell + placed items (GLB/texture loads suspend) */}
+      <Suspense fallback={null}>
+        <RoomShellView
+          room={room}
+          assignedMaterials={scene.surfaces}
+          onClick={onSurfaceClick}
+          onPointerMove={onSurfaceMove}
         />
-      ))}
+
+        {scene.items.map((item) => (
+          <ItemView
+            key={item.id}
+            item={item}
+            selected={item.id === selectedId}
+            editing={item.id === editingId}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (editingIdRef.current) return;
+              if (wasDrag()) return;
+              if (toolRef.current.kind === "look") select(item.id);
+            }}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              if (toolRef.current.kind === "look") beginEdit(item.id);
+            }}
+          />
+        ))}
+
+        {/* preset item slots (ghost "+ add" markers / chosen products) */}
+        <SlotMarkers room={room} onSlotClick={onSlotClick} />
+
+        {/* fixed windows */}
+        <Fixtures room={room} />
+      </Suspense>
     </>
   );
 }
 
 // ---- public component (mounts inside Canvas) -----------------------------
-export default function Scene({ room }: { room: RoomShell }) {
+export default function Scene({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
   const editingId = useConfigurator((s) => s.editingId);
   const lockedRef = useRef(false);
   lockedRef.current = editingId !== null;
 
   return (
     <CameraRig lockedRef={lockedRef} bounds={room.bounds} eyeHeight={room.eyeHeight}>
-      <SceneInner room={room} />
+      <SceneInner room={room} onSlotClick={onSlotClick} />
     </CameraRig>
   );
 }

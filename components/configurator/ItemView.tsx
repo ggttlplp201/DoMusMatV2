@@ -10,16 +10,34 @@
  * Selection ring: white; editing ring: green (#46e0a0).
  */
 
+import { Suspense, useMemo } from "react";
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import type { PlacedItem } from "@/lib/configurator/types";
+import type { PlacedItem, ProductMeta } from "@/lib/configurator/types";
 import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
 
 // ---- GLB model (only loaded when modelUrl is present) --------------------
-function ModelMesh({ url }: { url: string }) {
+// Auto-fits any GLB to its real-world height (realDimsMm.h), centres it
+// horizontally, and grounds its base to y=0 — so models of unknown source
+// scale/origin land on the floor at a believable size.
+function ModelMesh({ url, realDimsMm }: { url: string; realDimsMm: ProductMeta["realDimsMm"] }) {
   const { scene } = useGLTF(url);
-  return <primitive object={scene.clone()} />;
+  const fitted = useMemo(() => {
+    const root = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(root);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    const s = size.y > 1e-4 ? (realDimsMm.h / 1000) / size.y : 1;
+    root.position.set(-center.x, -box.min.y, -center.z); // centre x/z, ground base to y=0
+    const wrap = new THREE.Group();
+    wrap.add(root);
+    wrap.scale.setScalar(s);
+    return wrap;
+  }, [scene, realDimsMm.h]);
+  return <primitive object={fitted} />;
 }
 
 // ---- primitive placeholder -----------------------------------------------
@@ -76,7 +94,9 @@ export default function ItemView({ item, selected, editing, onClick, onDoubleCli
       onDoubleClick={onDoubleClick}
     >
       {meta?.modelUrl ? (
-        <ModelMesh url={meta.modelUrl} />
+        <Suspense fallback={null}>
+          <ModelMesh url={meta.modelUrl} realDimsMm={meta.realDimsMm} />
+        </Suspense>
       ) : (
         <PlaceholderMesh item={item} />
       )}

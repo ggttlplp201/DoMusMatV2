@@ -12,9 +12,32 @@ export interface SurfaceDef {
   normal: [number, number, number];
 }
 
+/** A preset location where an item of a given category can be placed
+ *  (e.g. a door slot at a doorway). Shown as a ghost outline + "+" until filled. */
+export interface ItemSlot {
+  id: string;
+  category: string;                  // matches ProductMeta.category
+  pos: [number, number, number];     // floor position (m)
+  rotY: number;                      // facing (radians)
+  label: string;                     // e.g. "Add door"
+  outline: [number, number];         // ghost width × height (m)
+}
+
+/** A fixed architectural model (e.g. a window) — always present, non-editable. */
+export interface Fixture {
+  id: string;
+  modelUrl: string;
+  pos: [number, number, number];
+  rotY: number;
+  realDimsMm: { w: number; h: number; d: number };
+  ground?: boolean;                  // false → centre at pos (e.g. elevated windows)
+}
+
 export interface RoomShell {
   id: string;
   surfaces: SurfaceDef[];
+  slots: ItemSlot[];                                         // preset item locations
+  fixtures: Fixture[];                                       // fixed décor (windows, …)
   bounds: { min: [number, number]; max: [number, number] }; // walkable x/z extent (m)
   eyeHeight: number;                                         // m
   defaultMaterials: Record<string, string>;                 // surfaceId -> materialId
@@ -23,9 +46,12 @@ export interface RoomShell {
 export interface ProductMeta {
   ref: string;
   name: string;
+  category?: string;                                  // slot category this fits ("door", "wardrobe", …)
   modelUrl?: string;                                  // undefined → primitive placeholder
+  modelRotY?: number;                                 // intrinsic rotation to normalise the GLB's facing
   realDimsMm: { w: number; h: number; d: number };
   allowedSurfaces: SurfaceKind[];
+  sample?: boolean;                                   // stand-in asset; always shown in the palette
 }
 
 export interface PlacedItem {
@@ -40,8 +66,9 @@ export interface SceneDocument {
   room: string;
   surfaces: Record<string, string>;                   // surfaceId -> materialId
   items: PlacedItem[];
+  slots?: Record<string, string>;                     // slotId -> product ref
 }
 
 export function emptyScene(roomId: string): SceneDocument {
-  return { room: roomId, surfaces: {}, items: [] };
+  return { room: roomId, surfaces: {}, items: [], slots: {} };
 }

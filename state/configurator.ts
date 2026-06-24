@@ -28,6 +28,9 @@ interface ConfiguratorState {
   beginEdit(id: string): void;
   saveEdit(): void;
   escape(): void;
+  /** fill a preset slot with a product ref */
+  assignSlot(slotId: string, ref: string): void;
+  clearSlot(slotId: string): void;
 }
 
 export const useConfigurator = create<ConfiguratorState>((set) => ({
@@ -76,4 +79,13 @@ export const useConfigurator = create<ConfiguratorState>((set) => ({
   beginEdit: (id) => set({ editingId: id, selectedId: id, tool: { kind: "look" } }),
   saveEdit: () => set({ editingId: null, selectedId: null }),
   escape: () => set((st) => st.editingId ? { editingId: null, selectedId: null } : { tool: { kind: "look" }, selectedId: null }),
+
+  assignSlot: (slotId, ref) =>
+    set((st) => ({ scene: { ...st.scene, slots: { ...(st.scene.slots ?? {}), [slotId]: ref } } })),
+  clearSlot: (slotId) =>
+    set((st) => {
+      const slots = { ...(st.scene.slots ?? {}) };
+      delete slots[slotId];
+      return { scene: { ...st.scene, slots } };
+    }),
 }));
