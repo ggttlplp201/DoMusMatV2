@@ -38,9 +38,23 @@ navigation already matches the pano-roam UX, so the two stages share a feel.
 > interaction model). Default room reference:
 > `docs/superpowers/specs/assets/configurator-default-floorplan.md`.
 
+## Two distinct products (scope clarification, 2026-06-24)
+
+The "virtual showroom" idea splits into **two separate products**; this spec/build is the **first**:
+
+1. **Customer Visualizer (THIS project)** — a configurator that shows **only the
+   items the customer selected** (from the cart) so they can see how their picks
+   look and pair together in a room. Entry = cart → playground. Selected-items-only.
+2. **Virtual Showroom (separate, future project)** — an IKEA-style space where
+   **all DomusMat products** are present in one walkable showroom; users roam and
+   **click an item for more info**. All-items, browse-and-inspect. NOT built here.
+
+The two share tech (R3F, GLB assets, click-walk navigation) but differ in purpose
+and content. Everything below describes the **Customer Visualizer**.
+
 ## Scope of THIS spec
 
-This spec covers **the real-time configurator (Tier 1)** only.
+This spec covers **the real-time configurator / customer visualizer (Tier 1)** only.
 
 **In scope:**
 - A `/configurator` route inside this Next.js app.
