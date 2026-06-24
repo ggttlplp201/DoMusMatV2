@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useConfigurator } from "@/state/configurator";
 import { getRoomShell } from "@/lib/configurator/rooms";
-import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
 import { decodeScene } from "@/lib/configurator/serialize";
+import { paletteFromCartRefs } from "@/lib/configurator/palette";
+import { repo } from "@/lib/repository";
 import { useCart } from "@/state/cart";
 import Scene from "@/components/configurator/Scene";
 import Hud from "@/components/configurator/Hud";
@@ -12,14 +13,22 @@ import Hud from "@/components/configurator/Hud";
 export default function ConfiguratorPage() {
   const [mounted, setMounted] = useState(false);
   const loadScene = useConfigurator((s) => s.loadScene);
+  const sceneRoom = useConfigurator((s) => s.scene.room);
   const { items: cart } = useCart();
 
   // products the user picked that are actually configurable
+  // cart items carry a variant SKU (ref); resolve via repository to the product id
   const palette = useMemo(
-    () => cart.map((i) => CONFIGURABLE_PRODUCTS[i.ref]).filter(Boolean),
+    () =>
+      paletteFromCartRefs(
+        cart.map((i) => i.ref),
+        (ref) => repo.findByRef(ref)?.product.id,
+      ),
     [cart],
   );
-  const room = useMemo(() => getRoomShell("house-40x30"), []);
+
+  // derive room shell from the store's scene.room so a loaded/shared scene uses its own room
+  const room = useMemo(() => getRoomShell(sceneRoom), [sceneRoom]);
 
   useEffect(() => {
     setMounted(true);
