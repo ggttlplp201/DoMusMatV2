@@ -10,6 +10,17 @@ describe("scene serialization", () => {
       items: [{ id: "item-1", ref: "p", surface: "floor-master", pos: [1,0,1] as [number,number,number], rotY: 0 }] };
     expect(decodeScene(encodeScene(doc))).toEqual(doc);
   });
+  it("round-trips a fully populated house scene", () => {
+    const doc = {
+      room: "house-40x30",
+      surfaces: { "floor-master": "walnut", "floor-family": "oak", ceiling: "marble-white" },
+      items: [
+        { id: "item-1", ref: "balizador-de-jardim-led", surface: "floor-family", pos: [1.2,0,0.8] as [number,number,number], rotY: 1.57 },
+        { id: "item-2", ref: "balizador-de-jardim-led", surface: "floor-master", pos: [-2,0,-1] as [number,number,number], rotY: 0 },
+      ],
+    };
+    expect(decodeScene(encodeScene(doc))).toEqual(doc);
+  });
   it("returns null on garbage", () => {
     expect(decodeScene("not-valid-base64!!")).toBeNull();
   });
