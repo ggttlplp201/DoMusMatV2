@@ -32,8 +32,6 @@ create index if not exists orders_user_id_idx on public.orders(user_id);
 -- RLS: a user sees/creates their own orders; managers see all and can update status.
 create policy "orders_select_own_or_manager" on public.orders for select
   using (user_id = auth.uid() or public.is_manager());
-create policy "orders_insert_own" on public.orders for insert
-  with check (user_id = auth.uid());
 create policy "orders_update_manager" on public.orders for update
   using (public.is_manager()) with check (public.is_manager());
 
@@ -41,11 +39,6 @@ create policy "order_items_select_own_or_manager" on public.order_items for sele
   using (exists (
     select 1 from public.orders o
     where o.id = order_id and (o.user_id = auth.uid() or public.is_manager())
-  ));
-create policy "order_items_insert_own" on public.order_items for insert
-  with check (exists (
-    select 1 from public.orders o
-    where o.id = order_id and o.user_id = auth.uid()
   ));
 
 -- keep updated_at fresh
@@ -79,6 +72,9 @@ begin
   if auth.uid() is null then
     raise exception 'Must be authenticated to create an order';
   end if;
+  if coalesce(jsonb_array_length(p_items), 0) = 0 then
+    raise exception 'Order must contain at least one item';
+  end if;
   select coalesce(sum((it->>'quantity')::int), 0)
     into v_total
     from jsonb_array_elements(p_items) it;
@@ -97,3 +93,7 @@ begin
   return v_order_id;
 end;
 $create_order$;
+
+-- Order creation flows EXCLUSIVELY through this RPC (no direct INSERT policies on
+-- orders/order_items), so total_quantity is always computed atomically and cannot drift.
+grant execute on function public.create_order(text, text, text, jsonb) to authenticated;
