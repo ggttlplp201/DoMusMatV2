@@ -70,9 +70,9 @@ export default function AdminPage() {
         {!loading && role === "manager" && (
           <>
             {/* KPI */}
-            <div className="mb-8 inline-flex items-baseline gap-2 rounded border border-aluminium bg-neutral-fill px-6 py-4">
-              <span className="text-3xl font-bold tabular-nums text-ink">{customers.length}</span>
-              <span className="text-sm text-aluminium-dark">{t("admin.totalCustomers")}</span>
+            <div className="mb-8 inline-block rounded border border-aluminium bg-neutral-fill px-4 py-3">
+              <div className="text-sm text-aluminium-dark">{t("admin.totalCustomers")}</div>
+              <div className="text-2xl font-bold text-ink tabular-nums">{customers.length}</div>
             </div>
 
             {/* By country */}
@@ -97,7 +97,9 @@ export default function AdminPage() {
             <section>
               <h2 className="mb-3 text-base font-semibold text-ink">{t("admin.customers")}</h2>
 
-              {fetched && customers.length === 0 ? (
+              {!fetched ? (
+                <p className="text-aluminium-dark py-8">…</p>
+              ) : customers.length === 0 ? (
                 <p className="text-aluminium-dark py-8 text-center">{t("admin.empty")}</p>
               ) : (
                 <div className="overflow-x-auto">
@@ -118,7 +120,7 @@ export default function AdminPage() {
                           key={row.id}
                           className={i % 2 === 0 ? "bg-white" : "bg-neutral-fill"}
                         >
-                          <td className="py-2 px-3 text-ink">{row.full_name}</td>
+                          <td className="py-2 px-3 text-ink">{row.full_name || "—"}</td>
                           <td className="py-2 px-3 text-ink">{row.company_name || "—"}</td>
                           <td className="py-2 px-3 text-ink">{row.email}</td>
                           <td className="py-2 px-3 text-ink">
