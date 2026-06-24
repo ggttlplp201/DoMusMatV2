@@ -67,6 +67,15 @@ function DownloadIcon() {
   );
 }
 
+function CubeIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 7.5 12 3 3 7.5v9L12 21l9-4.5z" />
+      <path d="M3 7.5 12 12l9-4.5M12 12v9" />
+    </svg>
+  );
+}
+
 function HamburgerIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -139,6 +148,13 @@ function CategoryBar({ activeId }: { activeId: string | null }) {
         <DownloadIcon />
         {t("nav.downloads")}
       </Link>
+      <Link
+        href="/configurator"
+        className="flex items-center gap-[5px] px-[14px] py-[6px] text-[14.5px] font-medium text-emerald-700 whitespace-nowrap rounded transition-colors hover:bg-emerald-50"
+      >
+        <CubeIcon />
+        3D Showroom
+      </Link>
     </nav>
   );
 }
@@ -209,6 +225,16 @@ function MobileMenu({
             >
               <DownloadIcon />
               {t("nav.downloads")}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/configurator"
+              onClick={onClose}
+              className="flex items-center gap-2 px-6 min-h-[44px] text-sm font-medium text-emerald-700 hover:bg-emerald-50 border-t border-hairline"
+            >
+              <CubeIcon />
+              3D Showroom
             </Link>
           </li>
         </ul>
