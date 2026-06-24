@@ -1,14 +1,48 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/state/auth";
 import { countryName } from "@/lib/countries";
 import { useT, useLocale } from "@/state/locale";
+import { createClient } from "@/lib/supabase/client";
+
+interface OrderRow {
+  id: string;
+  source: string;
+  status: string;
+  total_quantity: number;
+  created_at: string;
+  order_items: {
+    id: string;
+    product_name_snapshot: string | null;
+    product_ref: string;
+    quantity: number;
+  }[];
+}
 
 export default function AccountPage() {
   const { profile, loading, signOut } = useAuth();
   const t = useT();
   const { locale } = useLocale();
+
+  const [supabase] = useState(() => createClient());
+  const [orders, setOrders] = useState<OrderRow[]>([]);
+
+  useEffect(() => {
+    if (!profile) return;
+    let active = true;
+    supabase
+      .from("orders")
+      .select("*, order_items(*)")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (active && data) setOrders(data as OrderRow[]);
+      });
+    return () => { active = false; };
+  }, [profile, supabase]);
+
+  const localeTag = locale === "pt" ? "pt-PT" : locale === "en" ? "en-GB" : "zh-CN";
 
   return (
     <>
@@ -35,6 +69,40 @@ export default function AccountPage() {
           >
             {t("auth.signOut")}
           </button>
+        )}
+        {!loading && profile && (
+          <section className="mt-10">
+            <h2 className="mb-4 text-lg font-semibold text-ink">{t("account.orders.title")}</h2>
+            {orders.length === 0 ? (
+              <p className="text-sm text-muted">{t("account.orders.empty")}</p>
+            ) : (
+              <ul className="space-y-4">
+                {orders.map((o) => (
+                  <li key={o.id} className="rounded border border-aluminium bg-neutral-fill p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                      <span className="text-sm text-ink font-medium">
+                        {new Date(o.created_at).toLocaleDateString(localeTag)}
+                      </span>
+                      <span className="rounded bg-wash px-2 py-0.5 text-xs text-muted border border-hairline">
+                        {t(`order.status.${o.status}`)}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted mb-3">
+                      <span>{t(`order.source.${o.source}`)}</span>
+                      <span>{o.total_quantity} {t("order.units")}</span>
+                    </div>
+                    <ul className="space-y-1">
+                      {o.order_items.map((item) => (
+                        <li key={item.id} className="text-xs text-ink">
+                          {item.product_name_snapshot ?? item.product_ref} × {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         )}
       </main>
       <Footer />
