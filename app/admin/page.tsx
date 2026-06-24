@@ -99,7 +99,7 @@ export default function AdminPage() {
     } else {
       setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status: newStatus } : o));
     }
-    setSavingId(null);
+    setSavingId((prev) => (prev === orderId ? null : prev));
   }
 
   // Compute by-country breakdown
