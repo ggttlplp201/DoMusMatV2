@@ -17,13 +17,15 @@ export default function AccountPage() {
         <h1 className="mb-6 text-2xl font-bold text-ink">{t("account.title")}</h1>
         {loading && <p className="text-body">…</p>}
         {!loading && profile && (
-          <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
-            <dt className="text-muted">{profile.full_name}</dt><dd />
-            <dt className="text-muted">{t("account.email")}</dt><dd className="text-ink">{profile.email}</dd>
-            <dt className="text-muted">{t("account.company")}</dt><dd className="text-ink">{profile.company_name || "—"}</dd>
-            <dt className="text-muted">{t("account.country")}</dt><dd className="text-ink">{profile.country ? countryName(profile.country, locale) : "—"}</dd>
-            <dt className="text-muted">{t("account.role")}</dt><dd className="text-ink">{t(`account.role.${profile.role}`)}</dd>
-          </dl>
+          <>
+            <p className="mb-4 text-lg font-medium text-ink">{profile.full_name}</p>
+            <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-sm">
+              <dt className="text-muted">{t("account.email")}</dt><dd className="text-ink">{profile.email}</dd>
+              <dt className="text-muted">{t("account.company")}</dt><dd className="text-ink">{profile.company_name || "—"}</dd>
+              <dt className="text-muted">{t("account.country")}</dt><dd className="text-ink">{profile.country ? countryName(profile.country, locale) : "—"}</dd>
+              <dt className="text-muted">{t("account.role")}</dt><dd className="text-ink">{t(`account.role.${profile.role}`)}</dd>
+            </dl>
+          </>
         )}
         {!loading && profile && (
           <button
