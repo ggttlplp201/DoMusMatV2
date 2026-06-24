@@ -40,9 +40,9 @@ export default function Hud({ palette }: HudProps) {
 
   // ---- save/share (only touches browser APIs inside handler) -----------------
   const onShareSave = () => {
-    const url = `${location.pathname}?s=${encodeScene(scene)}`;
-    history.replaceState(null, "", url);
-    navigator.clipboard?.writeText(location.origin + url);
+    const url = `${window.location.pathname}?s=${encodeScene(scene)}`;
+    window.history.replaceState(null, "", url);
+    navigator.clipboard?.writeText(window.location.origin + url);
   };
 
   const locked = editingId !== null;
