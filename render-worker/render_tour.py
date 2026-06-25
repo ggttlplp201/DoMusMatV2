@@ -13,6 +13,9 @@ import urllib.request
 PANO_W, PANO_H = 2048, 1024
 SAMPLES = 64
 VARIANTS = ("day", "night")
+# glTF stores light intensity in candela; Blender imports that as a tiny wattage
+# (a 13cd spot → ~0.24W), so interior lights barely register. Scale them up.
+LIGHT_BOOST = 40.0
 
 
 # ---- pure helpers (no bpy) ------------------------------------------------
@@ -178,6 +181,10 @@ def render_all(cfg: dict, tmpdir: str = "/tmp") -> dict:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         scene_glb = download(cfg["scene"], os.path.join(tmpdir, "scene.glb"))
         bpy.ops.import_scene.gltf(filepath=scene_glb)
+        # imported interior lights are far too dim (candela→watts gap) — boost them
+        for obj in bpy.context.scene.objects:
+            if obj.type == "LIGHT" and obj.data.type in {"POINT", "SPOT", "AREA"}:
+                obj.data.energy *= LIGHT_BOOST
         hdri = download(cfg["hdri"][variant], os.path.join(tmpdir, f"{variant}.exr"))
         _setup_world(hdri, variant)
         _setup_render()
