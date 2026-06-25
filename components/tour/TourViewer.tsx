@@ -36,7 +36,7 @@ export default function TourViewer({ job }: { job: RenderJob }) {
       }));
   }
 
-  // create the viewer once per job
+  // create the viewer once per job (always starts on the "day" variant)
   useEffect(() => {
     if (!ref.current) return;
     const nodes = buildNodes("day");
@@ -55,16 +55,15 @@ export default function TourViewer({ job }: { job: RenderJob }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [job]);
 
-  // swap panos in place when the day/night toggle flips (keep current room)
-  const firstRun = useRef(true);
-  useEffect(() => {
-    if (firstRun.current) { firstRun.current = false; return; }
+  // swap panos imperatively on toggle — keep the current room, no effect/ref race
+  function switchVariant(v: TourVariant) {
+    if (v === variant) return;
+    setVariant(v);
     const vt = vtRef.current;
     if (!vt) return;
     const current = vt.getCurrentNode()?.id;
-    vt.setNodes(buildNodes(variant), current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [variant]);
+    vt.setNodes(buildNodes(v), current);
+  }
 
   const tab = (v: TourVariant) =>
     `px-3 py-1 text-xs font-medium transition ${
@@ -75,8 +74,8 @@ export default function TourViewer({ job }: { job: RenderJob }) {
     <div className="relative h-full w-full">
       <div ref={ref} className="h-full w-full" />
       <div className="absolute top-3 right-3 z-10 flex overflow-hidden rounded-full ring-1 ring-white/30">
-        <button className={tab("day")} onClick={() => setVariant("day")}>Day</button>
-        <button className={tab("night")} onClick={() => setVariant("night")}>Night</button>
+        <button className={tab("day")} onClick={() => switchVariant("day")}>Day</button>
+        <button className={tab("night")} onClick={() => switchVariant("night")}>Night</button>
       </div>
     </div>
   );
