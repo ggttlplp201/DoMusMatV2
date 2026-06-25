@@ -20,13 +20,14 @@ export default function TourViewer({ job }: { job: RenderJob }) {
     const links = spotLinks(spots);
     const urls = job.pano_urls[v] ?? {};
     const posById = new Map(spots.map((s) => [s.id, s.pos] as const));
-    // Blender's equirect camera centers the pano on the opposite world direction
-    // from the browser cubemap capture, so cycles panos are rotated 180° in azimuth.
-    const yawOffset = job.phase === "cycles" ? Math.PI : 0;
+    // Browser cubemap panos and Blender equirect panos have opposite azimuth
+    // handedness, so cycles arrows need the bearing's x-axis mirrored (negate angle).
+    const mirror = job.phase === "cycles";
     const yawTo = (fromId: string, toId: string) => {
       const a = posById.get(fromId)!;
       const b = posById.get(toId)!;
-      return Math.atan2(b[0] - a[0], b[2] - a[2]) + yawOffset;
+      const dx = mirror ? a[0] - b[0] : b[0] - a[0];
+      return Math.atan2(dx, b[2] - a[2]);
     };
     return spots
       .filter((s) => urls[s.id])
