@@ -18,13 +18,16 @@ export async function POST(req: Request) {
     if (!photorealEnabled()) {
       return NextResponse.json({ error: "photoreal not configured" }, { status: 503 });
     }
-    // one in-flight cloud render per user
+    // one in-flight cloud render per user — but ignore stale jobs (>20 min old)
+    // so a render whose worker never finished can't block forever
+    const staleCutoff = new Date(Date.now() - 20 * 60 * 1000).toISOString();
     const { count } = await supabase
       .from("render_jobs")
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id)
       .eq("phase", "cycles")
-      .in("status", ["queued", "rendering"]);
+      .in("status", ["queued", "rendering"])
+      .gt("created_at", staleCutoff);
     if ((count ?? 0) > 0) {
       return NextResponse.json({ error: "a photoreal render is already running" }, { status: 409 });
     }
