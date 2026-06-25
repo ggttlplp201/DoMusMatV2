@@ -34,7 +34,8 @@ export async function renderEquirect(
   width: number,
 ): Promise<Blob> {
   const [w, h] = equirectSize(width);
-  const cubeSize = Math.max(256, Math.floor(width / 4));
+  // cube faces drive the real sharpness; oversample (~width/3) and cap at 2048
+  const cubeSize = Math.min(2048, Math.max(512, Math.floor(width / 3)));
 
   // 1) capture the scene into a cubemap at the spot
   const cubeRT = new THREE.WebGLCubeRenderTarget(cubeSize, {

@@ -18,6 +18,7 @@ import FittedModel from "./FittedModel";
 
 export default function SlotMarkers({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
   const slots = useConfigurator((s) => s.scene.slots);
+  const capturing = useConfigurator((s) => s.capturing);
   return (
     <>
       {room.slots.map((slot) => {
@@ -31,7 +32,8 @@ export default function SlotMarkers({ room, onSlotClick }: { room: RoomShell; on
                   <FittedModel url={meta.modelUrl} realDimsMm={meta.realDimsMm} modelRotY={meta.modelRotY} />
                 </Suspense>
               </group>
-            ) : (
+            ) : capturing ? null : (
+              // empty-slot "+ add" affordance — gizmo only, hidden while rendering panos
               <SlotGhost slot={slot} onClick={() => onSlotClick(slot)} />
             )}
           </group>

@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useConfigurator } from "@/state/configurator";
 import type { RoomShell } from "./types";
 
-export const PANO_WIDTH = 4096;
+export const PANO_WIDTH = 6144;
 
 type Phase = "idle" | "capturing" | "uploading" | "error";
 

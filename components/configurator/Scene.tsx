@@ -118,7 +118,6 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
   const tool       = useConfigurator((s) => s.tool);
   const selectedId = useConfigurator((s) => s.selectedId);
   const editingId  = useConfigurator((s) => s.editingId);
-  const capturing  = useConfigurator((s) => s.capturing);
 
   const paintSurface = useConfigurator((s) => s.paintSurface);
   const placeItem    = useConfigurator((s) => s.placeItem);
@@ -217,8 +216,8 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
           />
         ))}
 
-        {/* preset item slots (ghost "+ add" markers / chosen products) — hidden during capture */}
-        {!capturing && <SlotMarkers room={room} onSlotClick={onSlotClick} />}
+        {/* preset item slots — chosen products always render; "+ add" ghosts hide during capture */}
+        <SlotMarkers room={room} onSlotClick={onSlotClick} />
 
         {/* fixed windows */}
         <Fixtures room={room} />
