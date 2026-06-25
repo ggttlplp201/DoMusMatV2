@@ -25,6 +25,7 @@ export function useGenerateTour(room: RoomShell) {
   const time = useConfigurator((s) => s.timeOfDay);
   const setTimeOfDay = useConfigurator((s) => s.setTimeOfDay);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function generate() {
@@ -47,6 +48,7 @@ export function useGenerateTour(room: RoomShell) {
       const urls: PanoUrls = { day: {}, night: {} };
       for (const variant of VARIANTS) {
         // drive the scene to the variant's time of day, wait for the HDRI to swap in
+        setNote(variant === "day" ? "Capturing daytime…" : "Capturing nighttime…");
         setTimeOfDay(VARIANT_TIMES[variant]);
         await wait(ENV_SETTLE_MS);
         const blobs = await runCapture(spots, PANO_WIDTH);
@@ -54,6 +56,7 @@ export function useGenerateTour(room: RoomShell) {
       }
 
       setPhase("uploading");
+      setNote("Finishing up…");
       await finalizeTourJob(jobId, urls);
 
       setTimeOfDay(originalTime);
@@ -68,5 +71,5 @@ export function useGenerateTour(room: RoomShell) {
     }
   }
 
-  return { generate, phase, error };
+  return { generate, phase, note, error };
 }

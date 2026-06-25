@@ -72,8 +72,24 @@ export default function Hud({ room, palette }: HudProps) {
     return `${h}:${m === 0 ? "00" : m}`;
   };
 
+  const rendering = tour.phase === "capturing" || tour.phase === "uploading";
+
   return (
     <>
+      {/* ---- full-screen rendering overlay (blocks all interaction) ---- */}
+      {rendering && (
+        <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-neutral-950/95 backdrop-blur-md">
+          <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-white/25 border-t-white" />
+          <div className="text-center">
+            <p className="text-sm font-medium tracking-wide text-white">Rendering your 360° walkthrough</p>
+            <p className="mt-1 text-xs text-white/60">{tour.note || "Preparing…"}</p>
+          </div>
+          <p className="mt-1 max-w-xs text-center text-[11px] leading-relaxed text-white/40">
+            Capturing day and night panoramas — this can take a moment. Please keep this tab open.
+          </p>
+        </div>
+      )}
+
       {/* ---- top control bar: time of day + per-room lights ---- */}
       <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-5 rounded-lg bg-black/55 backdrop-blur px-4 py-2">
         <label className="flex items-center gap-2 text-xs">

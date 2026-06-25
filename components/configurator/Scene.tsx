@@ -54,7 +54,7 @@ function Sun() {
       Math.sin(elevation) * r,
       Math.sin(azimuth) * Math.cos(elevation) * r,
     );
-    sun.intensity = Math.max(0.15, Math.sin(t * Math.PI) * 2.0);
+    sun.intensity = Math.max(0.15, Math.sin(t * Math.PI) * 2.8);
     target.position.set(0, 0, 0); // room centre
     target.updateMatrixWorld();
     sun.updateMatrixWorld();
@@ -90,8 +90,8 @@ function DayNightEnvironment() {
       <Environment
         files={night ? "/hdris/NightSkyHDRI003_2K_HDR.exr" : "/hdris/DaySkyHDRI063B_2K_HDR.exr"}
         background
-        environmentIntensity={night ? 0.1 : 0.3}
-        backgroundIntensity={night ? 0.5 : 0.55}
+        environmentIntensity={night ? 0.1 : 0.55}
+        backgroundIntensity={night ? 0.5 : 0.6}
       />
     </Suspense>
   );
