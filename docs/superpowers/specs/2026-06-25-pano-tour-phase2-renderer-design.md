@@ -116,3 +116,11 @@ Each task is independently testable; tasks 1–2 ship a working "photoreal reque
 - A render queue/dashboard, retries-with-backoff beyond a single manual retry.
 - Auto-upgrading existing quick tours to photoreal (the viewer-side "upgrade" button was considered and deferred — user chose separate buttons).
 - A `scene_url` DB column (stored in `spec` for now).
+
+## Calibration (final)
+- Interior lights: drop the realtime fill POINT lights at import (Cycles GI provides ambient bounce); keep SPOT downlights, force them straight down, and scale energy by `LIGHT_BOOST = 80` (glTF candela → Blender watts gap).
+- Tone-mapping: `view_transform = "Filmic"`.
+- World: day HDRI strength `1.0` + a sun lamp (energy `3.0`); night HDRI strength `0.15`, no sun.
+- GPU: OptiX → CUDA → CPU fallback.
+- Production render: `4096×2048`, `128` samples, denoised.
+- Scene `.glb` textures capped at `512px` to stay under Supabase Free's 50 MB per-file upload limit; raise to 1–2K on Supabase Pro.
