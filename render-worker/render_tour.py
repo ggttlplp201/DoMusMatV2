@@ -9,8 +9,9 @@ import os
 import sys
 import urllib.request
 
-PANO_W, PANO_H = 4096, 2048
-SAMPLES = 128
+# test settings — fast + cheap to validate the pipeline; raise once GPU is confirmed
+PANO_W, PANO_H = 2048, 1024
+SAMPLES = 64
 VARIANTS = ("day", "night")
 
 
@@ -109,10 +110,38 @@ def _setup_world(hdri_path: str, variant: str):
         scene.collection.objects.link(sun_obj)
 
 
+def _enable_gpu(scene):
+    """Best-effort: render on the GPU (OptiX→CUDA); silently fall back to CPU."""
+    import bpy
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        for dtype in ("OPTIX", "CUDA"):
+            try:
+                prefs.compute_device_type = dtype
+            except TypeError:
+                continue
+            try:
+                prefs.refresh_devices()
+            except Exception:
+                pass
+            gpus = [d for d in prefs.devices if d.type != "CPU"]
+            if gpus:
+                for d in prefs.devices:
+                    d.use = d.type != "CPU"
+                scene.cycles.device = "GPU"
+                print(f"[render] GPU via {dtype}: {[d.name for d in gpus]}")
+                return
+    except Exception as e:  # noqa: BLE001
+        print(f"[render] GPU enable failed ({e}); using CPU")
+    scene.cycles.device = "CPU"
+    print("[render] using CPU")
+
+
 def _setup_render():
     import bpy
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
+    _enable_gpu(scene)
     scene.cycles.samples = SAMPLES
     scene.cycles.use_denoising = True
     scene.render.resolution_x = PANO_W
