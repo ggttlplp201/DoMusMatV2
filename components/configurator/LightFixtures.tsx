@@ -34,14 +34,13 @@ function CeilingLight({ position, helpers }: { position: [number, number, number
       <group position={[0, -0.02, 0]}>
         <FittedModel url="/models/ceiling_light_round.glb" realDimsMm={{ w: 1, h: 1, d: 1 }} fitMaxSize={0.3} ground={false} autoFlat castShadow={false} />
       </group>
-      {/* emissive lens (glow only), facing down */}
+      {/* small emissive lens = the fixture opening (glow only) */}
       <mesh position={[0, -0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.085, 24]} />
-        <meshStandardMaterial color="#ffffff" emissive={WARM} emissiveIntensity={2.6} toneMapped={false} />
+        <circleGeometry args={[0.055, 20]} />
+        <meshStandardMaterial color="#fff3df" emissive={WARM} emissiveIntensity={1.0} toneMapped={false} />
       </mesh>
-      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.9} penumbra={0.8} intensity={7} distance={10} decay={1.4} color={WARM} castShadow={false} />
-      {/* omnidirectional fill so the whole room (walls too) brightens when lights are on */}
-      <pointLight position={[0, -0.1, 0]} intensity={3.5} distance={6} decay={2} color={WARM} />
+      {/* controlled downward beam — a recessed downlight (no upward/ceiling spill) */}
+      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.6} penumbra={0.9} intensity={4.5} distance={8} decay={1.7} color={WARM} castShadow={false} />
       <object3D ref={targetRef} position={[0, -2, 0]} />
     </group>
   );

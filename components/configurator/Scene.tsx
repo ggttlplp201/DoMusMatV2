@@ -61,7 +61,7 @@ function Sun() {
     <>
       <directionalLight
         ref={lightRef}
-        castShadow
+        castShadow={time < 19}
         color="#fff4e2"
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0004}
