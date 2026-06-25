@@ -32,6 +32,7 @@ import ItemView from "./ItemView";
 import SlotMarkers from "./SlotMarkers";
 import Fixtures from "./Fixtures";
 import LightFixtures from "./LightFixtures";
+import PanoCapture from "./PanoCapture";
 
 // ---- time-of-day sun (real moving direction, not just brightness) ---------
 function Sun() {
@@ -117,6 +118,7 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
   const tool       = useConfigurator((s) => s.tool);
   const selectedId = useConfigurator((s) => s.selectedId);
   const editingId  = useConfigurator((s) => s.editingId);
+  const capturing  = useConfigurator((s) => s.capturing);
 
   const paintSurface = useConfigurator((s) => s.paintSurface);
   const placeItem    = useConfigurator((s) => s.placeItem);
@@ -182,6 +184,8 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
       <Sun />
       {/* feeds the player position/facing to the DOM minimap */}
       <CameraTracker />
+      {/* offscreen 360 capture for the tour */}
+      <PanoCapture />
       {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}
       <ambientLight intensity={0.16} />
 
@@ -213,8 +217,8 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
           />
         ))}
 
-        {/* preset item slots (ghost "+ add" markers / chosen products) */}
-        <SlotMarkers room={room} onSlotClick={onSlotClick} />
+        {/* preset item slots (ghost "+ add" markers / chosen products) — hidden during capture */}
+        {!capturing && <SlotMarkers room={room} onSlotClick={onSlotClick} />}
 
         {/* fixed windows */}
         <Fixtures room={room} />
