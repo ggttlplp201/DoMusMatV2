@@ -69,7 +69,8 @@ export async function GET(req: Request) {
     .eq("id", jobId)
     .single();
   if (error || !data) return NextResponse.json({ error: "not found" }, { status: 404 });
-  return NextResponse.json(data);
+  // polled until status flips to ready — never cache
+  return NextResponse.json(data, { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function PATCH(req: Request) {

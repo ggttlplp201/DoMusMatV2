@@ -82,7 +82,11 @@ export async function failTourJob(jobId: string, message: string): Promise<void>
 }
 
 export async function getTourJob(jobId: string): Promise<RenderJob> {
-  const res = await fetch(`/api/render-tour?jobId=${encodeURIComponent(jobId)}`);
+  // no-store + cache-bust: this is polled until the worker flips status to ready,
+  // so a cached response would keep returning the stale "queued" state forever
+  const res = await fetch(`/api/render-tour?jobId=${encodeURIComponent(jobId)}&t=${Date.now()}`, {
+    cache: "no-store",
+  });
   if (!res.ok) throw new Error(`getTourJob failed: ${res.status}`);
   return (await res.json()) as RenderJob;
 }
