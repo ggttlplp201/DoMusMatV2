@@ -51,7 +51,7 @@ function Sun() {
       Math.sin(elevation) * r,
       Math.sin(azimuth) * Math.cos(elevation) * r,
     );
-    sun.intensity = Math.max(0.2, Math.sin(t * Math.PI) * 3.0);
+    sun.intensity = Math.max(0.15, Math.sin(t * Math.PI) * 2.0);
     target.position.set(0, 0, 0); // room centre
     target.updateMatrixWorld();
     sun.updateMatrixWorld();
@@ -147,7 +147,12 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
     <>
       {/* HDRI environment — image-based lighting, reflections + sky background */}
       <Suspense fallback={null}>
-        <Environment files="/hdris/DaySkyHDRI063B_2K_HDR.exr" background />
+        <Environment
+          files="/hdris/DaySkyHDRI063B_2K_HDR.exr"
+          background
+          environmentIntensity={0.3}
+          backgroundIntensity={0.55}
+        />
       </Suspense>
       {/* sun — angle/colour driven by time of day; casts shadows */}
       <Sun />

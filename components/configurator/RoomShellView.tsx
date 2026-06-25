@@ -56,7 +56,7 @@ function TexturedMaterial({ tex, size }: { tex: MaterialTextureSet; size: [numbe
       side={THREE.DoubleSide}
       metalness={0}
       roughness={1}
-      envMapIntensity={0.8}
+      envMapIntensity={0.5}
     />
   );
 }
@@ -98,7 +98,7 @@ export default function RoomShellView({ room, assignedMaterials, onClick, onPoin
                 color={mat?.color ?? DEFAULT_KIND_COLOR[s.kind]}
                 side={THREE.DoubleSide}
                 roughness={0.85}
-                envMapIntensity={0.8}
+                envMapIntensity={0.5}
               />
             )}
           </mesh>
