@@ -31,8 +31,10 @@ export function useGeneratePhotoreal(room: RoomShell) {
       setPhase("exporting");
       setNote("Exporting your scene…");
       const glb = await runExport();
+      const glbMB = glb.byteLength / 1e6;
+      console.log(`[photoreal] exported .glb = ${glbMB.toFixed(1)} MB`);
       if (glb.byteLength > 60_000_000) {
-        throw new Error("Your scene is too large to render in the cloud (over 60MB). Try a simpler room.");
+        throw new Error(`Scene .glb is ${glbMB.toFixed(0)}MB (limit 60MB).`);
       }
 
       setPhase("uploading");
