@@ -15,7 +15,7 @@ SAMPLES = 64
 VARIANTS = ("day", "night")
 # glTF stores light intensity in candela; Blender imports that as a tiny wattage
 # (a 13cd spot → ~0.24W), so interior lights barely register. Scale them up.
-LIGHT_BOOST = 40.0
+LIGHT_BOOST = 80.0
 
 
 # ---- pure helpers (no bpy) ------------------------------------------------
@@ -181,10 +181,20 @@ def render_all(cfg: dict, tmpdir: str = "/tmp") -> dict:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         scene_glb = download(cfg["scene"], os.path.join(tmpdir, "scene.glb"))
         bpy.ops.import_scene.gltf(filepath=scene_glb)
-        # imported interior lights are far too dim (candela→watts gap) — boost them
-        for obj in bpy.context.scene.objects:
-            if obj.type == "LIGHT" and obj.data.type in {"POINT", "SPOT", "AREA"}:
+        import mathutils
+        # Cycles provides ambient bounce via GI, so drop the realtime "fill" point
+        # lights (they shadowed the ceiling into a crescent). Keep the spotlights as
+        # downlights: boost out of the candela→watts hole and force them straight down.
+        for obj in list(bpy.context.scene.objects):
+            if obj.type != "LIGHT":
+                continue
+            if obj.data.type == "POINT":
+                bpy.data.objects.remove(obj, do_unlink=True)
+            elif obj.data.type in {"SPOT", "AREA"}:
                 obj.data.energy *= LIGHT_BOOST
+                if obj.data.type == "SPOT":
+                    loc = obj.matrix_world.to_translation()
+                    obj.matrix_world = mathutils.Matrix.Translation(loc)  # aim -Z down
         hdri = download(cfg["hdri"][variant], os.path.join(tmpdir, f"{variant}.exr"))
         _setup_world(hdri, variant)
         _setup_render()
