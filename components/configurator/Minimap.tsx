@@ -41,7 +41,11 @@ export default function Minimap({ room }: { room: RoomShell }) {
       PAD + ((x - minX) / spanX) * innerW,
       PAD + ((z - minZ) / spanZ) * innerH,
     ];
-    return { segs, minX, minZ, spanX, spanZ, innerW, innerH, height: innerH + PAD * 2, toSvg };
+    const labels = room.lightZones.map((z) => {
+      const [lx, ly] = toSvg((z.x0 + z.x1) / 2, (z.z0 + z.z1) / 2);
+      return { label: z.label, x: lx, y: ly };
+    });
+    return { segs, labels, minX, minZ, spanX, spanZ, innerW, innerH, height: innerH + PAD * 2, toSvg };
   }, [room]);
 
   // animate the player marker from the camera singleton
@@ -72,6 +76,20 @@ export default function Minimap({ room }: { room: RoomShell }) {
             <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.55)" strokeWidth={1.5} strokeLinecap="round" />
           );
         })}
+        {/* room labels */}
+        {plan.labels.map((l, i) => (
+          <text
+            key={i}
+            x={l.x}
+            y={l.y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="fill-white/60"
+            style={{ fontSize: 7, letterSpacing: 0.2 }}
+          >
+            {l.label}
+          </text>
+        ))}
         {/* player position + facing (apex points the way they look) */}
         <g ref={markerRef}>
           <circle r={3.4} fill="#34d399" stroke="white" strokeWidth={1} />

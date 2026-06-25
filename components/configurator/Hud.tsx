@@ -28,8 +28,6 @@ export default function Hud({ room, palette }: HudProps) {
   const setRoomLight = useConfigurator((s) => s.setRoomLight);
   const showLightHelpers    = useConfigurator((s) => s.showLightHelpers);
   const setShowLightHelpers = useConfigurator((s) => s.setShowLightHelpers);
-  const showLightBeams      = useConfigurator((s) => s.showLightBeams);
-  const setShowLightBeams   = useConfigurator((s) => s.setShowLightBeams);
   const [zoneId, setZoneId] = useState(room.lightZones[0]?.id ?? "");
   const zoneCfg = roomLights[zoneId] ?? { type: "none" as LightType, count: 0 };
 
@@ -77,7 +75,7 @@ export default function Hud({ room, palette }: HudProps) {
       {/* ---- top control bar: time of day + per-room lights ---- */}
       <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-5 rounded-lg bg-black/55 backdrop-blur px-4 py-2">
         <label className="flex items-center gap-2 text-xs">
-          <span className="opacity-70">🕑 Time</span>
+          <span className="opacity-70">Time</span>
           <input
             type="range" min={6} max={20} step={0.5} value={timeOfDay}
             onChange={(e) => setTimeOfDay(+e.target.value)}
@@ -86,7 +84,7 @@ export default function Hud({ room, palette }: HudProps) {
           <span className="tabular-nums w-9">{fmtTime(timeOfDay)}</span>
         </label>
         <div className="flex items-center gap-2 text-xs">
-          <span className="opacity-70">💡</span>
+          <span className="opacity-70">Lights</span>
           <select
             value={zoneId}
             onChange={(e) => setZoneId(e.target.value)}
@@ -119,13 +117,6 @@ export default function Hud({ room, palette }: HudProps) {
             </span>
           )}
           <button
-            onClick={() => setShowLightBeams(!showLightBeams)}
-            title="Show light beams (volumetric shine)"
-            className={`px-2 py-0.5 rounded ${showLightBeams ? "bg-white text-black" : "bg-black/40 border border-white/30 hover:border-white/70"}`}
-          >
-            Beams
-          </button>
-          <button
             onClick={() => setShowLightHelpers(!showLightHelpers)}
             title="Show light direction cones"
             className={`px-2 py-0.5 rounded ${showLightHelpers ? "bg-white text-black" : "bg-black/40 border border-white/30 hover:border-white/70"}`}
@@ -148,7 +139,7 @@ export default function Hud({ room, palette }: HudProps) {
             className={btn(tool.kind === "look")}
             onClick={() => setTool({ kind: "look" })}
           >
-            👣 Walk / look
+            Walk / look
           </button>
         </div>
 
@@ -207,7 +198,7 @@ export default function Hud({ room, palette }: HudProps) {
             className="w-full px-3 py-1.5 rounded text-sm bg-indigo-600/80 hover:bg-indigo-500 text-white border border-indigo-400/30 transition"
             onClick={onShareSave}
           >
-            💾 Save &amp; copy link
+            Save &amp; copy link
           </button>
         </div>
       </div>
@@ -216,7 +207,7 @@ export default function Hud({ room, palette }: HudProps) {
       {editingItem && (
         <div className="absolute top-16 left-1/2 -translate-x-1/2 flex items-center gap-3 px-4 py-2 rounded-lg bg-emerald-600/90 backdrop-blur shadow-lg">
           <span className="text-sm font-medium">
-            🔒 Moving — drag to reposition
+            Moving — drag to reposition
           </span>
           <button
             className="px-2 py-1 rounded bg-white/15 hover:bg-white/25 text-xs"
@@ -228,13 +219,13 @@ export default function Hud({ room, palette }: HudProps) {
             className="px-2 py-1 rounded bg-red-500/80 hover:bg-red-500 text-xs"
             onClick={() => deleteItem(editingId!)}
           >
-            Delete (⌫)
+            Delete
           </button>
           <button
             className="px-3 py-1 rounded bg-white text-emerald-700 font-semibold text-sm"
             onClick={saveEdit}
           >
-            Save ✓
+            Save
           </button>
         </div>
       )}
@@ -242,7 +233,7 @@ export default function Hud({ room, palette }: HudProps) {
       {/* ---- selected (not editing) hint ---- */}
       {selectedId && !editingId && (
         <div className="absolute top-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded bg-black/70 text-xs">
-          Selected — <b>double-click</b> the item to move it · R rotate · ⌫ delete
+          Selected — <b>double-click</b> the item to move it · R to rotate · Del to delete
         </div>
       )}
 
@@ -263,7 +254,7 @@ export default function Hud({ room, palette }: HudProps) {
       {/* ---- bottom hint ---- */}
       <div className="absolute bottom-3 left-3 text-xs opacity-70 bg-black/50 rounded px-2 py-1">
         Drag to look · <b>Walk</b>: click floor to walk · click an item to select ·{" "}
-        <b>double-click</b> an item to move it (locks camera) · <b>Save ✓</b> to finish ·{" "}
+        <b>double-click</b> an item to move it (locks camera) · <b>Save</b> to finish ·{" "}
         <b>Esc</b> to exit add/edit mode
       </div>
 
