@@ -183,7 +183,7 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
       {/* feeds the player position/facing to the DOM minimap */}
       <CameraTracker />
       {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}
-      <ambientLight intensity={0.12} />
+      <ambientLight intensity={0.16} />
 
       {/* room shell + placed items (GLB/texture loads suspend) */}
       <Suspense fallback={null}>

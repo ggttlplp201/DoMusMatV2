@@ -43,6 +43,9 @@ function CeilingLight({ position, helpers }: { position: [number, number, number
       {/* wide, soft downward beam — overlapping pools fill the floor evenly */}
       <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.9} penumbra={1} intensity={13} distance={9} decay={1.3} color={WARM} castShadow={false} />
       <object3D ref={targetRef} position={[0, -2, 0]} />
+      {/* soft omni fill placed mid-room — lifts the ceiling + walls (fake bounce)
+          without a hotspot, since it sits well below the ceiling */}
+      <pointLight position={[0, -1.5, 0]} intensity={3.5} distance={7} decay={2} color={WARM} castShadow={false} />
     </group>
   );
 }
