@@ -7,9 +7,13 @@ export interface TourSpec {
   spots: CaptureSpot[];
 }
 
+/** Day/night variants rendered per spot. */
+export type TourVariant = "day" | "night";
+export const VARIANT_TIMES: Record<TourVariant, number> = { day: 13, night: 21 };
+
 /** Object path inside the `tours` storage bucket. */
-export function panoPath(jobId: string, spotId: string): string {
-  return `${jobId}/${spotId}.jpg`;
+export function panoPath(jobId: string, spotId: string, variant: TourVariant): string {
+  return `${jobId}/${spotId}-${variant}.jpg`;
 }
 
 /** Navigation graph: every spot links to all the others. */

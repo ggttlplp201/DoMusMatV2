@@ -5,8 +5,9 @@ import type { CaptureSpot } from "./captureSpots";
 const spot = (id: string): CaptureSpot => ({ id, label: id, pos: [0, 1.6, 0] });
 
 describe("panoPath", () => {
-  it("builds a bucket-relative jpg path", () => {
-    expect(panoPath("job123", "living")).toBe("job123/living.jpg");
+  it("builds a bucket-relative jpg path with the variant", () => {
+    expect(panoPath("job123", "living", "day")).toBe("job123/living-day.jpg");
+    expect(panoPath("job123", "living", "night")).toBe("job123/living-night.jpg");
   });
 });
 

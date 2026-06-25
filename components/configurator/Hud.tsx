@@ -107,7 +107,7 @@ export default function Hud({ room, palette }: HudProps) {
           ))}
           {zoneCfg.type === "ceiling" && (
             <span className="flex items-center gap-1">
-              {[3, 6, 9].map((n) => (
+              {[1, 3, 6, 9].map((n) => (
                 <button
                   key={n}
                   onClick={() => setRoomLight(zoneId, { type: "ceiling", count: n })}

@@ -1,11 +1,14 @@
 import { createClient } from "@/lib/supabase/client";
-import { panoPath, type TourSpec } from "./tourSpec";
+import { panoPath, type TourSpec, type TourVariant } from "./tourSpec";
+
+/** spotId → public URL, for each day/night variant. */
+export type PanoUrls = Record<TourVariant, Record<string, string>>;
 
 export interface RenderJob {
   id: string;
   status: "queued" | "rendering" | "ready" | "error";
   phase: "browser" | "cycles";
-  pano_urls: Record<string, string>;
+  pano_urls: PanoUrls;
   error: string | null;
   spec: TourSpec;
 }
@@ -33,9 +36,9 @@ export async function createTourJob(spec: TourSpec): Promise<string> {
   return jobId;
 }
 
-export async function uploadPano(jobId: string, spotId: string, blob: Blob): Promise<string> {
+export async function uploadPano(jobId: string, spotId: string, variant: TourVariant, blob: Blob): Promise<string> {
   const supabase = createClient();
-  const path = panoPath(jobId, spotId);
+  const path = panoPath(jobId, spotId, variant);
   const { error } = await supabase.storage
     .from("tours")
     .upload(path, blob, { contentType: "image/jpeg", upsert: true });
@@ -43,7 +46,7 @@ export async function uploadPano(jobId: string, spotId: string, blob: Blob): Pro
   return supabase.storage.from("tours").getPublicUrl(path).data.publicUrl;
 }
 
-export async function finalizeTourJob(jobId: string, panoUrls: Record<string, string>): Promise<void> {
+export async function finalizeTourJob(jobId: string, panoUrls: PanoUrls): Promise<void> {
   const res = await fetch("/api/render-tour", {
     method: "PATCH",
     headers: { "content-type": "application/json" },
