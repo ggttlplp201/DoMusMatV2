@@ -8,7 +8,7 @@ export function Footer() {
   const m = repo.getManufacturer();
 
   return (
-    <footer style={{ background: "#141414", color: "#fff" }}>
+    <footer className="mt-16 md:mt-24" style={{ background: "#141414", color: "#fff" }}>
       {/* Main grid */}
       <div
         className="mx-auto max-w-[1440px] px-9"

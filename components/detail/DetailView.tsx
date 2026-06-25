@@ -17,13 +17,6 @@ import { localizedName } from "@/lib/i18n";
 import { useCart } from "@/state/cart";
 import { useBom } from "@/state/bom";
 
-const NODE_LABEL_KEY: Record<string, string> = {
-  "Produção": "supply.node.production",
-  "Expedição": "supply.node.dispatch",
-  "Transporte": "supply.node.transport",
-  "Em obra": "supply.node.onsite",
-};
-
 const ASSET_LABEL_KEY: Record<string, string> = {
   "Ficha Técnica": "bim.asset.fichatecnica",
 };
@@ -106,10 +99,6 @@ export function DetailView({ productId }: DetailViewProps) {
     model: t("detail.tab.model.label") || "Modelo 3D",
     tech: t("detail.tab.tech.label") || "Desenho técnico · DRAWING",
   };
-
-  // Supply chain
-  const chain = product.supply_chain;
-  const supplyNodes = chain?.delivery_nodes ?? [];
 
   return (
     <div>
@@ -389,34 +378,6 @@ export function DetailView({ productId }: DetailViewProps) {
         </div>
       </section>
 
-      {/* Supply chain section */}
-      {chain && supplyNodes.length > 0 && (
-        <section className="border-t border-[#E6E5DE] pt-12 pb-[72px]">
-          <h2 className="text-[22px] font-semibold tracking-[-0.01em] mb-6 text-[#17181C]">
-            {t("supply.title") || "供应链"}
-            <span className="font-mono text-[12px] font-normal text-[#8C8C84] tracking-[0.06em] ml-2">SUPPLY CHAIN</span>
-          </h2>
-          <div className="flex gap-[14px]">
-            {supplyNodes.map((node, i) => (
-              <div key={node.label} className="flex-1 border border-[#E6E5DE] rounded-[12px] px-5 py-[22px]">
-                <div className="font-mono text-[11px] text-[#B4B4AC] mb-[10px]">{String(i + 1).padStart(2, "0")}</div>
-                <div className="text-[17px] font-semibold text-[#17181C]">
-                  {NODE_LABEL_KEY[node.label] ? t(NODE_LABEL_KEY[node.label]) : node.label}
-                </div>
-                <div className="text-[13px] text-[#8C8C84] mt-1.5">
-                  {hasRealValue(node.eta) ? String(node.eta) : t("fb.eta") || "预计时间待定"}
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-[13.5px] text-[#8C8C84] mt-[18px]">
-            {t("supply.stock") || "库存"}：
-            <span className="text-[#17181C]">{hasRealValue(chain.stock) ? String(chain.stock) : t("fb.stock") || "库存面议"}</span>
-            {" · "}
-            {t("supply.installNote") || "安装说明按需提供"}
-          </p>
-        </section>
-      )}
     </div>
   );
 }
