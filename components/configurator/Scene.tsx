@@ -19,7 +19,7 @@
 
 import { Suspense, useEffect, useRef } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+import { Environment, SoftShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { useConfigurator } from "@/state/configurator";
 import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
@@ -145,6 +145,9 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
 
   return (
     <>
+      {/* softer, contact-hardening shadows (conservative samples) */}
+      <SoftShadows size={26} samples={12} focus={0.85} />
+
       {/* HDRI environment — image-based lighting, reflections + sky background */}
       <Suspense fallback={null}>
         <Environment files="/hdris/MorningSkyHDRI014B_1K_HDR.exr" background />
