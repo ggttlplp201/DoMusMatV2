@@ -21,7 +21,7 @@ import { useConfigurator } from "@/state/configurator";
 
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
 
-const MAX_TEX = 1024; // longest texture edge in the exported .glb
+const MAX_TEX = 512; // longest texture edge in the exported .glb (keeps it under the Supabase free 50MB upload cap)
 const TEX_KEYS = ["map", "normalMap", "roughnessMap", "metalnessMap", "aoMap", "emissiveMap"] as const;
 
 /** Swap each material's textures for ~1K downscaled copies; returns a restore fn.

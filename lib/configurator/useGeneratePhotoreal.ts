@@ -12,9 +12,9 @@ import type { RoomShell } from "./types";
 
 type Phase = "idle" | "exporting" | "uploading" | "error";
 
-// Upload ceiling for the exported scene .glb. Must stay ≤ the Supabase Storage
-// per-file upload limit (raise that in the dashboard if you raise this).
-const MAX_GLB_BYTES = 250_000_000;
+// Upload ceiling for the exported scene .glb — just under Supabase Free's 50MB
+// per-file upload cap, so we fail with a clear message instead of a storage error.
+const MAX_GLB_BYTES = 48_000_000;
 
 export function useGeneratePhotoreal(room: RoomShell) {
   const router = useRouter();
