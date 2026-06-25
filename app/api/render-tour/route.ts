@@ -47,8 +47,8 @@ export async function POST(req: Request) {
     // fire-and-forget; the worker drives the job to ready/error
     fetch(process.env.MODAL_RENDER_URL!, {
       method: "POST",
-      headers: { "content-type": "application/json", "x-trigger-secret": process.env.MODAL_TRIGGER_SECRET ?? "" },
-      body: JSON.stringify({ jobId: data.id, sceneUrl: body.sceneUrl, spots: body.spec.spots, hdriUrls: hdriUrls(origin) }),
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jobId: data.id, sceneUrl: body.sceneUrl, spots: body.spec.spots, hdriUrls: hdriUrls(origin), secret: process.env.MODAL_TRIGGER_SECRET ?? "" }),
     }).catch(() => {});
   }
 

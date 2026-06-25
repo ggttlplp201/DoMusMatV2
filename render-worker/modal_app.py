@@ -38,12 +38,11 @@ def render(job_id: str, scene_url: str, spots: list, hdri_urls: dict):
 
 @app.function(image=web_image, secrets=secrets)
 @modal.fastapi_endpoint(method="POST")
-async def trigger(request):
+def trigger(payload: dict):
     import os
-    from fastapi.responses import JSONResponse
-    # shared secret arrives in the x-trigger-secret header (set by the Vercel route)
-    if request.headers.get("x-trigger-secret") != os.environ["MODAL_TRIGGER_SECRET"]:
-        return JSONResponse({"error": "forbidden"}, status_code=403)
-    p = await request.json()
-    render.spawn(p["jobId"], p["sceneUrl"], p["spots"], p["hdriUrls"])
-    return JSONResponse({"accepted": True}, status_code=202)
+    from fastapi import HTTPException
+    # the whole JSON body arrives as `payload`; the shared secret travels inside it
+    if payload.get("secret") != os.environ["MODAL_TRIGGER_SECRET"]:
+        raise HTTPException(status_code=403, detail="forbidden")
+    render.spawn(payload["jobId"], payload["sceneUrl"], payload["spots"], payload["hdriUrls"])
+    return {"accepted": True}
