@@ -78,6 +78,22 @@ function Sun() {
   );
 }
 
+// ---- day/night environment (switches HDRI past sunset) --------------------
+function DayNightEnvironment() {
+  const time = useConfigurator((s) => s.timeOfDay);
+  const night = time >= 19; // past sunset → night sky, dim ambient so interior lights dominate
+  return (
+    <Suspense fallback={null}>
+      <Environment
+        files={night ? "/hdris/NightSkyHDRI003_2K_HDR.exr" : "/hdris/DaySkyHDRI063B_2K_HDR.exr"}
+        background
+        environmentIntensity={night ? 0.1 : 0.3}
+        backgroundIntensity={night ? 0.5 : 0.55}
+      />
+    </Suspense>
+  );
+}
+
 // ---- inner scene (needs to be inside CameraRig's context provider) -------
 function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
   const { walkTo, wasDrag } = useCameraRig();
@@ -145,15 +161,8 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
 
   return (
     <>
-      {/* HDRI environment — image-based lighting, reflections + sky background */}
-      <Suspense fallback={null}>
-        <Environment
-          files="/hdris/DaySkyHDRI063B_2K_HDR.exr"
-          background
-          environmentIntensity={0.3}
-          backgroundIntensity={0.55}
-        />
-      </Suspense>
+      {/* HDRI environment — day sky, or night sky past sunset */}
+      <DayNightEnvironment />
       {/* sun — angle/colour driven by time of day; casts shadows */}
       <Sun />
       {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}

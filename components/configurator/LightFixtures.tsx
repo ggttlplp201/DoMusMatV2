@@ -39,7 +39,9 @@ function CeilingLight({ position, helpers }: { position: [number, number, number
         <circleGeometry args={[0.085, 24]} />
         <meshStandardMaterial color="#ffffff" emissive={WARM} emissiveIntensity={2.6} toneMapped={false} />
       </mesh>
-      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.85} penumbra={0.85} intensity={3} distance={9} decay={1.4} color={WARM} castShadow={false} />
+      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.9} penumbra={0.8} intensity={7} distance={10} decay={1.4} color={WARM} castShadow={false} />
+      {/* omnidirectional fill so the whole room (walls too) brightens when lights are on */}
+      <pointLight position={[0, -0.1, 0]} intensity={3.5} distance={6} decay={2} color={WARM} />
       <object3D ref={targetRef} position={[0, -2, 0]} />
     </group>
   );
