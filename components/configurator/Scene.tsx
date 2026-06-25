@@ -18,10 +18,12 @@
  */
 
 import { Suspense, useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { useConfigurator } from "@/state/configurator";
+import { cameraMini } from "@/lib/configurator/cameraTrack";
 import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
 import type { ItemSlot, RoomShell, SurfaceDef } from "@/lib/configurator/types";
 import CameraRig, { useCameraRig } from "./CameraRig";
@@ -92,6 +94,19 @@ function DayNightEnvironment() {
       />
     </Suspense>
   );
+}
+
+// ---- publishes the player's floor position/facing to the DOM minimap ------
+function CameraTracker() {
+  const dir = useRef(new THREE.Vector3());
+  useFrame(({ camera }) => {
+    cameraMini.x = camera.position.x;
+    cameraMini.z = camera.position.z;
+    camera.getWorldDirection(dir.current);
+    cameraMini.dx = dir.current.x;
+    cameraMini.dz = dir.current.z;
+  });
+  return null;
 }
 
 // ---- inner scene (needs to be inside CameraRig's context provider) -------
@@ -165,6 +180,8 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
       <DayNightEnvironment />
       {/* sun — angle/colour driven by time of day; casts shadows */}
       <Sun />
+      {/* feeds the player position/facing to the DOM minimap */}
+      <CameraTracker />
       {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}
       <ambientLight intensity={0.12} />
 

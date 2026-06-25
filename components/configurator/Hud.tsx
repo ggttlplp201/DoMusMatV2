@@ -5,6 +5,7 @@ import { useConfigurator, type LightType } from "@/state/configurator";
 import { MATERIALS } from "@/lib/configurator/products";
 import { encodeScene } from "@/lib/configurator/serialize";
 import type { RoomShell, ProductMeta } from "@/lib/configurator/types";
+import Minimap from "./Minimap";
 
 interface HudProps {
   room: RoomShell;
@@ -27,6 +28,8 @@ export default function Hud({ room, palette }: HudProps) {
   const setRoomLight = useConfigurator((s) => s.setRoomLight);
   const showLightHelpers    = useConfigurator((s) => s.showLightHelpers);
   const setShowLightHelpers = useConfigurator((s) => s.setShowLightHelpers);
+  const showLightBeams      = useConfigurator((s) => s.showLightBeams);
+  const setShowLightBeams   = useConfigurator((s) => s.setShowLightBeams);
   const [zoneId, setZoneId] = useState(room.lightZones[0]?.id ?? "");
   const zoneCfg = roomLights[zoneId] ?? { type: "none" as LightType, count: 0 };
 
@@ -115,6 +118,13 @@ export default function Hud({ room, palette }: HudProps) {
               ))}
             </span>
           )}
+          <button
+            onClick={() => setShowLightBeams(!showLightBeams)}
+            title="Show light beams (volumetric shine)"
+            className={`px-2 py-0.5 rounded ${showLightBeams ? "bg-white text-black" : "bg-black/40 border border-white/30 hover:border-white/70"}`}
+          >
+            Beams
+          </button>
           <button
             onClick={() => setShowLightHelpers(!showLightHelpers)}
             title="Show light direction cones"
@@ -257,10 +267,8 @@ export default function Hud({ room, palette }: HudProps) {
         <b>Esc</b> to exit add/edit mode
       </div>
 
-      {/* ---- live scene document dump ---- */}
-      <pre className="absolute top-3 right-3 max-h-[80vh] overflow-auto text-[10px] leading-tight bg-black/55 rounded p-2 w-72">
-        {JSON.stringify(scene, null, 2)}
-      </pre>
+      {/* ---- floor-plan minimap (top-right) ---- */}
+      <Minimap room={room} />
     </>
   );
 }
