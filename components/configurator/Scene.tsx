@@ -150,7 +150,7 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
 
       {/* HDRI environment — image-based lighting, reflections + sky background */}
       <Suspense fallback={null}>
-        <Environment files="/hdris/MorningSkyHDRI014B_1K_HDR.exr" background />
+        <Environment files="/hdris/DaySkyHDRI063B_2K_HDR.exr" background />
       </Suspense>
       {/* sun — angle/colour driven by time of day; casts shadows */}
       <Sun />
