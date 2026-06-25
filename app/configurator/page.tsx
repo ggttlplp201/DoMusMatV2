@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
+import { EffectComposer, N8AO, Bloom, SMAA } from "@react-three/postprocessing";
 import { useConfigurator } from "@/state/configurator";
 import { getRoomShell } from "@/lib/configurator/rooms";
 import { decodeScene } from "@/lib/configurator/serialize";
@@ -69,6 +70,12 @@ export default function ConfiguratorPage() {
           gl={{ toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.85 }}
         >
           <Scene room={room} onSlotClick={setPickerSlot} />
+          {/* tasteful polish: ambient occlusion + bloom + anti-aliasing */}
+          <EffectComposer enableNormalPass multisampling={0}>
+            <N8AO halfRes aoRadius={0.5} intensity={1.6} distanceFalloff={1} color="black" />
+            <Bloom luminanceThreshold={0.9} luminanceSmoothing={0.25} intensity={0.5} mipmapBlur />
+            <SMAA />
+          </EffectComposer>
         </Canvas>
       )}
       <Hud room={room} palette={palette} />
