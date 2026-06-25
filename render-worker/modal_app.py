@@ -15,6 +15,9 @@ image = (
     .add_local_file("render_tour.py", "/root/render_tour.py", copy=True)
 )
 
+# lightweight image for the web trigger — needs FastAPI (Modal no longer auto-installs it)
+web_image = modal.Image.debian_slim().pip_install("fastapi[standard]")
+
 secrets = [modal.Secret.from_name("domusmat-render")]  # SUPABASE_URL, SUPABASE_SERVICE_KEY, MODAL_TRIGGER_SECRET
 
 
@@ -33,7 +36,7 @@ def render(job_id: str, scene_url: str, spots: list, hdri_urls: dict):
     )
 
 
-@app.function(image=image, secrets=secrets)
+@app.function(image=web_image, secrets=secrets)
 @modal.fastapi_endpoint(method="POST")
 async def trigger(request):
     import os
