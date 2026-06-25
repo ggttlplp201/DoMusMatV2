@@ -71,9 +71,20 @@ export default function SceneExporter() {
       setCapturing(true);
       await nextFrame();
       const hiddenSuns: THREE.Light[] = [];
+      const spotRestores: Array<() => void> = [];
+      const tmp = new THREE.Vector3();
       scene.traverse((o) => {
         const l = o as THREE.DirectionalLight;
         if (l.isDirectionalLight && l.visible) { l.visible = false; hiddenSuns.push(l); }
+        // spotlights aim via a separate target object; GLTFExporter only bakes node
+        // rotation, so orient each to look at its target before export (else it aims wrong)
+        const sl = o as THREE.SpotLight;
+        if (sl.isSpotLight && sl.target) {
+          const prev = sl.quaternion.clone();
+          sl.lookAt(sl.target.getWorldPosition(tmp));
+          sl.updateMatrixWorld();
+          spotRestores.push(() => { sl.quaternion.copy(prev); sl.updateMatrixWorld(); });
+        }
       });
       const restoreTextures = downscaleTextures(scene);
       try {
@@ -89,6 +100,7 @@ export default function SceneExporter() {
         return buf;
       } finally {
         restoreTextures();
+        spotRestores.forEach((r) => r());
         hiddenSuns.forEach((l) => (l.visible = true));
         setCapturing(false);
       }
