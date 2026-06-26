@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
+import Link from "next/link";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
 import { useAuth } from "@/state/auth";
@@ -198,6 +199,15 @@ export default function AdminPage() {
 
         {!loading && role === "manager" && (
           <>
+            <div className="mb-6">
+              <Link
+                href="/admin/products"
+                className="inline-block rounded bg-ink px-4 py-2 text-sm font-semibold text-white"
+              >
+                {t("admin.prod.nav")} →
+              </Link>
+            </div>
+
             {/* KPI */}
             <div className="mb-8 inline-block rounded border border-aluminium bg-neutral-fill px-4 py-3">
               <div className="text-sm text-aluminium-dark">{t("admin.totalCustomers")}</div>
