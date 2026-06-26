@@ -6,7 +6,6 @@ import { MATERIALS } from "@/lib/configurator/products";
 import { encodeScene } from "@/lib/configurator/serialize";
 import type { RoomShell, ProductMeta } from "@/lib/configurator/types";
 import Minimap from "./Minimap";
-import { useGenerateTour } from "@/lib/configurator/useGenerateTour";
 import { useGeneratePhotoreal } from "@/lib/configurator/useGeneratePhotoreal";
 
 interface HudProps {
@@ -32,7 +31,6 @@ export default function Hud({ room, palette }: HudProps) {
   const setShowLightHelpers = useConfigurator((s) => s.setShowLightHelpers);
   const [zoneId, setZoneId] = useState(room.lightZones[0]?.id ?? "");
   const zoneCfg = roomLights[zoneId] ?? { type: "none" as LightType, count: 0 };
-  const tour = useGenerateTour(room);
   const photo = useGeneratePhotoreal(room);
 
   // ---- keyboard shortcuts (client-side only, inside useEffect) ---------------
@@ -74,10 +72,8 @@ export default function Hud({ room, palette }: HudProps) {
     return `${h}:${m === 0 ? "00" : m}`;
   };
 
-  const rendering =
-    tour.phase === "capturing" || tour.phase === "uploading" ||
-    photo.phase === "exporting" || photo.phase === "uploading";
-  const overlayNote = photo.phase !== "idle" && photo.phase !== "error" ? photo.note : tour.note;
+  const rendering = photo.phase === "exporting" || photo.phase === "uploading";
+  const overlayNote = photo.note;
 
   return (
     <>
@@ -225,24 +221,10 @@ export default function Hud({ room, palette }: HudProps) {
           </button>
         </div>
 
-        {/* Generate 360 walkthrough */}
+        {/* Generate photoreal walkthrough */}
         <div className="pt-1 border-t border-white/10">
           <button
-            className="w-full px-3 py-1.5 rounded text-sm bg-emerald-600/80 hover:bg-emerald-500 text-white border border-emerald-400/30 transition disabled:opacity-50"
-            onClick={tour.generate}
-            disabled={tour.phase === "capturing" || tour.phase === "uploading"}
-          >
-            {tour.phase === "capturing"
-              ? "Rendering panoramas…"
-              : tour.phase === "uploading"
-                ? "Uploading…"
-                : "Generate 360° walkthrough"}
-          </button>
-          {tour.phase === "error" && (
-            <p className="mt-1 text-xs text-red-300">{tour.error}</p>
-          )}
-          <button
-            className="mt-1 w-full px-3 py-1.5 rounded text-sm bg-purple-600/80 hover:bg-purple-500 text-white border border-purple-400/30 transition disabled:opacity-50"
+            className="w-full px-3 py-1.5 rounded text-sm bg-purple-600/80 hover:bg-purple-500 text-white border border-purple-400/30 transition disabled:opacity-50"
             onClick={photo.generate}
             disabled={photo.phase === "exporting" || photo.phase === "uploading"}
           >
