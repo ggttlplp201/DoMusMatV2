@@ -71,6 +71,8 @@ export const CONFIGURABLE_PRODUCTS: Record<string, ProductMeta> = {
   "sample-fire-doors":   { ref: "sample-fire-doors",   name: "Fire Escape Doors", category: "door-double", sample: true, modelUrl: "/models/fire_escape__exit_doors.glb", realDimsMm: { w: 1800, h: 2100, d: 150 }, allowedSurfaces: ["floor"] },
   "sample-shoe-cabinet": { ref: "sample-shoe-cabinet", name: "Shoe Cabinet",      category: "cabinet",  sample: true, modelUrl: "/models/shoe_cabinet.glb",            realDimsMm: { w: 900,  h: 1000, d: 350 }, allowedSurfaces: ["floor"] },
   "sample-wardrobe":     { ref: "sample-wardrobe",     name: "Wardrobe",          category: "wardrobe", sample: true, modelUrl: "/models/wardrobe.glb",                realDimsMm: { w: 1200, h: 2000, d: 600 }, allowedSurfaces: ["floor"] },
+  "sample-dresser":      { ref: "sample-dresser",      name: "Modern Dresser",    category: "dresser",  sample: true, modelUrl: "/models/dresser_modern_light_wood.glb", realDimsMm: { w: 1700, h: 982,  d: 533 }, allowedSurfaces: ["floor"] },
+  "sample-table":        { ref: "sample-table",        name: "Modern Table",      category: "table",    sample: true, modelUrl: "/models/modern_table.glb",            realDimsMm: { w: 760,  h: 750,  d: 2200 }, allowedSurfaces: ["floor"] },
 };
 
 /** Products that should always appear in the playground palette (sample assets). */
