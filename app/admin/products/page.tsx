@@ -28,6 +28,7 @@ export default function AdminProductsPage() {
   const [fetched, setFetched] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [sortKey, setSortKey] = useState<"name" | "category" | "status" | "variants">("name");
 
   useEffect(() => {
     let cancelled = false;
@@ -49,6 +50,20 @@ export default function AdminProductsPage() {
     const c = repo.getCategories().find((x) => x.id === id);
     return c ? localizedName(c, locale) : id;
   };
+
+  // non-mutating sort for display
+  const sortedRows = [...rows].sort((a, b) => {
+    switch (sortKey) {
+      case "category":
+        return catName(a.category).localeCompare(catName(b.category));
+      case "status":
+        return a.status === b.status ? 0 : a.status === "active" ? -1 : 1;
+      case "variants":
+        return (b.product_variants?.length ?? 0) - (a.product_variants?.length ?? 0);
+      default:
+        return localizedName(a, locale).localeCompare(localizedName(b, locale));
+    }
+  });
 
   async function toggleStatus(row: ProductRow) {
     const next = row.status === "active" ? "retired" : "active";
@@ -85,6 +100,22 @@ export default function AdminProductsPage() {
         <p className="text-aluminium-dark py-8 text-center">{t("admin.prod.empty")}</p>
       ) : (
         <div className="overflow-x-auto">
+          <div className="mb-3 flex items-center gap-2">
+            <label htmlFor="prodSort" className="text-xs text-aluminium-dark">
+              {t("admin.sortBy")}
+            </label>
+            <select
+              id="prodSort"
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as typeof sortKey)}
+              className="rounded border border-aluminium bg-white px-2 py-1 text-sm text-ink"
+            >
+              <option value="name">{t("admin.prod.sortName")}</option>
+              <option value="category">{t("admin.prod.sortCategory")}</option>
+              <option value="status">{t("admin.prod.sortStatus")}</option>
+              <option value="variants">{t("admin.prod.sortVariants")}</option>
+            </select>
+          </div>
           <table className="w-full min-w-[680px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-aluminium text-left text-xs uppercase tracking-wide text-aluminium-dark">
@@ -96,7 +127,7 @@ export default function AdminProductsPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {sortedRows.map((r) => (
                 <tr key={r.id} className="border-b border-neutral-fill">
                   <td className="py-2 pr-4 font-medium text-ink">{localizedName(r, locale)}</td>
                   <td className="py-2 pr-4 text-aluminium-dark">{catName(r.category)}</td>
