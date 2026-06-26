@@ -1,4 +1,7 @@
-// Phase 2: swap JsonProductRepository for SupabaseProductRepository (same interface).
+// Phase A (catalogue migration): data now comes from Supabase via loadCatalogue(), hydrated
+// into an InMemoryProductRepository inside <CatalogueProvider>. This module keeps the same
+// in-memory implementation; the static `repo` below is the seed/fallback used by the
+// useCatalogue() hook when no provider is mounted (tests) and by server-side generateStaticParams.
 
 import { catalogue } from "@/lib/types";
 import type { Catalogue, Category, Product, Variant, Commercial } from "@/lib/types";
@@ -17,7 +20,7 @@ export interface ProductRepository {
 // TODO: per-variant GLB models
 // Note: High Bay special handling is NOT needed here — the ProductRepository treats all products uniformly.
 
-class JsonProductRepository implements ProductRepository {
+export class InMemoryProductRepository implements ProductRepository {
   private readonly data: Catalogue;
   private readonly productById: Map<string, Product>;
   private readonly variantByRef: Map<string, { product: Product; variant: Variant }>;
@@ -65,4 +68,4 @@ class JsonProductRepository implements ProductRepository {
   }
 }
 
-export const repo: ProductRepository = new JsonProductRepository(catalogue);
+export const repo: ProductRepository = new InMemoryProductRepository(catalogue);

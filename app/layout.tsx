@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/app/providers";
+import { loadCatalogue } from "@/lib/catalogue/loadCatalogue";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -29,13 +30,14 @@ export const metadata: Metadata = {
   description: "工业照明 BIM 产品目录",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const catalogue = await loadCatalogue();
   return (
     <html lang="zh-CN">
       <body
         className={`${archivo.variable} ${ibmPlexMono.variable} ${notoSansSC.variable} font-sans text-ink bg-white antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers catalogue={catalogue}>{children}</Providers>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { filterProducts } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
 import { useT } from "@/state/locale";
@@ -33,6 +33,7 @@ export function CatalogueView() {
   const initialCategory = searchParams.get("category");
   const initialQuery = searchParams.get("q") ?? "";
   const t = useT();
+  const repo = useCatalogue();
 
   const [filters, setFilters] = useState<CatalogueFilters>(() => ({
     ...EMPTY_FILTERS,

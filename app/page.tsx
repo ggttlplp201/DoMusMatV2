@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useMemo } from "react";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
 import { RenderModelCompare } from "@/components/home/RenderModelCompare";
+import type { Product, Category } from "@/lib/types";
 
 // ─── Data (computed once at module level for perf) ─────────────────────────
 
@@ -33,9 +35,7 @@ const CATEGORY_COUNTS: Record<string, number> = {
   espelhos: 9,
 };
 
-function computeStats() {
-  const products = repo.getProducts();
-  const categories = repo.getCategories();
+function computeStats(products: Product[], categories: Category[]) {
   const formats = new Set<string>();
   let totalAssets = 0;
   for (const p of products) {
@@ -53,8 +53,6 @@ function computeStats() {
     assetCount: totalAssets,
   };
 }
-
-const stats = computeStats();
 
 // ─── Icons ─────────────────────────────────────────────────────────────────
 
@@ -79,11 +77,12 @@ function DownloadIcon() {
 // High Bay product for the hero compare slider
 const HIGH_BAY_ID = "barra-led-high-bay";
 const HIGH_BAY_MODEL = "/models/high_bay_led_bar.glb";
-const highBayProduct = repo.getProduct(HIGH_BAY_ID);
-const highBayImage = highBayProduct?.images?.[0] ?? null;
 
 function HeroSection() {
   const t = useT();
+  const repo = useCatalogue();
+  const highBayProduct = repo.getProduct(HIGH_BAY_ID);
+  const highBayImage = highBayProduct?.images?.[0] ?? null;
 
   const titleLines = t("home.heroTitle").split("\n");
 
@@ -223,6 +222,8 @@ function HeroSection() {
 
 function StatsBand() {
   const t = useT();
+  const repo = useCatalogue();
+  const stats = useMemo(() => computeStats(repo.getProducts(), repo.getCategories()), [repo]);
 
   const statItems = [
     { n: stats.productCount, label: t("home.stat.products") },
@@ -288,6 +289,7 @@ function StatsBand() {
 function CategoriesSection() {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
   const categories = repo.getCategories();
 
   return (
@@ -411,6 +413,7 @@ function CategoriesSection() {
 function FeaturedSection() {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
   const products = repo.getProducts().slice(0, 3);
   const categories = repo.getCategories();
 

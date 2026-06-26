@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { calculateOrder } from "@/lib/pricing";
 import { formatPrice, formatLeadTime } from "@/lib/format";
 import { useT } from "@/state/locale";
@@ -18,6 +18,7 @@ interface OrderCalculatorProps {
 }
 
 export function OrderCalculator({ variantRef }: OrderCalculatorProps) {
+  const repo = useCatalogue();
   const commercial = repo.getCommercial();
   const t = useT();
   const [qty, setQty] = useState(1);

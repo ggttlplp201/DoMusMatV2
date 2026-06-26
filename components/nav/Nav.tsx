@@ -10,7 +10,7 @@ import { useLists } from "@/state/lists";
 import { useT, useLocale } from "@/state/locale";
 import { LOCALES } from "@/lib/i18n";
 import { localizedName } from "@/lib/i18n";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { AccountMenu } from "@/components/nav/AccountMenu";
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
@@ -119,6 +119,7 @@ function LanguageSwitch() {
 // ─── Category nav ─────────────────────────────────────────────────────────────
 
 function CategoryBar({ activeId }: { activeId: string | null }) {
+  const repo = useCatalogue();
   const categories = repo.getCategories();
   const { locale } = useLocale();
   const t = useT();
@@ -183,6 +184,7 @@ function MobileMenu({
 }) {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
   const categories = repo.getCategories();
 
   if (!open) return null;

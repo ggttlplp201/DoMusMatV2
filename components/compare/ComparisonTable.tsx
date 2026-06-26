@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { formatPrice, formatDimensions } from "@/lib/format";
 import { hasRealValue } from "@/lib/placeholder";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName, localizeSpecValue } from "@/lib/i18n";
-import type { Product } from "@/lib/types";
+import type { Product, Commercial } from "@/lib/types";
 
 function getPowerRange(product: Product): string {
   const powers = product.variants
@@ -29,10 +29,9 @@ function getFirstVariantDimensions(product: Product): string {
   return "—";
 }
 
-function getFirstVariantPrice(product: Product, priceFallback?: string): string {
+function getFirstVariantPrice(product: Product, commercial: Commercial, priceFallback?: string): string {
   const firstRef = product.variants[0]?.ref;
   if (!firstRef) return "—";
-  const commercial = repo.getCommercial();
   return formatPrice(commercial.unit_prices?.[firstRef], commercial.currency, priceFallback);
 }
 
@@ -49,6 +48,8 @@ interface ComparisonTableProps {
 export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
+  const commercial = repo.getCommercial();
 
   const specFallback = t("fb.spec");
 
@@ -98,7 +99,7 @@ export function ComparisonTable({ productIds, onRemove }: ComparisonTableProps) 
         return Array.isArray(certs) ? certs.join(", ") : String(certs);
       },
     },
-    { key: "price", label: t("order.unitPrice"), getValue: (p) => getFirstVariantPrice(p, t("fb.price")) },
+    { key: "price", label: t("order.unitPrice"), getValue: (p) => getFirstVariantPrice(p, commercial, t("fb.price")) },
     { key: "conformidade", label: t("compliance.title"), getValue: (p) => getConformidade(p, specFallback) },
   ];
 

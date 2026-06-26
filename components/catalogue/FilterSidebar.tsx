@@ -1,5 +1,5 @@
 "use client";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { facetOptions } from "@/lib/filter";
 import type { CatalogueFilters } from "@/lib/filter";
 import { useT, useLocale } from "@/state/locale";
@@ -19,6 +19,7 @@ const FORMAT_CHIPS = ["IFC", "RFA", "DWG", "SKP", "PDF"];
 export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
   const categories = repo.getCategories();
   const allProducts = repo.getProducts();
   const { power, ip, colorTemp } = facetOptions(allProducts);

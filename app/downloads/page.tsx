@@ -2,7 +2,7 @@
 
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/Footer";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
 import { hasRealValue } from "@/lib/placeholder";
@@ -10,6 +10,7 @@ import { hasRealValue } from "@/lib/placeholder";
 export default function DownloadsPage() {
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
 
   const products = repo.getProducts();
   const categories = repo.getCategories();

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { hasRealValue } from "@/lib/placeholder";
 import { ModelViewer } from "./ModelViewer";
 import { Gallery } from "./Gallery";
@@ -31,6 +31,7 @@ interface DetailViewProps {
 }
 
 export function DetailView({ productId }: DetailViewProps) {
+  const repo = useCatalogue();
   const product = repo.getProduct(productId);
   const analytics = useAnalytics();
   const { locale } = useLocale();

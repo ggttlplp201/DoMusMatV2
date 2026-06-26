@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLists } from "@/state/lists";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
@@ -11,6 +11,7 @@ export function SavedLists() {
   const { saved, toggle } = useLists();
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
 
   if (saved.length === 0) {
     return (

@@ -4,19 +4,19 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { repo } from "@/lib/repository";
+import { useCatalogue } from "@/state/catalogue";
 import { hasRealValue } from "@/lib/placeholder";
 import { useCompare } from "@/state/compare";
 import { useAnalytics } from "@/state/analytics";
 import { useRouter } from "next/navigation";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
-import type { Product, BimAssetFormat } from "@/lib/types";
+import type { Product, Category, BimAssetFormat } from "@/lib/types";
 
 gsap.registerPlugin(useGSAP);
 
-function getCategoryName(categoryId: string, locale: import("@/lib/i18n").Locale): string {
-  const cat = repo.getCategories().find(c => c.id === categoryId);
+function getCategoryName(categories: Category[], categoryId: string, locale: import("@/lib/i18n").Locale): string {
+  const cat = categories.find(c => c.id === categoryId);
   return cat ? localizedName(cat, locale) : categoryId;
 }
 
@@ -58,6 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
   const analytics = useAnalytics();
   const t = useT();
   const { locale } = useLocale();
+  const repo = useCatalogue();
   const inCompare = has(product.id);
   const router = useRouter();
 
@@ -196,7 +197,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-col flex-1 p-[20px_22px_0px]">
         {/* Category */}
         <p className="font-mono text-[11px] tracking-[0.06em] uppercase text-[#B4B4AC] mb-2">
-          {getCategoryName(product.category, locale)}
+          {getCategoryName(repo.getCategories(), product.category, locale)}
         </p>
 
         {/* Title */}
