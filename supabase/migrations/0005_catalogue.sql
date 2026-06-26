@@ -39,11 +39,14 @@ create table if not exists public.products (
 );
 alter table public.products enable row level security;
 
+-- Composite PK: real SKUs are globally unique, but 7 SKU-less products legitimately
+-- share the sentinel ref 'PLACEHOLDER', so ref alone cannot be the key.
 create table if not exists public.product_variants (
-  ref text primary key,
+  ref text not null,
   product_id text not null references public.products(id) on delete cascade,
   attrs jsonb not null default '{}',
-  sort_order int not null default 0
+  sort_order int not null default 0,
+  primary key (product_id, ref)
 );
 alter table public.product_variants enable row level security;
 

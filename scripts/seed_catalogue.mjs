@@ -61,7 +61,7 @@ console.log(`Seeding ${SUPABASE_URL}`);
 // FK order: categories -> products -> variants
 await upsert("categories", categories, "id");
 await upsert("products", products, "id");
-await upsert("product_variants", variants, "ref");
+await upsert("product_variants", variants, "product_id,ref");
 
 // sanity read-back
 const { count: pc } = await supabase.from("products").select("*", { count: "exact", head: true });
