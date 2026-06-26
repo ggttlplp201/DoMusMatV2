@@ -16,6 +16,9 @@ VARIANTS = ("day", "night")
 # glTF stores light intensity in candela; Blender imports that as a tiny wattage
 # (a 13cd spot → ~0.24W), so interior lights barely register. Scale them up.
 LIGHT_BOOST = 80.0
+# World (HDRI) ambient strength per variant. Day is sunlit; night relies on a dim
+# environment for fill so walls/ceiling between the downlights don't crush to black.
+WORLD_STRENGTH = {"day": 1.0, "night": 0.35}
 
 
 # ---- pure helpers (no bpy) ------------------------------------------------
@@ -102,7 +105,7 @@ def _setup_world(hdri_path: str, variant: str):
     out = nt.nodes.new("ShaderNodeOutputWorld")
     nt.links.new(env.outputs["Color"], bg.inputs["Color"])
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
-    bg.inputs["Strength"].default_value = 1.0 if variant == "day" else 0.15
+    bg.inputs["Strength"].default_value = WORLD_STRENGTH[variant]
 
     # day gets a sun roughly matching the configurator's midday arc; night has none
     if variant == "day":
