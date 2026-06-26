@@ -135,9 +135,15 @@ export function primitiveHouse(): RoomShell {
     else defaultMaterials[s.id] = "wallpaper"; // walls + ceiling
   }
 
-  // preset item slots: doorways (category "door") + a couple of furniture spots
+  // preset item slots: doorways (category "door") + furniture spots
   const door = (id: string, xft: number, yft: number, rotY: number, label: string): ItemSlot =>
     ({ id, category: "door", pos: [px(xft), 0, pz(yft)], rotY, label, outline: [0.9, 2.1] });
+  // dressers sit against a bedroom side-wall, facing into the room
+  const dresser = (id: string, xft: number, yft: number, rotY: number): ItemSlot =>
+    ({ id, category: "dresser", pos: [px(xft), 0, pz(yft)], rotY, label: "Add dresser", outline: [1.7, 1.0] });
+  // tables sit free-standing in the open living/dining area
+  const table = (id: string, xft: number, yft: number, rotY: number): ItemSlot =>
+    ({ id, category: "table", pos: [px(xft), 0, pz(yft)], rotY, label: "Add table", outline: [1.2, 0.75] });
   const slots: ItemSlot[] = [
     door("slot-door-entry",  14.5, 0,  0,            "Add entry door"),
     door("slot-door-br2",    7.5,  18, 0,            "Add door"),
@@ -147,6 +153,13 @@ export function primitiveHouse(): RoomShell {
     door("slot-door-wash",   40,   4.5, Math.PI / 2, "Add door"),
     { id: "slot-wardrobe-master", category: "wardrobe", pos: [px(37), 0, pz(14)], rotY: Math.PI, label: "Add wardrobe", outline: [1.2, 2.0] },
     { id: "slot-cabinet-entry",   category: "cabinet",  pos: [px(18), 0, pz(1.5)], rotY: 0,        label: "Add cabinet",  outline: [0.9, 1.0] },
+    // dressers — one per bedroom, against a solid side-wall, facing into the room
+    dresser("slot-dresser-br2",    8,  20.5, -Math.PI / 2),  // BR2 east wall, faces west
+    dresser("slot-dresser-br3",    21, 24,   -Math.PI / 2),  // BR3 east wall, faces west
+    dresser("slot-dresser-master", 28, 24,    Math.PI / 2),  // master west wall, faces east
+    // tables — in the dining bay and the family area
+    table("slot-table-dining", 19.5, 9, 0),
+    table("slot-table-family", 7,    9, 0),
   ];
 
   // fixed window models, centred in their (equal-size) wall openings; uniform fit = no squish
