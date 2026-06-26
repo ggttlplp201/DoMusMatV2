@@ -19,5 +19,17 @@ Renders day+night equirectangular panoramas of a configured scene with Blender C
        MODAL_TRIGGER_SECRET=<same random string>
 5. Redeploy the Next app. The "Photoreal walkthrough" button is now live.
 
+## Architecture
+The web `trigger` endpoint spawns a lightweight CPU `orchestrate` function, which owns
+the `render_jobs` row (rendering → ready/error) and fans each `(variant, spot)` out to its
+own GPU `render_one` container via `.starmap()`. Each worker runs Blender for a single
+equirect pano (`render_tour.py --variant …`) and uploads it. Wall-clock ≈ one render
+regardless of room count; total GPU-seconds (and cost) are unchanged.
+
+`render_tour.py` with no `--variant` still does the full sequential render with status
+patching — used for local Blender testing and as a single-container fallback.
+
 ## Cost
-A10G GPU, ~1–3 min/tour for a few rooms × 2 variants → on the order of a few US cents per tour.
+A10G GPU, total ~GPU-seconds for a few rooms × 2 variants → on the order of a few US cents
+per tour. With the fan-out the renders run concurrently, so the *wait* is ~one pano, not all
+of them — same compute, just in parallel.

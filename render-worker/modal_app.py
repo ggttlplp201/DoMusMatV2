@@ -31,22 +31,57 @@ image = (
 # lightweight image for the web trigger — needs FastAPI (Modal no longer auto-installs it)
 web_image = modal.Image.debian_slim().pip_install("fastapi[standard]")
 
+# the CPU coordinator only needs render_tour.py's stdlib-only helpers (no Blender) —
+# keep it off the multi-GB render image so its cold start stays fast
+coordinator_image = modal.Image.debian_slim().add_local_file(
+    "render_tour.py", "/root/render_tour.py", copy=True
+)
+
 secrets = [modal.Secret.from_name("domusmat-render")]  # SUPABASE_URL, SUPABASE_SERVICE_KEY, MODAL_TRIGGER_SECRET
 
 
 @app.function(image=image, gpu="A10G", secrets=secrets, timeout=1800)
-def render(job_id: str, scene_url: str, spots: list, hdri_urls: dict):
+def render_one(job_id: str, scene_url: str, variant: str, spot: dict, hdri_url: str):
+    """Render+upload a single (variant, spot) pano in its own GPU container.
+    No status patching — the coordinator owns the job row."""
     import os, json, subprocess
     subprocess.run(
         [
             "/opt/blender/blender", "--background", "--python", "/root/render_tour.py", "--",
             "--job", job_id, "--scene", scene_url,
-            "--spots", json.dumps(spots),
-            "--hdri-day", hdri_urls["day"], "--hdri-night", hdri_urls["night"],
+            "--variant", variant,
+            "--spots", json.dumps([spot]),
+            f"--hdri-{variant}", hdri_url,
             "--supabase-url", os.environ["SUPABASE_URL"],
         ],
         check=True,
     )
+
+
+@app.function(image=coordinator_image, secrets=secrets, timeout=1800)
+def orchestrate(job_id: str, scene_url: str, spots: list, hdri_urls: dict):
+    """CPU coordinator: own the job row, fan each (variant, spot) out to its own
+    GPU container, then mark ready/error. Wall-clock ≈ one render, not all of them."""
+    import os, sys
+    sys.path.insert(0, "/root")  # render_tour.py is added to the image at /root
+    import render_tour as rt
+    supabase_url = os.environ["SUPABASE_URL"]
+    rt.patch_job(supabase_url, job_id, {"status": "rendering"})
+    try:
+        work = [
+            (job_id, scene_url, variant, spot, hdri_urls[variant])
+            for variant in rt.VARIANTS
+            for spot in spots
+        ]
+        list(render_one.starmap(work))  # blocks until all panos done; raises on any failure
+        pano_urls = {
+            variant: {s["id"]: rt.public_url(supabase_url, job_id, s["id"], variant) for s in spots}
+            for variant in rt.VARIANTS
+        }
+        rt.patch_job(supabase_url, job_id, {"status": "ready", "pano_urls": pano_urls})
+    except Exception as exc:  # noqa: BLE001 — report any failure back to the job
+        rt.patch_job(supabase_url, job_id, {"status": "error", "error": str(exc)[:500]})
+        raise
 
 
 @app.function(image=web_image, secrets=secrets)
@@ -57,5 +92,5 @@ def trigger(payload: dict):
     # the whole JSON body arrives as `payload`; the shared secret travels inside it
     if payload.get("secret") != os.environ["MODAL_TRIGGER_SECRET"]:
         raise HTTPException(status_code=403, detail="forbidden")
-    render.spawn(payload["jobId"], payload["sceneUrl"], payload["spots"], payload["hdriUrls"])
+    orchestrate.spawn(payload["jobId"], payload["sceneUrl"], payload["spots"], payload["hdriUrls"])
     return {"accepted": True}

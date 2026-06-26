@@ -41,6 +41,7 @@ def parse_args(argv: list[str]) -> dict:
         elif key == "--spots": out["spots"] = json.loads(val)
         elif key == "--hdri-day": out["hdri"]["day"] = val
         elif key == "--hdri-night": out["hdri"]["night"] = val
+        elif key == "--variant": out["variant"] = val  # single-variant worker mode (else both)
         elif key == "--supabase-url": out["supabase_url"] = val
         i += 2
     return out
@@ -177,48 +178,60 @@ def _make_camera():
     return cam_obj
 
 
-def render_all(cfg: dict, tmpdir: str = "/tmp") -> dict:
+def _render_variant(cfg: dict, variant: str, tmpdir: str) -> dict:
+    """Import the scene fresh, set up lights/world/camera for one variant, and
+    render+upload every spot. Returns {spot_id: url}. No job-status patching —
+    callers own status (so parallel workers don't race the row)."""
     import bpy
+    import mathutils
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    scene_glb = download(cfg["scene"], os.path.join(tmpdir, "scene.glb"))
+    bpy.ops.import_scene.gltf(filepath=scene_glb)
+    # Cycles provides ambient bounce via GI, so drop the realtime "fill" point
+    # lights (they shadowed the ceiling into a crescent). Keep the spotlights as
+    # downlights: boost out of the candela→watts hole and force them straight down.
+    for obj in list(bpy.context.scene.objects):
+        if obj.type != "LIGHT":
+            continue
+        if obj.data.type == "POINT":
+            bpy.data.objects.remove(obj, do_unlink=True)
+        elif obj.data.type in {"SPOT", "AREA"}:
+            obj.data.energy *= LIGHT_BOOST
+            if obj.data.type == "SPOT":
+                loc = obj.matrix_world.to_translation()
+                obj.matrix_world = mathutils.Matrix.Translation(loc)  # aim -Z down
+    hdri = download(cfg["hdri"][variant], os.path.join(tmpdir, f"{variant}.exr"))
+    _setup_world(hdri, variant)
+    _setup_render()
+    cam = _make_camera()
+    urls = {}
+    for spot in cfg["spots"]:
+        x, y, z = spot["pos"]
+        # three.js (x,y up,z) -> Blender (x, -z, y up)
+        cam.location = (x, -z, y)
+        out_path = os.path.join(tmpdir, output_name(spot["id"], variant))
+        bpy.context.scene.render.filepath = out_path
+        bpy.ops.render.render(write_still=True)
+        urls[spot["id"]] = upload_jpeg(cfg["supabase_url"], cfg["job"], spot["id"], variant, out_path)
+    return urls
+
+
+def render_all(cfg: dict, tmpdir: str = "/tmp") -> dict:
+    """Full sequential render of all variants×spots WITH job-status patching.
+    Used for local testing and as the single-container fallback."""
     patch_job(cfg["supabase_url"], cfg["job"], {"status": "rendering"})
-    pano_urls = {"day": {}, "night": {}}
-    for variant in VARIANTS:
-        # fresh scene per variant
-        bpy.ops.wm.read_factory_settings(use_empty=True)
-        scene_glb = download(cfg["scene"], os.path.join(tmpdir, "scene.glb"))
-        bpy.ops.import_scene.gltf(filepath=scene_glb)
-        import mathutils
-        # Cycles provides ambient bounce via GI, so drop the realtime "fill" point
-        # lights (they shadowed the ceiling into a crescent). Keep the spotlights as
-        # downlights: boost out of the candela→watts hole and force them straight down.
-        for obj in list(bpy.context.scene.objects):
-            if obj.type != "LIGHT":
-                continue
-            if obj.data.type == "POINT":
-                bpy.data.objects.remove(obj, do_unlink=True)
-            elif obj.data.type in {"SPOT", "AREA"}:
-                obj.data.energy *= LIGHT_BOOST
-                if obj.data.type == "SPOT":
-                    loc = obj.matrix_world.to_translation()
-                    obj.matrix_world = mathutils.Matrix.Translation(loc)  # aim -Z down
-        hdri = download(cfg["hdri"][variant], os.path.join(tmpdir, f"{variant}.exr"))
-        _setup_world(hdri, variant)
-        _setup_render()
-        cam = _make_camera()
-        for spot in cfg["spots"]:
-            x, y, z = spot["pos"]
-            # three.js (x,y up,z) -> Blender (x, -z, y up)
-            cam.location = (x, -z, y)
-            out_path = os.path.join(tmpdir, output_name(spot["id"], variant))
-            bpy.context.scene.render.filepath = out_path
-            bpy.ops.render.render(write_still=True)
-            url = upload_jpeg(cfg["supabase_url"], cfg["job"], spot["id"], variant, out_path)
-            pano_urls[variant][spot["id"]] = url
+    pano_urls = {variant: _render_variant(cfg, variant, tmpdir) for variant in VARIANTS}
     patch_job(cfg["supabase_url"], cfg["job"], {"status": "ready", "pano_urls": pano_urls})
     return pano_urls
 
 
 def main():
     cfg = parse_args(sys.argv)
+    # Worker mode: render just one variant, no status patching — the Modal
+    # coordinator owns the job row and reports success/failure across the fan-out.
+    if cfg.get("variant"):
+        _render_variant(cfg, cfg["variant"], "/tmp")
+        return
     try:
         render_all(cfg)
     except Exception as exc:  # noqa: BLE001 — report any failure back to the job

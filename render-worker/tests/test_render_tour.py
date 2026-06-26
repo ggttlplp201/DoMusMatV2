@@ -25,3 +25,16 @@ def test_parse_args_reads_double_dash_block():
     assert cfg["scene"] == "s.glb"
     assert cfg["spots"][0]["id"] == "living"
     assert cfg["hdri"]["day"] == "d.exr"
+    assert "variant" not in cfg  # full-render mode when --variant is absent
+
+
+def test_parse_args_single_variant_worker_mode():
+    argv = ["blender", "--python", "render_tour.py", "--",
+            "--job", "j2", "--scene", "s.glb",
+            "--variant", "night",
+            "--spots", '[{"id":"living","pos":[1,1.6,2]}]',
+            "--hdri-night", "n.exr",
+            "--supabase-url", "https://x.supabase.co"]
+    cfg = parse_args(argv)
+    assert cfg["variant"] == "night"
+    assert cfg["hdri"] == {"night": "n.exr"}  # only the variant's hdri is passed
