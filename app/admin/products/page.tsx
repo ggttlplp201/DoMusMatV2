@@ -27,6 +27,7 @@ export default function AdminProductsPage() {
   const [rows, setRows] = useState<ProductRow[]>([]);
   const [fetched, setFetched] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,9 +53,14 @@ export default function AdminProductsPage() {
   async function toggleStatus(row: ProductRow) {
     const next = row.status === "active" ? "retired" : "active";
     setBusyId(row.id);
+    setActionError(null);
     const res = await setProductStatusAction(row.id, next);
     setBusyId(null);
-    if (res.ok) setRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: next } : r)));
+    if (res.ok) {
+      setRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: next } : r)));
+    } else {
+      setActionError(res.error ?? t("admin.prod.error"));
+    }
   }
 
   return (
@@ -70,6 +76,8 @@ export default function AdminProductsPage() {
           ← {t("admin.title")}
         </Link>
       </div>
+
+      {actionError && <p className="mb-4 text-sm text-red-600">{actionError}</p>}
 
       {!fetched ? (
         <p className="text-aluminium-dark py-8">{t("admin.prod.loading")}</p>
