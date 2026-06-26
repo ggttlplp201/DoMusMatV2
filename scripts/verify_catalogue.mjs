@@ -20,9 +20,9 @@ if (existsSync(envPath)) {
   }
 }
 
-const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-if (!URL || !KEY) {
+if (!SUPABASE_URL || !KEY) {
   console.error("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY (.env.local or env).");
   process.exit(1);
 }
@@ -35,7 +35,7 @@ const PRODUCT_COLUMNS =
 const dataPath = fileURLToPath(new URL("../data/product_data.json", import.meta.url));
 const staticCat = JSON.parse(readFileSync(dataPath, "utf8"));
 
-const sb = createClient(URL, KEY, { auth: { persistSession: false } });
+const sb = createClient(SUPABASE_URL, KEY, { auth: { persistSession: false } });
 const [cats, prods, vars] = await Promise.all([
   sb.from("categories").select("id,name,name_en,name_zh,sort_order"),
   sb.from("products").select(PRODUCT_COLUMNS),
@@ -62,7 +62,7 @@ function check(label, got, want) {
   catch (e) { fails++; console.error(`  ✗ ${label}\n    ${String(e.message).split("\n").slice(0, 6).join("\n    ")}`); }
 }
 
-console.log(`Verifying ${URL}`);
+console.log(`Verifying ${SUPABASE_URL}`);
 check(`categories (${categories.length})`, categories, staticCat.categories);
 check(`product count`, products.length, staticCat.products.length);
 
