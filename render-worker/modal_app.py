@@ -40,7 +40,9 @@ coordinator_image = modal.Image.debian_slim().add_local_file(
 secrets = [modal.Secret.from_name("domusmat-render")]  # SUPABASE_URL, SUPABASE_SERVICE_KEY, MODAL_TRIGGER_SECRET
 
 
-@app.function(image=image, gpu="A10G", secrets=secrets, timeout=1800)
+# L40S (Ada) renders Cycles/OptiX ~2x faster than A10G for a few cents more per hour;
+# since renders are short bursts the absolute cost delta is negligible.
+@app.function(image=image, gpu="L40S", secrets=secrets, timeout=1800)
 def render_one(job_id: str, scene_url: str, variant: str, spot: dict, hdri_url: str):
     """Render+upload a single (variant, spot) pano in its own GPU container.
     No status patching — the coordinator owns the job row."""

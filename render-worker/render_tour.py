@@ -7,7 +7,15 @@ The render path imports bpy lazily and runs under:
 import json
 import os
 import sys
+import time
 import urllib.request
+
+
+def _timed(label: str, t0: float) -> float:
+    """Print elapsed seconds for a phase (shows up in Modal logs) and return now."""
+    now = time.perf_counter()
+    print(f"[time] {label}: {now - t0:.1f}s", flush=True)
+    return now
 
 # production quality (GPU-rendered): 4K equirect, adaptive-sampled + denoised
 PANO_W, PANO_H = 4096, 2048
@@ -184,6 +192,7 @@ def _render_variant(cfg: dict, variant: str, tmpdir: str) -> dict:
     callers own status (so parallel workers don't race the row)."""
     import bpy
     import mathutils
+    t0 = time.perf_counter()
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene_glb = download(cfg["scene"], os.path.join(tmpdir, "scene.glb"))
     bpy.ops.import_scene.gltf(filepath=scene_glb)
@@ -204,6 +213,7 @@ def _render_variant(cfg: dict, variant: str, tmpdir: str) -> dict:
     _setup_world(hdri, variant)
     _setup_render()
     cam = _make_camera()
+    t0 = _timed(f"{variant} import+setup", t0)
     urls = {}
     for spot in cfg["spots"]:
         x, y, z = spot["pos"]
@@ -212,7 +222,9 @@ def _render_variant(cfg: dict, variant: str, tmpdir: str) -> dict:
         out_path = os.path.join(tmpdir, output_name(spot["id"], variant))
         bpy.context.scene.render.filepath = out_path
         bpy.ops.render.render(write_still=True)
+        t0 = _timed(f"{variant}/{spot['id']} render", t0)
         urls[spot["id"]] = upload_jpeg(cfg["supabase_url"], cfg["job"], spot["id"], variant, out_path)
+        t0 = _timed(f"{variant}/{spot['id']} upload", t0)
     return urls
 
 
