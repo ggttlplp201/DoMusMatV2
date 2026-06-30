@@ -190,6 +190,10 @@ function SceneInner({ room }: { room: RoomShell }) {
       <SceneExporter />
       {/* low fill so deep-interior corners aren't crushed (HDRI does the rest) */}
       <ambientLight intensity={0.16} />
+      {/* one cheap warm-from-above / cool-from-below fill — replaces the old
+          per-fixture point lights so interiors keep their ceiling/wall lift
+          without N extra real-time lights */}
+      <hemisphereLight args={["#ffe6c8", "#1a1d24", 0.45]} />
 
       {/* room shell + placed items (GLB/texture loads suspend) */}
       <Suspense fallback={null}>

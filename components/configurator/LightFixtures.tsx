@@ -40,12 +40,12 @@ function CeilingLight({ position, helpers }: { position: [number, number, number
         <circleGeometry args={[0.05, 24]} />
         <meshStandardMaterial color="#fff6ea" emissive={WARM} emissiveIntensity={1.3} toneMapped={false} />
       </mesh>
-      {/* wide, soft downward beam — overlapping pools fill the floor evenly */}
-      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.9} penumbra={1} intensity={13} distance={9} decay={1.3} color={WARM} castShadow={false} />
+      {/* wide, soft downward beam — overlapping pools fill the floor evenly.
+          (A per-fixture point "fill" used to lift the ceiling/walls, but that
+          doubled the real-time light count; a single scene-wide hemisphere light
+          now does that lift far more cheaply — see Scene.tsx.) */}
+      <spotLight ref={spotRef} position={[0, -0.06, 0]} angle={0.9} penumbra={1} intensity={16} distance={9} decay={1.3} color={WARM} castShadow={false} />
       <object3D ref={targetRef} position={[0, -2, 0]} />
-      {/* soft omni fill placed mid-room — lifts the ceiling + walls (fake bounce)
-          without a hotspot, since it sits well below the ceiling */}
-      <pointLight position={[0, -1.5, 0]} intensity={3.5} distance={7} decay={2} color={WARM} castShadow={false} />
     </group>
   );
 }
