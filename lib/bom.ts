@@ -22,7 +22,8 @@ export function buildBomLines(items: BomItem[], opts?: BomBuildOpts): BomLine[] 
   const commercial = repo.getCommercial();
   return items.map(({ ref, quantity }) => {
     const found = repo.findByRef(ref);            // { product, variant } | undefined
-    const product = found?.product;
+    // Fall back to a product-id ref (used by the design assistant for SKU-less products).
+    const product = found?.product ?? repo.getProduct(ref);
     const variant = found?.variant;
     const price = commercial.unit_prices?.[ref];
     const unitPrice = formatPrice(price, commercial.currency, priceFallback);

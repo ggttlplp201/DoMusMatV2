@@ -25,7 +25,8 @@ export function buildOrderPayload(
   const built: OrderItemPayload[] = items
     .filter((i) => i.quantity > 0)
     .map(({ ref, quantity }) => {
-      const product = repo.findByRef(ref)?.product;
+      // Fall back to a product-id ref (design assistant adds SKU-less products by id).
+      const product = repo.findByRef(ref)?.product ?? repo.getProduct(ref);
       return {
         product_ref: ref,
         product_id: product?.id ?? "",

@@ -8,7 +8,9 @@ import { useCatalogue } from "@/state/catalogue";
 import { useCart } from "@/state/cart";
 import { useT, useLocale } from "@/state/locale";
 import { localizedName } from "@/lib/i18n";
+import { hasRealValue } from "@/lib/placeholder";
 import { buildSpecPackage } from "@/lib/spec/documents";
+import type { Product } from "@/lib/types";
 import {
   composeSolution,
   PROJECTS,
@@ -30,6 +32,13 @@ const cardOff = "border-aluminium bg-white";
 function firstRef(product: { variants?: { ref: string }[] } | null): string | null {
   const r = product?.variants?.find((v) => v.ref && v.ref !== "PLACEHOLDER")?.ref;
   return r ?? null;
+}
+
+// Ref to add to the quote: the real SKU, or the product id for SKU-less products
+// (bom/order resolve product-id refs via getProduct).
+function quoteRef(product: Product | null): string | null {
+  if (!product) return null;
+  return firstRef(product) ?? product.id;
 }
 
 export default function DesignPage() {
@@ -70,9 +79,13 @@ export default function DesignPage() {
 
   function requestQuote() {
     if (!solution) return;
+    const seen = new Set<string>();
     for (const s of solution.systems) {
-      const ref = firstRef(s.product);
-      if (ref) add(ref, 1);
+      const ref = quoteRef(s.product);
+      if (ref && !seen.has(ref)) {
+        seen.add(ref);
+        add(ref, 1);
+      }
     }
     setQuoted(true);
   }
@@ -216,6 +229,9 @@ export default function DesignPage() {
     onQuote: () => void;
     onRestart: () => void;
   }) {
+    const products = Array.from(
+      new Map(solution.systems.filter((s) => s.product).map((s) => [s.product!.id, s.product!])).values(),
+    );
     return (
       <>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -267,6 +283,46 @@ export default function DesignPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* BIM / CAD files — direct access to each recommended product's catalogue files */}
+        <div className="mt-6">
+          <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-aluminium-dark">
+            {t("design.files")}
+          </h3>
+          <div className="space-y-2">
+            {products.map((p) => {
+              const assets = (p.bim_assets ?? []).filter((a) => hasRealValue(a.file));
+              return (
+                <div
+                  key={p.id}
+                  className="flex flex-wrap items-center gap-2 rounded-lg border border-aluminium bg-white p-3 text-sm"
+                >
+                  <span className="font-medium text-ink">{localizedName(p, locale)}</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {assets.length > 0 ? (
+                      assets.map((a, i) => (
+                        <a
+                          key={i}
+                          href={a.file}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded border border-ink px-2 py-0.5 text-xs font-medium text-ink hover:bg-neutral-fill"
+                        >
+                          {a.format} ↓
+                        </a>
+                      ))
+                    ) : (
+                      <span className="text-xs text-aluminium-dark">{t("design.noFiles")}</span>
+                    )}
+                  </div>
+                  <Link href={`/products/${p.id}`} className="ml-auto text-xs font-medium text-[#DA1E28] hover:underline">
+                    {t("design.allFiles")} →
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Technical output (reuses the spec engine) */}
