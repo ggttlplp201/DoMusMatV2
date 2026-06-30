@@ -8,12 +8,12 @@ import { getRoomShell } from "@/lib/configurator/rooms";
 import { decodeScene } from "@/lib/configurator/serialize";
 import { useProgress } from "@react-three/drei";
 import { paletteFromCartRefs } from "@/lib/configurator/palette";
-import { SAMPLE_PRODUCTS, productsForCategory } from "@/lib/configurator/products";
-import type { ItemSlot } from "@/lib/configurator/types";
+import { SAMPLE_PRODUCTS } from "@/lib/configurator/products";
 import { repo } from "@/lib/repository";
 import { useCart } from "@/state/cart";
 import Scene from "@/components/configurator/Scene";
 import Hud from "@/components/configurator/Hud";
+import ModelPicker from "@/components/configurator/chrome/ModelPicker";
 
 /** Frosted-glass loading overlay while GLBs / HDRI stream in. */
 function LoadingOverlay() {
@@ -31,12 +31,8 @@ function LoadingOverlay() {
 
 export default function ConfiguratorPage() {
   const [mounted, setMounted] = useState(false);
-  const [pickerSlot, setPickerSlot] = useState<ItemSlot | null>(null);
   const loadScene = useConfigurator((s) => s.loadScene);
   const sceneRoom = useConfigurator((s) => s.scene.room);
-  const slots = useConfigurator((s) => s.scene.slots);
-  const assignSlot = useConfigurator((s) => s.assignSlot);
-  const clearSlot = useConfigurator((s) => s.clearSlot);
   const { items: cart } = useCart();
 
   // palette = always-available sample assets + the user's configurable cart picks.
@@ -69,7 +65,7 @@ export default function ConfiguratorPage() {
           dpr={[1, 1.5]}
           gl={{ toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.45 }}
         >
-          <Scene room={room} onSlotClick={setPickerSlot} />
+          <Scene room={room} />
           {/* tasteful polish: ambient occlusion + bloom + anti-aliasing (perf-tuned) */}
           <EffectComposer multisampling={0}>
             <N8AO halfRes aoRadius={0.5} intensity={1.3} distanceFalloff={1} aoSamples={8} denoiseSamples={4} color="black" />
@@ -80,40 +76,7 @@ export default function ConfiguratorPage() {
       )}
       <Hud room={room} palette={palette} />
       <LoadingOverlay />
-
-      {/* preset-slot product picker */}
-      {pickerSlot && (
-        <div
-          className="absolute inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setPickerSlot(null)}
-        >
-          <div className="w-80 rounded-xl bg-neutral-900 p-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-3 text-sm font-semibold capitalize">Choose a {pickerSlot.category}</div>
-            <div className="grid grid-cols-2 gap-2">
-              {productsForCategory(pickerSlot.category).map((p) => {
-                const active = slots?.[pickerSlot.id] === p.ref;
-                return (
-                  <button
-                    key={p.ref}
-                    onClick={() => { assignSlot(pickerSlot.id, p.ref); setPickerSlot(null); }}
-                    className={`rounded-lg border p-3 text-left text-xs transition ${active ? "border-emerald-400 bg-emerald-400/10" : "border-white/15 hover:border-white/50"}`}
-                  >
-                    {p.name}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-3 flex items-center gap-4 text-xs">
-              {slots?.[pickerSlot.id] && (
-                <button className="text-red-300 underline" onClick={() => { clearSlot(pickerSlot.id); setPickerSlot(null); }}>
-                  Remove
-                </button>
-              )}
-              <button className="text-white/60 underline" onClick={() => setPickerSlot(null)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModelPicker />
     </div>
   );
 }

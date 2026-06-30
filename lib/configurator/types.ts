@@ -51,6 +51,7 @@ export interface RoomShell {
   bounds: { min: [number, number]; max: [number, number] }; // walkable x/z extent (m)
   eyeHeight: number;                                         // m
   defaultMaterials: Record<string, string>;                 // surfaceId -> materialId
+  defaultLights: Record<string, { type: "none" | "ceiling"; count: number }>; // zoneId -> initial lighting
 }
 
 export interface ProductMeta {

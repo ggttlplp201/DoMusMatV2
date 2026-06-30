@@ -25,11 +25,6 @@ export const MATERIALS: MaterialDef[] = [
       repeatMeters: 2.0,
     },
   },
-  { id: "marble-white", name: "Marble White", color: "#ECEAE4" },
-  { id: "walnut",       name: "Walnut",       color: "#6B4A2B" },
-  { id: "slate",        name: "Slate",        color: "#3A3F44" },
-  { id: "sage",         name: "Sage",         color: "#9CAF88" },
-  { id: "oak",          name: "Oak",          color: "#C9A36B" },
   // --- textured PBR materials (ambientCG sample sets) ---
   {
     id: "wood-093", name: "Wood Panel", color: "#9c6b3f",

@@ -112,7 +112,7 @@ function CameraTracker() {
 }
 
 // ---- inner scene (needs to be inside CameraRig's context provider) -------
-function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
+function SceneInner({ room }: { room: RoomShell }) {
   const { walkTo, wasDrag } = useCameraRig();
 
   const scene      = useConfigurator((s) => s.scene);
@@ -220,7 +220,7 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
         ))}
 
         {/* preset item slots — chosen products always render; "+ add" ghosts hide during capture */}
-        <SlotMarkers room={room} onSlotClick={onSlotClick} />
+        <SlotMarkers room={room} />
 
         {/* fixed windows */}
         <Fixtures room={room} />
@@ -233,14 +233,14 @@ function SceneInner({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot
 }
 
 // ---- public component (mounts inside Canvas) -----------------------------
-export default function Scene({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
+export default function Scene({ room }: { room: RoomShell }) {
   const editingId = useConfigurator((s) => s.editingId);
   const lockedRef = useRef(false);
   lockedRef.current = editingId !== null;
 
   return (
     <CameraRig lockedRef={lockedRef} bounds={room.bounds} eyeHeight={room.eyeHeight}>
-      <SceneInner room={room} onSlotClick={onSlotClick} />
+      <SceneInner room={room} />
     </CameraRig>
   );
 }

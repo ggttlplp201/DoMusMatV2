@@ -50,15 +50,19 @@ function CeilingLight({ position, helpers }: { position: [number, number, number
   );
 }
 
-// evenly spread `count` positions across a zone
+// evenly spread `count` positions across a zone, running the main row along the
+// zone's longer axis (so a long, narrow hallway gets its lights down its length)
 function gridPositions(z: LightZone, count: number): [number, number, number][] {
   const cols = Math.min(count, 3), rows = Math.ceil(count / cols);
+  const longAxisX = Math.abs(z.x1 - z.x0) >= Math.abs(z.z1 - z.z0);
   const out: [number, number, number][] = [];
   let n = 0;
   for (let r = 0; r < rows && n < count; r++) {
     for (let c = 0; c < cols && n < count; c++, n++) {
-      const fx = cols === 1 ? 0.5 : (c + 0.5) / cols;
-      const fz = rows === 1 ? 0.5 : (r + 0.5) / rows;
+      const fLong = cols === 1 ? 0.5 : (c + 0.5) / cols;  // along the longer axis
+      const fShort = rows === 1 ? 0.5 : (r + 0.5) / rows; // across the shorter axis
+      const fx = longAxisX ? fLong : fShort;
+      const fz = longAxisX ? fShort : fLong;
       out.push([THREE.MathUtils.lerp(z.x0, z.x1, fx), z.ceilingY, THREE.MathUtils.lerp(z.z0, z.z1, fz)]);
     }
   }

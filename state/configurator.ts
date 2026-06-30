@@ -2,6 +2,9 @@ import { create } from "zustand";
 import type { SceneDocument, PlacedItem, SurfaceDef, ProductMeta } from "@/lib/configurator/types";
 import { emptyScene } from "@/lib/configurator/types";
 import { snapPos, wallRotY, isAllowedSurface } from "@/lib/configurator/geometry";
+import { getRoomShell } from "@/lib/configurator/rooms";
+
+const INITIAL_ROOM = "house-40x30";
 
 export type Tool =
   | { kind: "look" }
@@ -10,6 +13,18 @@ export type Tool =
 
 export type LightType = "none" | "ceiling";
 export interface LightConfig { type: LightType; count: number; }
+
+/** which left-rail flyout is open (null = none) */
+export type FlyoutTool = "materials" | "items" | "actions";
+
+/** an open model-picker request. `slotId` set → fill that preset slot;
+ *  absent → free placement (arm the place tool, then click a surface). */
+export interface PickerTarget {
+  title: string;
+  refs: string[];          // candidate product refs to choose from
+  surfaceLabel?: string;   // e.g. "Floor · fits doorway"
+  slotId?: string;
+}
 
 let idCounter = 0;
 export function __resetItemIds() { idCounter = 0; } // tests only
@@ -23,7 +38,14 @@ interface ConfiguratorState {
   roomLights: Record<string, LightConfig>;  // per-zone interior lighting
   showLightHelpers: boolean;         // reveal light-direction helpers
   capturing: boolean;                // true while rendering panos (hide gizmos)
+  activeTool: FlyoutTool | null;     // which left-rail flyout is open
+  picker: PickerTarget | null;       // open model-picker modal (null = closed)
+  setActiveTool(tool: FlyoutTool): void;   // toggles: same tool closes it
+  openPicker(target: PickerTarget): void;
+  closePicker(): void;
   loadScene(doc: SceneDocument): void;
+  /** switch to a different floor plan; starts the new plan from a clean scene */
+  setRoom(roomId: string): void;
   setTool(tool: Tool): void;
   paintSurface(surfaceId: string, materialId: string): void;
   /** returns the new item id, or null if the surface is disallowed */
@@ -45,16 +67,37 @@ interface ConfiguratorState {
 }
 
 export const useConfigurator = create<ConfiguratorState>((set) => ({
-  scene: emptyScene("house-40x30"),
+  scene: emptyScene(INITIAL_ROOM),
   tool: { kind: "look" },
   selectedId: null,
   editingId: null,
   timeOfDay: 9,
-  roomLights: { living: { type: "ceiling", count: 6 } },
+  roomLights: { ...getRoomShell(INITIAL_ROOM).defaultLights },
   showLightHelpers: false,
   capturing: false,
+  activeTool: null,
+  picker: null,
+
+  setActiveTool: (tool) => set((st) => ({ activeTool: st.activeTool === tool ? null : tool })),
+  openPicker: (target) => set({ picker: target, activeTool: null }),
+  closePicker: () => set({ picker: null }),
 
   loadScene: (doc) => set({ scene: doc, selectedId: null, editingId: null, tool: { kind: "look" } }),
+
+  setRoom: (roomId) =>
+    set((st) =>
+      st.scene.room === roomId
+        ? st
+        : {
+            scene: emptyScene(roomId),
+            selectedId: null,
+            editingId: null,
+            tool: { kind: "look" },
+            // zone ids are plan-specific — load the new plan's default lighting
+            roomLights: { ...getRoomShell(roomId).defaultLights },
+          },
+    ),
+
   setTool: (tool) => set({ tool, selectedId: null }),
 
   paintSurface: (surfaceId, materialId) =>

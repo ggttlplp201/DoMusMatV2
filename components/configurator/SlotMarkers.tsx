@@ -2,23 +2,65 @@
 
 /**
  * SlotMarkers — renders preset item slots.
- *  - empty slot → ghost outline + a floating "＋ Add …" button (drei Html)
- *  - filled slot → the chosen product model; clicking it re-opens the picker
+ *  - empty slot, camera near  → ghost outline + a floating "＋ Add …" button
+ *  - empty slot, camera far   → a small floor dot (discoverable, not cluttered)
+ *  - filled slot              → the chosen product model; clicking re-opens the picker
+ * Only slots within NEAR_RADIUS of the camera show their full affordance, so you
+ * see a handful at a time instead of every label in the building at once.
  * Clicking a slot calls onSlotClick(slot) so the page can show the product picker.
  */
 
-import { Suspense } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Html } from "@react-three/drei";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-import type { ThreeEvent } from "@react-three/fiber";
 import type { ItemSlot, RoomShell } from "@/lib/configurator/types";
-import { CONFIGURABLE_PRODUCTS } from "@/lib/configurator/products";
+import { CONFIGURABLE_PRODUCTS, productsForCategory } from "@/lib/configurator/products";
 import { useConfigurator } from "@/state/configurator";
 import FittedModel from "./FittedModel";
 
-export default function SlotMarkers({ room, onSlotClick }: { room: RoomShell; onSlotClick: (slot: ItemSlot) => void }) {
+const NEAR_RADIUS = 4.5;                       // m — fully reveal "+ Add" within this range
+const NEAR_RADIUS_SQ = NEAR_RADIUS * NEAR_RADIUS;
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+export default function SlotMarkers({ room }: { room: RoomShell }) {
   const slots = useConfigurator((s) => s.scene.slots);
   const capturing = useConfigurator((s) => s.capturing);
+  const openPicker = useConfigurator((s) => s.openPicker);
+  const camera = useThree((s) => s.camera);
+  const [near, setNear] = useState<Set<string>>(() => new Set());
+  const acc = useRef(0);
+
+  // open the shared picker for a slot (fills that slot on "Place in room")
+  const onSlotClick = (slot: ItemSlot) =>
+    openPicker({
+      title: `Choose ${cap(slot.category)}`,
+      refs: productsForCategory(slot.category).map((p) => p.ref),
+      surfaceLabel: "Floor",
+      slotId: slot.id,
+    });
+
+  // throttled (~6.7Hz) proximity check; only re-render when the near-set changes
+  useFrame((_, dt) => {
+    acc.current += dt;
+    if (acc.current < 0.15) return;
+    acc.current = 0;
+    const { x, z } = camera.position;
+    setNear((prev) => {
+      const next = new Set<string>();
+      for (const slot of room.slots) {
+        const dx = slot.pos[0] - x, dz = slot.pos[2] - z;
+        if (dx * dx + dz * dz <= NEAR_RADIUS_SQ) next.add(slot.id);
+      }
+      if (next.size === prev.size) {
+        let same = true;
+        for (const id of next) if (!prev.has(id)) { same = false; break; }
+        if (same) return prev; // unchanged → skip re-render
+      }
+      return next;
+    });
+  });
+
   return (
     <>
       {room.slots.map((slot) => {
@@ -32,14 +74,30 @@ export default function SlotMarkers({ room, onSlotClick }: { room: RoomShell; on
                   <FittedModel url={meta.modelUrl} realDimsMm={meta.realDimsMm} modelRotY={meta.modelRotY} />
                 </Suspense>
               </group>
-            ) : capturing ? null : (
-              // empty-slot "+ add" affordance — gizmo only, hidden while rendering panos
+            ) : capturing ? null : near.has(slot.id) ? (
+              // close enough to act on — full outline + label, hidden while rendering panos
               <SlotGhost slot={slot} onClick={() => onSlotClick(slot)} />
+            ) : (
+              // far away — just a quiet floor dot so the spot is discoverable
+              <SlotDot onClick={() => onSlotClick(slot)} />
             )}
           </group>
         );
       })}
     </>
+  );
+}
+
+function SlotDot({ onClick }: { onClick: () => void }) {
+  return (
+    <mesh
+      position={[0, 0.03, 0]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onClick(); }}
+    >
+      <circleGeometry args={[0.2, 24]} />
+      <meshBasicMaterial color="#34d399" transparent opacity={0.4} side={THREE.DoubleSide} />
+    </mesh>
   );
 }
 
