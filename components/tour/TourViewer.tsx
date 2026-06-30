@@ -90,7 +90,7 @@ export default function TourViewer({ job }: { job: RenderJob }) {
         <button className={tab("night")} onClick={() => switchVariant("night")}>Night</button>
       </div>
       {/* reliable room jump menu — navigation independent of arrow placement */}
-      <div className="absolute bottom-4 left-1/2 z-10 flex max-w-[92vw] -translate-x-1/2 flex-wrap justify-center gap-1.5 rounded-full bg-black/55 px-2 py-1.5 backdrop-blur">
+      <div className="absolute top-4 left-1/2 z-10 flex max-w-[78vw] -translate-x-1/2 flex-wrap justify-center gap-1.5 rounded-full bg-black/55 px-2 py-1.5 backdrop-blur">
         {job.spec.spots
           .filter((s) => job.pano_urls[variant]?.[s.id])
           .map((s) => (

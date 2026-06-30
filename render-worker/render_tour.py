@@ -17,8 +17,9 @@ def _timed(label: str, t0: float) -> float:
     print(f"[time] {label}: {now - t0:.1f}s", flush=True)
     return now
 
-# production quality (GPU-rendered): 4K equirect, adaptive-sampled + denoised
-PANO_W, PANO_H = 4096, 2048
+# production quality (GPU-rendered): 6K equirect, adaptive-sampled + denoised.
+# Higher pano width = more pixels per degree = sharper when zoomed in the viewer.
+PANO_W, PANO_H = 6144, 3072
 SAMPLES = 96  # max; adaptive sampling stops early on converged pixels
 VARIANTS = ("day", "night")
 # glTF stores light intensity in candela; Blender imports that as a tiny wattage
@@ -26,7 +27,7 @@ VARIANTS = ("day", "night")
 LIGHT_BOOST = 80.0
 # World (HDRI) ambient strength per variant. Day is sunlit; night relies on a dim
 # environment for fill so walls/ceiling between the downlights don't crush to black.
-WORLD_STRENGTH = {"day": 1.0, "night": 0.35}
+WORLD_STRENGTH = {"day": 1.35, "night": 0.35}
 
 
 # ---- pure helpers (no bpy) ------------------------------------------------
@@ -160,11 +161,25 @@ def _setup_render():
     scene.cycles.samples = SAMPLES
     scene.cycles.use_adaptive_sampling = True
     scene.cycles.adaptive_threshold = 0.02  # higher = stops sooner (faster, denoiser cleans up)
+    # Denoise the noise adaptive sampling leaves behind. Use OpenImageDenoise (the
+    # Cycles default): the OptiX denoiser produced all-black frames on our
+    # equirectangular panorama camera, and OIDN is robust on both GPU and CPU.
     scene.cycles.use_denoising = True
+    # Interiors are lit by GI bounce + downlights; the film-VFX bounce defaults
+    # (max 12) are overkill. Trim them — but keep enough diffuse/transmission to
+    # preserve the bounced fill the night variant relies on (see WORLD_STRENGTH).
+    scene.cycles.max_bounces = 8
+    scene.cycles.diffuse_bounces = 4
+    scene.cycles.glossy_bounces = 4
+    scene.cycles.transmission_bounces = 8  # windows/glass
+    scene.cycles.volume_bounces = 0        # no volumetrics in these scenes
+    # Caustics are expensive and invisible in typical interior shots.
+    scene.cycles.caustics_reflective = False
+    scene.cycles.caustics_refractive = False
     scene.render.resolution_x = PANO_W
     scene.render.resolution_y = PANO_H
     scene.render.image_settings.file_format = "JPEG"
-    scene.render.image_settings.quality = 90
+    scene.render.image_settings.quality = 92
     scene.view_settings.view_transform = "Filmic"  # calibrated in Task 5
 
 
